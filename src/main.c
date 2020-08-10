@@ -61,8 +61,8 @@ int main(void)
 		os_PutStrFull("PARSEC Encryption         ");
 		os_PutStrFull("--------------------------");
 		os_PutStrFull("64-byte (512 bit) block   ");
-		os_PutStrFull("96-byte (768 bit) key     ");
-		os_PutStrFull("32 rounds                ");
+		os_PutStrFull("128-byte (1024 bit) key   ");
+		os_PutStrFull("32 rounds                 ");
 		os_PutStrFull("                          ");
 
 		/* Waits for a key */
