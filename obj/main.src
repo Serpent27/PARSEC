@@ -1,0 +1,2882 @@
+; Zilog eZ80 ANSI C Compiler Release 3.4
+; -optsize -noreduceopt -nomodsect -peephole -globalopt
+; -localcse -const=ROM 
+	FILE	"SRC\MAIN.C"
+	.assume ADL=1
+	SEGMENT DATA
+_hex_enc:
+	DB	48
+	DB	49
+	DB	50
+	DB	51
+	DB	52
+	DB	53
+	DB	54
+	DB	55
+	DB	56
+	DB	57
+	DB	65
+	DB	66
+	DB	67
+	DB	68
+	DB	69
+	DB	70
+	DB	0
+_sbox_enc:
+	DB	182
+	DB	145
+	DB	190
+	DB	136
+	DB	227
+	DB	154
+	DB	143
+	DB	246
+	DB	251
+	DB	91
+	DB	35
+	DB	139
+	DB	232
+	DB	40
+	DB	12
+	DB	84
+	DB	135
+	DB	24
+	DB	117
+	DB	233
+	DB	22
+	DB	165
+	DB	95
+	DB	219
+	DB	108
+	DB	55
+	DB	250
+	DB	60
+	DB	107
+	DB	198
+	DB	13
+	DB	170
+	DB	93
+	DB	26
+	DB	163
+	DB	188
+	DB	30
+	DB	171
+	DB	191
+	DB	195
+	DB	174
+	DB	149
+	DB	137
+	DB	238
+	DB	94
+	DB	54
+	DB	102
+	DB	37
+	DB	248
+	DB	197
+	DB	39
+	DB	142
+	DB	156
+	DB	224
+	DB	78
+	DB	68
+	DB	41
+	DB	209
+	DB	115
+	DB	116
+	DB	205
+	DB	131
+	DB	38
+	DB	206
+	DB	25
+	DB	208
+	DB	77
+	DB	100
+	DB	161
+	DB	192
+	DB	222
+	DB	247
+	DB	173
+	DB	85
+	DB	228
+	DB	252
+	DB	31
+	DB	33
+	DB	14
+	DB	196
+	DB	58
+	DB	71
+	DB	27
+	DB	146
+	DB	76
+	DB	141
+	DB	214
+	DB	210
+	DB	217
+	DB	103
+	DB	172
+	DB	64
+	DB	212
+	DB	244
+	DB	62
+	DB	121
+	DB	239
+	DB	82
+	DB	242
+	DB	32
+	DB	133
+	DB	223
+	DB	105
+	DB	112
+	DB	169
+	DB	15
+	DB	168
+	DB	126
+	DB	74
+	DB	151
+	DB	7
+	DB	202
+	DB	109
+	DB	106
+	DB	186
+	DB	114
+	DB	113
+	DB	72
+	DB	153
+	DB	3
+	DB	96
+	DB	80
+	DB	187
+	DB	226
+	DB	193
+	DB	90
+	DB	203
+	DB	123
+	DB	110
+	DB	138
+	DB	49
+	DB	51
+	DB	215
+	DB	207
+	DB	194
+	DB	213
+	DB	36
+	DB	134
+	DB	175
+	DB	245
+	DB	83
+	DB	127
+	DB	201
+	DB	119
+	DB	152
+	DB	132
+	DB	21
+	DB	216
+	DB	73
+	DB	220
+	DB	11
+	DB	29
+	DB	69
+	DB	56
+	DB	101
+	DB	118
+	DB	6
+	DB	130
+	DB	125
+	DB	221
+	DB	164
+	DB	230
+	DB	129
+	DB	144
+	DB	229
+	DB	158
+	DB	179
+	DB	181
+	DB	48
+	DB	10
+	DB	89
+	DB	17
+	DB	184
+	DB	180
+	DB	104
+	DB	140
+	DB	128
+	DB	87
+	DB	243
+	DB	185
+	DB	57
+	DB	42
+	DB	111
+	DB	19
+	DB	46
+	DB	157
+	DB	45
+	DB	160
+	DB	67
+	DB	166
+	DB	18
+	DB	53
+	DB	92
+	DB	255
+	DB	124
+	DB	183
+	DB	234
+	DB	122
+	DB	235
+	DB	236
+	DB	150
+	DB	75
+	DB	61
+	DB	178
+	DB	5
+	DB	2
+	DB	43
+	DB	63
+	DB	86
+	DB	16
+	DB	70
+	DB	88
+	DB	167
+	DB	200
+	DB	249
+	DB	0
+	DB	225
+	DB	189
+	DB	148
+	DB	59
+	DB	218
+	DB	79
+	DB	211
+	DB	120
+	DB	177
+	DB	1
+	DB	34
+	DB	240
+	DB	176
+	DB	99
+	DB	50
+	DB	204
+	DB	254
+	DB	98
+	DB	4
+	DB	159
+	DB	9
+	DB	8
+	DB	44
+	DB	147
+	DB	52
+	DB	97
+	DB	20
+	DB	65
+	DB	155
+	DB	66
+	DB	81
+	DB	23
+	DB	237
+	DB	253
+	DB	47
+	DB	162
+	DB	28
+	DB	241
+	DB	231
+	DB	199
+_sbox_dec:
+	DB	215
+	DB	225
+	DB	205
+	DB	119
+	DB	234
+	DB	204
+	DB	156
+	DB	110
+	DB	237
+	DB	236
+	DB	169
+	DB	150
+	DB	14
+	DB	30
+	DB	78
+	DB	105
+	DB	209
+	DB	171
+	DB	190
+	DB	183
+	DB	242
+	DB	146
+	DB	20
+	DB	247
+	DB	17
+	DB	64
+	DB	33
+	DB	82
+	DB	252
+	DB	151
+	DB	36
+	DB	76
+	DB	99
+	DB	77
+	DB	226
+	DB	10
+	DB	136
+	DB	47
+	DB	62
+	DB	50
+	DB	13
+	DB	56
+	DB	181
+	DB	206
+	DB	238
+	DB	186
+	DB	184
+	DB	250
+	DB	168
+	DB	130
+	DB	230
+	DB	131
+	DB	240
+	DB	191
+	DB	45
+	DB	25
+	DB	153
+	DB	180
+	DB	80
+	DB	219
+	DB	27
+	DB	202
+	DB	94
+	DB	207
+	DB	91
+	DB	243
+	DB	245
+	DB	188
+	DB	55
+	DB	152
+	DB	210
+	DB	81
+	DB	117
+	DB	148
+	DB	108
+	DB	201
+	DB	84
+	DB	66
+	DB	54
+	DB	221
+	DB	121
+	DB	246
+	DB	97
+	DB	140
+	DB	15
+	DB	73
+	DB	208
+	DB	177
+	DB	211
+	DB	170
+	DB	125
+	DB	9
+	DB	192
+	DB	32
+	DB	44
+	DB	22
+	DB	120
+	DB	241
+	DB	233
+	DB	229
+	DB	67
+	DB	154
+	DB	46
+	DB	89
+	DB	174
+	DB	102
+	DB	113
+	DB	28
+	DB	24
+	DB	112
+	DB	128
+	DB	182
+	DB	103
+	DB	116
+	DB	115
+	DB	58
+	DB	59
+	DB	18
+	DB	155
+	DB	143
+	DB	223
+	DB	95
+	DB	197
+	DB	127
+	DB	194
+	DB	158
+	DB	107
+	DB	141
+	DB	176
+	DB	162
+	DB	157
+	DB	61
+	DB	145
+	DB	100
+	DB	137
+	DB	16
+	DB	3
+	DB	42
+	DB	129
+	DB	11
+	DB	175
+	DB	85
+	DB	51
+	DB	6
+	DB	163
+	DB	1
+	DB	83
+	DB	239
+	DB	218
+	DB	41
+	DB	200
+	DB	109
+	DB	144
+	DB	118
+	DB	5
+	DB	244
+	DB	52
+	DB	185
+	DB	165
+	DB	235
+	DB	187
+	DB	68
+	DB	251
+	DB	34
+	DB	160
+	DB	21
+	DB	189
+	DB	212
+	DB	106
+	DB	104
+	DB	31
+	DB	37
+	DB	90
+	DB	72
+	DB	40
+	DB	138
+	DB	228
+	DB	224
+	DB	203
+	DB	166
+	DB	173
+	DB	167
+	DB	0
+	DB	195
+	DB	172
+	DB	179
+	DB	114
+	DB	122
+	DB	35
+	DB	217
+	DB	2
+	DB	38
+	DB	69
+	DB	124
+	DB	134
+	DB	39
+	DB	79
+	DB	49
+	DB	29
+	DB	255
+	DB	213
+	DB	142
+	DB	111
+	DB	126
+	DB	231
+	DB	60
+	DB	63
+	DB	133
+	DB	65
+	DB	57
+	DB	87
+	DB	222
+	DB	92
+	DB	135
+	DB	86
+	DB	132
+	DB	147
+	DB	88
+	DB	220
+	DB	23
+	DB	149
+	DB	159
+	DB	70
+	DB	101
+	DB	53
+	DB	216
+	DB	123
+	DB	4
+	DB	74
+	DB	164
+	DB	161
+	DB	254
+	DB	12
+	DB	19
+	DB	196
+	DB	198
+	DB	199
+	DB	248
+	DB	43
+	DB	96
+	DB	227
+	DB	253
+	DB	98
+	DB	178
+	DB	93
+	DB	139
+	DB	7
+	DB	71
+	DB	48
+	DB	214
+	DB	26
+	DB	8
+	DB	75
+	DB	249
+	DB	232
+	DB	193
+_pbox_enc:
+	DB	17
+	DB	23
+	DB	21
+	DB	16
+	DB	15
+	DB	18
+	DB	59
+	DB	52
+	DB	27
+	DB	57
+	DB	25
+	DB	8
+	DB	51
+	DB	47
+	DB	36
+	DB	56
+	DB	42
+	DB	6
+	DB	20
+	DB	44
+	DB	2
+	DB	19
+	DB	37
+	DB	61
+	DB	35
+	DB	32
+	DB	63
+	DB	34
+	DB	31
+	DB	10
+	DB	9
+	DB	24
+	DB	46
+	DB	45
+	DB	41
+	DB	40
+	DB	4
+	DB	28
+	DB	55
+	DB	49
+	DB	11
+	DB	29
+	DB	12
+	DB	53
+	DB	50
+	DB	26
+	DB	5
+	DB	33
+	DB	38
+	DB	58
+	DB	54
+	DB	39
+	DB	14
+	DB	48
+	DB	7
+	DB	22
+	DB	3
+	DB	43
+	DB	0
+	DB	62
+	DB	30
+	DB	13
+	DB	1
+	DB	60
+_pbox_dec:
+	DB	58
+	DB	62
+	DB	20
+	DB	56
+	DB	36
+	DB	46
+	DB	17
+	DB	54
+	DB	11
+	DB	30
+	DB	29
+	DB	40
+	DB	42
+	DB	61
+	DB	52
+	DB	4
+	DB	3
+	DB	0
+	DB	5
+	DB	21
+	DB	18
+	DB	2
+	DB	55
+	DB	1
+	DB	31
+	DB	10
+	DB	45
+	DB	8
+	DB	37
+	DB	41
+	DB	60
+	DB	28
+	DB	25
+	DB	47
+	DB	27
+	DB	24
+	DB	14
+	DB	22
+	DB	48
+	DB	51
+	DB	35
+	DB	34
+	DB	16
+	DB	57
+	DB	19
+	DB	33
+	DB	32
+	DB	13
+	DB	53
+	DB	39
+	DB	44
+	DB	12
+	DB	7
+	DB	43
+	DB	50
+	DB	38
+	DB	15
+	DB	9
+	DB	49
+	DB	6
+	DB	63
+	DB	23
+	DB	59
+	DB	26
+	SEGMENT CODE
+_round_enc_sub:
+	LD	HL,-6
+	CALL	__frameset
+	LD	BC,0
+	LD	(IX+-3),BC
+	JR	L_2
+L_0:
+	LD	BC,(IX+-3)
+	LD	HL,(IX+6)
+	ADD	HL,BC
+	LD	(IX+-6),HL
+	LD	BC,(IX+-3)
+	LD	HL,(IX+6)
+	ADD	HL,BC
+	LD	IY,HL
+	LD	A,(HL)
+	UEXT	HL
+	LD	L,A
+	LD	BC,_sbox_enc
+	ADD	HL,BC
+	LD	IY,HL
+	LD	A,(HL)
+	LD	HL,(IX+-6)
+	LD	(HL),A
+	LD	BC,(IX+-3)
+	LD	HL,(IX+9)
+	ADD	HL,BC
+	LD	IY,HL
+	LD	A,(HL)
+	LD	HL,(IX+-6)
+	XOR	A,(HL)
+	LD	HL,(IX+6)
+	LD	BC,(IX+-3)
+	ADD	HL,BC
+	LD	IY,HL
+	LD	(HL),A
+	LD	BC,(IX+-3)
+	INC	BC
+	LD	(IX+-3),BC
+L_2:
+	LD	BC,64
+	LD	HL,(IX+-3)
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_0
+	LD	SP,IX
+	POP	IX
+	RET	
+
+
+;**************************** _round_enc_sub ***************************
+;Name                         Addr/Register   Size   Type
+;_sbox_enc                           STATIC    256   variable
+;a                                     IX-3      3   variable
+;key                                   IX+9      3   parameter
+;msg                                   IX+6      3   parameter
+
+
+; Stack Frame Size: 18 (bytes)
+;       Spill Code: 0 (instruction)
+
+
+_round_dec_sub:
+	LD	HL,-12
+	CALL	__frameset
+	LD	BC,0
+	LD	(IX+-3),BC
+	JR	L_6
+L_4:
+	LD	BC,(IX+-3)
+	LD	HL,(IX+6)
+	ADD	HL,BC
+	LD	(IX+-6),HL
+	LD	BC,(IX+-3)
+	LD	HL,(IX+6)
+	ADD	HL,BC
+	LD	IY,HL
+	LD	HL,(IX+9)
+	LD	BC,(IX+-3)
+	ADD	HL,BC
+	LD	(IX+-9),HL
+	LD	A,(IY)
+	XOR	A,(HL)
+	LD	HL,(IX+-6)
+	LD	(HL),A
+	LD	HL,(IX+-6)
+	LD	A,(HL)
+	UEXT	HL
+	LD	L,A
+	LD	BC,_sbox_dec
+	ADD	HL,BC
+	LD	IY,HL
+	LD	HL,(IX+6)
+	LD	BC,(IX+-3)
+	ADD	HL,BC
+	LD	(IX+-12),HL
+	LD	A,(IY)
+	LD	(HL),A
+	LD	BC,(IX+-3)
+	INC	BC
+	LD	(IX+-3),BC
+L_6:
+	LD	BC,64
+	LD	HL,(IX+-3)
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_4
+	LD	SP,IX
+	POP	IX
+	RET	
+
+
+;**************************** _round_dec_sub ***************************
+;Name                         Addr/Register   Size   Type
+;_sbox_dec                           STATIC    256   variable
+;a                                     IX-3      3   variable
+;key                                   IX+9      3   parameter
+;msg                                   IX+6      3   parameter
+
+
+; Stack Frame Size: 24 (bytes)
+;       Spill Code: 0 (instruction)
+
+
+_round_enc_per:
+	LD	HL,-24
+	CALL	__frameset
+	LD	HL,(IX+9)
+	LD	A,(HL)
+	UEXT	HL
+	LD	L,A
+	LD	(IX+-6),HL
+	LD	BC,0
+	LD	(IX+-3),BC
+	JR	L_10
+L_8:
+	LD	BC,(IX+-3)
+	LD	HL,(IX+6)
+	ADD	HL,BC
+	LD	IY,HL
+	LD	HL,(IX+12)
+	LD	BC,(IX+-3)
+	ADD	HL,BC
+	LD	(IX+-24),HL
+	LD	A,(IY)
+	LD	(HL),A
+	LD	BC,(IX+-3)
+	INC	BC
+	LD	(IX+-3),BC
+L_10:
+	LD	BC,64
+	LD	HL,(IX+-3)
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_8
+	LD	BC,0
+	LD	(IX+-3),BC
+	JR	L_13
+L_11:
+	LD	DE,(IX+-3)
+	LD	(IX+-18),DE	; spill
+	LD	HL,(IX+12)
+	LD	BC,(IX+-6)
+	LD	DE,(IX+6)
+	LD	(IX+-12),DE	; spill
+	LD	DE,(IX+-18)	; unspill
+	ADD	HL,DE
+	LD	IY,HL
+	LD	HL,(IX+-3)
+	LD	DE,_pbox_enc
+	ADD	HL,DE
+	LD	(IX+-21),HL
+	LD	A,(HL)
+	UEXT	HL
+	LD	L,A
+	CALL	__ixor
+	LD	A,L
+	AND	A,63
+	UEXT	HL
+	LD	L,A
+	LD	A,(IY)
+	LD	DE,(IX+-12)	; unspill
+	ADD	HL,DE
+	LD	IY,HL
+	LD	(HL),A
+	LD	BC,(IX+-3)
+	INC	BC
+	LD	(IX+-3),BC
+L_13:
+	LD	BC,64
+	LD	HL,(IX+-3)
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_11
+	LD	SP,IX
+	POP	IX
+	RET	
+
+
+;**************************** _round_enc_per ***************************
+;Name                         Addr/Register   Size   Type
+;_pbox_enc                           STATIC     64   variable
+;b                                     IX-6      3   variable
+;a                                     IX-3      3   variable
+;tmp                                  IX+12      3   parameter
+;key                                   IX+9      3   parameter
+;msg                                   IX+6      3   parameter
+
+
+; Stack Frame Size: 39 (bytes)
+;       Spill Code: 0 (instruction)
+
+
+_round_dec_per:
+	LD	HL,-12
+	CALL	__frameset
+	LD	HL,(IX+9)
+	LD	A,(HL)
+	UEXT	HL
+	LD	L,A
+	LD	(IX+-6),HL
+	LD	BC,0
+	LD	(IX+-3),BC
+	JR	L_18
+L_16:
+	LD	BC,(IX+-3)
+	LD	HL,(IX+6)
+	ADD	HL,BC
+	LD	IY,HL
+	LD	HL,(IX+12)
+	LD	BC,(IX+-3)
+	ADD	HL,BC
+	LD	(IX+-12),HL
+	LD	A,(IY)
+	LD	(HL),A
+	LD	BC,(IX+-3)
+	INC	BC
+	LD	(IX+-3),BC
+L_18:
+	LD	BC,64
+	LD	HL,(IX+-3)
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_16
+	LD	BC,0
+	LD	(IX+-3),BC
+	JR	L_21
+L_19:
+	LD	BC,(IX+-3)
+	LD	HL,(IX+12)
+	ADD	HL,BC
+	LD	IY,HL
+	LD	HL,(IX+-3)
+	LD	BC,(IX+-6)
+	CALL	__ixor
+	LD	A,L
+	AND	A,63
+	UEXT	HL
+	LD	L,A
+	LD	BC,_pbox_dec
+	ADD	HL,BC
+	LD	(IX+-9),HL
+	LD	BC,(IX+6)
+	LD	A,(HL)
+	UEXT	HL
+	LD	L,A
+	LD	A,(IY)
+	ADD	HL,BC
+	LD	IY,HL
+	LD	(HL),A
+	LD	BC,(IX+-3)
+	INC	BC
+	LD	(IX+-3),BC
+L_21:
+	LD	BC,64
+	LD	HL,(IX+-3)
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_19
+	LD	SP,IX
+	POP	IX
+	RET	
+
+
+;**************************** _round_dec_per ***************************
+;Name                         Addr/Register   Size   Type
+;_pbox_dec                           STATIC     64   variable
+;b                                     IX-6      3   variable
+;a                                     IX-3      3   variable
+;tmp                                  IX+12      3   parameter
+;key                                   IX+9      3   parameter
+;msg                                   IX+6      3   parameter
+
+
+; Stack Frame Size: 27 (bytes)
+;       Spill Code: 0 (instruction)
+
+
+_round_enc:
+	CALL	__frameset0
+	LD	BC,(IX+9)
+	PUSH	BC
+	LD	BC,(IX+6)
+	PUSH	BC
+	CALL	_round_enc_sub
+	POP	BC
+	POP	BC
+	LD	BC,(IX+12)
+	PUSH	BC
+	LD	BC,(IX+9)
+	PUSH	BC
+	LD	BC,(IX+6)
+	PUSH	BC
+	CALL	_round_enc_per
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	SP,IX
+	POP	IX
+	RET	
+
+
+;**************************** _round_enc ***************************
+;Name                         Addr/Register   Size   Type
+;tmp                                  IX+12      3   parameter
+;key                                   IX+9      3   parameter
+;msg                                   IX+6      3   parameter
+
+
+; Stack Frame Size: 15 (bytes)
+;       Spill Code: 0 (instruction)
+
+
+_round_dec:
+	CALL	__frameset0
+	LD	BC,(IX+12)
+	PUSH	BC
+	LD	BC,(IX+9)
+	PUSH	BC
+	LD	BC,(IX+6)
+	PUSH	BC
+	CALL	_round_dec_per
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	BC,(IX+9)
+	PUSH	BC
+	LD	BC,(IX+6)
+	PUSH	BC
+	CALL	_round_dec_sub
+	POP	BC
+	POP	BC
+	LD	SP,IX
+	POP	IX
+	RET	
+
+
+;**************************** _round_dec ***************************
+;Name                         Addr/Register   Size   Type
+;tmp                                  IX+12      3   parameter
+;key                                   IX+9      3   parameter
+;msg                                   IX+6      3   parameter
+
+
+; Stack Frame Size: 15 (bytes)
+;       Spill Code: 0 (instruction)
+
+
+_enc:
+	LD	HL,-3
+	CALL	__frameset
+	LD	BC,0
+	LD	(IX+-3),BC
+	JR	L_28
+L_26:
+	LD	BC,(IX+12)
+	PUSH	BC
+	LD	HL,(IX+-3)
+	ADD	HL,HL
+	ADD	HL,HL
+	ADD	HL,HL
+	ADD	HL,HL
+	ADD	HL,HL
+	ADD	HL,HL
+	LD	BC,(IX+9)
+	ADD	HL,BC
+	PUSH	HL
+	LD	BC,(IX+6)
+	PUSH	BC
+	CALL	_round_enc
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	BC,(IX+-3)
+	INC	BC
+	LD	(IX+-3),BC
+L_28:
+	LD	BC,32
+	LD	HL,(IX+-3)
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_26
+	LD	SP,IX
+	POP	IX
+	RET	
+
+
+;**************************** _enc ***************************
+;Name                         Addr/Register   Size   Type
+;a                                     IX-3      3   variable
+;tmp                                  IX+12      3   parameter
+;exp_key                               IX+9      3   parameter
+;msg                                   IX+6      3   parameter
+
+
+; Stack Frame Size: 18 (bytes)
+;       Spill Code: 0 (instruction)
+
+
+_dec:
+	LD	HL,-3
+	CALL	__frameset
+	LD	BC,32
+	LD	(IX+-3),BC
+	JR	L_32
+L_30:
+	LD	BC,(IX+12)
+	PUSH	BC
+	LD	IY,(IX+-3)
+	LEA	HL,IY+-1
+	ADD	HL,HL
+	ADD	HL,HL
+	ADD	HL,HL
+	ADD	HL,HL
+	ADD	HL,HL
+	ADD	HL,HL
+	LD	BC,(IX+9)
+	ADD	HL,BC
+	PUSH	HL
+	LD	BC,(IX+6)
+	PUSH	BC
+	CALL	_round_dec
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	IY,(IX+-3)
+	LEA	IY,IY+-1
+	LD	(IX+-3),IY
+L_32:
+	LD	BC,(IX+-3)
+	OR	A,A
+	SBC	HL,HL
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_30
+	LD	SP,IX
+	POP	IX
+	RET	
+
+
+;**************************** _dec ***************************
+;Name                         Addr/Register   Size   Type
+;a                                     IX-3      3   variable
+;tmp                                  IX+12      3   parameter
+;exp_key                               IX+9      3   parameter
+;msg                                   IX+6      3   parameter
+
+
+; Stack Frame Size: 18 (bytes)
+;       Spill Code: 0 (instruction)
+
+
+_expand_key:
+	LD	HL,-42
+	CALL	__frameset
+	LD	BC,0
+	LD	(IX+-3),BC
+	JR	L_36
+L_34:
+	LD	BC,(IX+-3)
+	LD	HL,(IX+9)
+	ADD	HL,BC
+	LD	IY,HL
+	LD	A,(IX+-3)
+	LD	(HL),A
+	LD	BC,(IX+-3)
+	INC	BC
+	LD	(IX+-3),BC
+L_36:
+	LD	BC,2048
+	LD	HL,(IX+-3)
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_34
+	LD	BC,0
+	LD	(IX+-3),BC
+	JR	L_42
+L_40:
+	LD	BC,0
+	LD	(IX+-6),BC
+	JR	L_39
+L_37:
+	LD	HL,(IX+-3)
+	LD	BC,(IX+-3)
+	LD	DE,(IX+9)
+	LD	(IX+-9),BC	; spill
+	LD	BC,(IX+6)
+	LD	(IX+-12),BC	; spill
+	LD	BC,(IX+-9)	; unspill
+	LD	(IX+-9),BC	; spill
+	LD	BC,(IX+9)
+	LD	(IX+-15),BC	; spill
+	LD	BC,(IX+-9)	; unspill
+	ADD	HL,HL
+	ADD	HL,HL
+	ADD	HL,HL
+	ADD	HL,HL
+	ADD	HL,HL
+	ADD	HL,HL
+	LD	(IX+-9),BC	; spill
+	LD	(IX+-18),HL	; spill
+	LD	BC,(IX+-9)	; unspill
+	LD	HL,(IX+-6)
+	CALL	__ixor
+	LD	BC,32
+	CALL	__ixor
+	LD	BC,2047
+	LD	(IX+-9),BC	; spill
+	LD	BC,_sbox_enc
+	LD	(IX+-21),BC	; spill
+	LD	BC,(IX+-9)	; unspill
+	LD	(IX+-9),BC	; spill
+	LD	BC,(IX+-21)	; unspill
+	ADD	HL,BC
+	LD	BC,(IX+-9)	; unspill
+	LD	IY,HL
+	LD	A,(HL)
+	UEXT	HL
+	LD	L,A
+	LD	(IX+-9),BC	; spill
+	LD	BC,(IX+-18)	; unspill
+	ADD	HL,BC
+	LD	BC,(IX+-9)	; unspill
+	CALL	__iand
+	ADD	HL,DE
+	LD	BC,(IX+-6)
+	LD	IY,HL
+	LD	HL,(IX+-3)
+	LD	DE,_sbox_enc
+	ADD	HL,DE
+	LD	(IX+-36),HL
+	LD	A,(HL)
+	UEXT	HL
+	LD	L,A
+	CALL	__ixor
+	LD	BC,96
+	CALL	__iremu
+	LD	BC,(IX+-12)	; unspill
+	ADD	HL,BC
+	LD	(IX+-39),HL
+	LD	A,(HL)
+	UEXT	HL
+	LD	L,A
+	LD	DE,HL
+	LD	HL,(IX+-3)
+	LD	(IX+-24),DE	; spill
+	LD	DE,_sbox_dec
+	LD	(IX+-27),DE	; spill
+	LD	DE,(IX+-24)	; unspill
+	LD	(IX+-24),DE	; spill
+	LD	DE,(IX+-27)	; unspill
+	ADD	HL,DE
+	LD	(IX+-42),HL
+	LD	A,(HL)
+	UEXT	HL
+	LD	L,A
+	LD	BC,HL
+	LD	HL,(IX+-24)
+	CALL	__ixor
+	LD	BC,(IX+-6)
+	CALL	__ixor
+	LD	BC,96
+	CALL	__ixor
+	LD	BC,(IX+-3)
+	LD	A,(IY)
+	LD	DE,_sbox_enc
+	ADD	HL,DE
+	LD	IY,HL
+	XOR	A,(HL)
+	LD	D,A
+	LD	HL,(IX+-3)
+	ADD	HL,HL
+	ADD	HL,HL
+	ADD	HL,HL
+	ADD	HL,HL
+	ADD	HL,HL
+	ADD	HL,HL
+	LD	(IX+-9),BC	; spill
+	LD	(IX+-30),HL	; spill
+	LD	BC,(IX+-9)	; unspill
+	LD	HL,(IX+-6)
+	CALL	__ixor
+	LD	BC,32
+	CALL	__ixor
+	LD	BC,2047
+	LD	(IX+-9),BC	; spill
+	LD	BC,_sbox_enc
+	LD	(IX+-33),BC	; spill
+	LD	BC,(IX+-9)	; unspill
+	LD	(IX+-9),BC	; spill
+	LD	BC,(IX+-33)	; unspill
+	ADD	HL,BC
+	LD	BC,(IX+-9)	; unspill
+	LD	IY,HL
+	LD	A,(HL)
+	UEXT	HL
+	LD	L,A
+	LD	(IX+-9),BC	; spill
+	LD	BC,(IX+-30)	; unspill
+	ADD	HL,BC
+	LD	BC,(IX+-9)	; unspill
+	CALL	__iand
+	LD	BC,(IX+-15)	; unspill
+	ADD	HL,BC
+	LD	IY,HL
+	LD	(HL),D
+	LD	BC,(IX+-6)
+	INC	BC
+	LD	(IX+-6),BC
+L_39:
+	LD	BC,96
+	LD	HL,(IX+-6)
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_37
+	LD	BC,(IX+-3)
+	INC	BC
+	LD	(IX+-3),BC
+L_42:
+	LD	BC,32
+	LD	HL,(IX+-3)
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_40
+	LD	SP,IX
+	POP	IX
+	RET	
+
+
+;**************************** _expand_key ***************************
+;Name                         Addr/Register   Size   Type
+;_sbox_dec                           STATIC    256   variable
+;_sbox_enc                           STATIC    256   variable
+;b                                     IX-6      3   variable
+;a                                     IX-3      3   variable
+;exp_key                               IX+9      3   parameter
+;key                                   IX+6      3   parameter
+
+
+; Stack Frame Size: 54 (bytes)
+;       Spill Code: -1 (instruction)
+
+
+_encrypt:
+	LD	HL,-2118
+	CALL	__frameset
+	LD	HL,IX
+	LD	BC,-2118
+	ADD	HL,BC
+	LD	BC,HL
+	PUSH	BC
+	LD	BC,(IX+9)
+	PUSH	BC
+	CALL	_expand_key
+	POP	BC
+	POP	BC
+	PEA	IX+-70
+	LD	HL,IX
+	LD	BC,-2118
+	ADD	HL,BC
+	LD	BC,HL
+	PUSH	BC
+	LD	BC,(IX+6)
+	PUSH	BC
+	CALL	_enc
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	BC,0
+	LD	(IX+-3),BC
+	JR	L_47
+L_45:
+	LD	BC,(IX+-3)
+	LD	HL,(IX+9)
+	ADD	HL,BC
+	LD	IY,HL
+	LD	(HL),0
+	LD	BC,(IX+-3)
+	INC	BC
+	LD	(IX+-3),BC
+L_47:
+	LD	BC,96
+	LD	HL,(IX+-3)
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_45
+	LD	BC,0
+	LD	(IX+-3),BC
+	JR	L_53
+L_51:
+	LD	BC,(IX+-3)
+	LEA	HL,IX+-70
+	ADD	HL,BC
+	LD	(HL),0
+	LD	BC,0
+	LD	(IX+-6),BC
+	JR	L_50
+L_48:
+	LD	HL,(IX+-6)
+	LD	BC,(IX+-3)
+	ADD	HL,HL
+	ADD	HL,HL
+	ADD	HL,HL
+	ADD	HL,HL
+	ADD	HL,HL
+	ADD	HL,HL
+	ADD	HL,BC
+	LD	BC,HL
+	LD	HL,IX
+	LD	DE,-2118
+	ADD	HL,DE
+	ADD	HL,BC
+	LD	(HL),0
+	LD	BC,(IX+-6)
+	INC	BC
+	LD	(IX+-6),BC
+L_50:
+	LD	BC,32
+	LD	HL,(IX+-6)
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_48
+	LD	BC,(IX+-3)
+	INC	BC
+	LD	(IX+-3),BC
+L_53:
+	LD	BC,64
+	LD	HL,(IX+-3)
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_51
+	LD	SP,IX
+	POP	IX
+	RET	
+
+
+;**************************** _encrypt ***************************
+;Name                         Addr/Register   Size   Type
+;exp_key                            IX-2118   2048   variable
+;tmp                                  IX-70     64   variable
+;b                                     IX-6      3   variable
+;a                                     IX-3      3   variable
+;key                                   IX+9      3   parameter
+;msg                                   IX+6      3   parameter
+
+
+; Stack Frame Size: 2130 (bytes)
+;       Spill Code: -1 (instruction)
+
+
+_decrypt:
+	LD	HL,-2118
+	CALL	__frameset
+	LD	HL,IX
+	LD	BC,-2118
+	ADD	HL,BC
+	LD	BC,HL
+	PUSH	BC
+	LD	BC,(IX+9)
+	PUSH	BC
+	CALL	_expand_key
+	POP	BC
+	POP	BC
+	PEA	IX+-70
+	LD	HL,IX
+	LD	BC,-2118
+	ADD	HL,BC
+	LD	BC,HL
+	PUSH	BC
+	LD	BC,(IX+6)
+	PUSH	BC
+	CALL	_dec
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	BC,0
+	LD	(IX+-3),BC
+	JR	L_58
+L_56:
+	LD	BC,(IX+-3)
+	LD	HL,(IX+9)
+	ADD	HL,BC
+	LD	IY,HL
+	LD	(HL),0
+	LD	BC,(IX+-3)
+	INC	BC
+	LD	(IX+-3),BC
+L_58:
+	LD	BC,96
+	LD	HL,(IX+-3)
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_56
+	LD	BC,0
+	LD	(IX+-3),BC
+	JR	L_64
+L_62:
+	LD	BC,(IX+-3)
+	LEA	HL,IX+-70
+	ADD	HL,BC
+	LD	IY,HL
+	LD	(HL),0
+	LD	BC,0
+	LD	(IX+-6),BC
+	JR	L_61
+L_59:
+	LD	HL,(IX+-6)
+	LD	BC,(IX+-3)
+	ADD	HL,HL
+	ADD	HL,HL
+	ADD	HL,HL
+	ADD	HL,HL
+	ADD	HL,HL
+	ADD	HL,HL
+	ADD	HL,BC
+	LD	BC,HL
+	LD	HL,IX
+	LD	DE,-2118
+	ADD	HL,DE
+	ADD	HL,BC
+	LD	IY,HL
+	LD	(HL),0
+	LD	BC,(IX+-6)
+	INC	BC
+	LD	(IX+-6),BC
+L_61:
+	LD	BC,32
+	LD	HL,(IX+-6)
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_59
+	LD	BC,(IX+-3)
+	INC	BC
+	LD	(IX+-3),BC
+L_64:
+	LD	BC,64
+	LD	HL,(IX+-3)
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_62
+	LD	SP,IX
+	POP	IX
+	RET	
+
+
+;**************************** _decrypt ***************************
+;Name                         Addr/Register   Size   Type
+;exp_key                            IX-2118   2048   variable
+;tmp                                  IX-70     64   variable
+;b                                     IX-6      3   variable
+;a                                     IX-3      3   variable
+;key                                   IX+9      3   parameter
+;msg                                   IX+6      3   parameter
+
+
+; Stack Frame Size: 2130 (bytes)
+;       Spill Code: -1 (instruction)
+
+
+_hex_to_int:
+	LD	HL,-3
+	CALL	__frameset
+	LD	A,(IX+6)
+	UEXT	HL
+	LD	L,A
+	LD	BC,16
+	CALL	__idivs
+	DEC	HL
+	DEC	HL
+	DEC	HL
+	LD	(IX+-2),L
+	LD	A,(IX+6)
+	UEXT	HL
+	LD	L,A
+	LD	BC,16
+	CALL	__irems
+	LD	(IX+-3),L
+	LD	B,10
+	LD	C,(IX+-2)
+	MLT	BC
+	LD	A,C
+	ADD	A,(IX+-3)
+	LD	(IX+-1),A
+	LD	A,9
+	CP	A,(IX+-1)
+	JR	NC,L_69
+	DEC	(IX+-1)
+L_69:
+	LD	A,(IX+-1)
+	LD	SP,IX
+	POP	IX
+	RET	
+
+
+;**************************** _hex_to_int ***************************
+;Name                         Addr/Register   Size   Type
+;second                                IX-3      1   variable
+;first                                 IX-2      1   variable
+;result                                IX-1      1   variable
+;c                                     IX+6      1   parameter
+
+
+; Stack Frame Size: 12 (bytes)
+;       Spill Code: -1 (instruction)
+
+
+_to_hex:
+	LD	HL,-3
+	CALL	__frameset
+	LD	BC,0
+	LD	(IX+-3),BC
+	JR	L_73
+L_71:
+	LD	BC,(IX+-3)
+	LD	HL,(IX+6)
+	ADD	HL,BC
+	LD	A,(HL)
+	UEXT	HL
+	LD	L,A
+	LD	BC,16
+	CALL	__idivs
+	LD	BC,_hex_enc
+	ADD	HL,BC
+	LD	IY,HL
+	LD	HL,(IX+-3)
+	ADD	HL,HL
+	LD	BC,(IX+9)
+	ADD	HL,BC
+	LD	A,(IY)
+	LD	(HL),A
+	LD	BC,(IX+-3)
+	LD	HL,(IX+6)
+	ADD	HL,BC
+	LD	A,(HL)
+	UEXT	HL
+	LD	L,A
+	LD	BC,16
+	CALL	__irems
+	LD	BC,_hex_enc
+	ADD	HL,BC
+	LD	IY,HL
+	LD	HL,(IX+-3)
+	ADD	HL,HL
+	LD	BC,HL
+	INC	BC
+	LD	HL,(IX+9)
+	ADD	HL,BC
+	LD	A,(IY)
+	LD	(HL),A
+	LD	HL,(IX+-3)
+	ADD	HL,HL
+	LD	BC,HL
+	LD	HL,(IX+9)
+	INC	BC
+	INC	BC
+	ADD	HL,BC
+	LD	(HL),0
+	LD	BC,(IX+-3)
+	INC	BC
+	LD	(IX+-3),BC
+L_73:
+	LD	BC,(IX+12)
+	LD	HL,(IX+-3)
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_71
+	LD	SP,IX
+	POP	IX
+	RET	
+
+
+;**************************** _to_hex ***************************
+;Name                         Addr/Register   Size   Type
+;_hex_enc                            STATIC     17   variable
+;a                                     IX-3      3   variable
+;size                                 IX+12      3   parameter
+;output                                IX+9      3   parameter
+;input                                 IX+6      3   parameter
+
+
+; Stack Frame Size: 18 (bytes)
+;       Spill Code: -1 (instruction)
+
+
+_from_hex:
+	LD	HL,-3
+	CALL	__frameset
+	LD	BC,0
+	LD	(IX+-3),BC
+	JR	L_77
+L_75:
+	LD	HL,(IX+-3)
+	ADD	HL,HL
+	LD	BC,(IX+6)
+	ADD	HL,BC
+	LD	C,(HL)
+	LD	B,0
+	PUSH	BC
+	CALL	_hex_to_int
+	POP	BC
+	ADD	A,A
+	ADD	A,A
+	ADD	A,A
+	ADD	A,A
+	LD	BC,(IX+-3)
+	LD	HL,(IX+9)
+	ADD	HL,BC
+	LD	(HL),A
+	LD	HL,(IX+-3)
+	ADD	HL,HL
+	LD	BC,HL
+	INC	BC
+	LD	HL,(IX+6)
+	ADD	HL,BC
+	LD	C,(HL)
+	LD	B,0
+	PUSH	BC
+	CALL	_hex_to_int
+	POP	BC
+	LD	BC,(IX+-3)
+	LD	HL,(IX+9)
+	ADD	HL,BC
+	LD	IY,HL
+	LD	HL,(IX+9)
+	LD	BC,(IX+-3)
+	ADD	HL,BC
+	ADD	A,(IY)
+	LD	(HL),A
+	LD	BC,(IX+-3)
+	INC	BC
+	LD	(IX+-3),BC
+L_77:
+	LD	BC,(IX+12)
+	LD	HL,(IX+-3)
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_75
+	LD	SP,IX
+	POP	IX
+	RET	
+
+
+;**************************** _from_hex ***************************
+;Name                         Addr/Register   Size   Type
+;a                                     IX-3      3   variable
+;size                                 IX+12      3   parameter
+;output                                IX+9      3   parameter
+;input                                 IX+6      3   parameter
+
+
+; Stack Frame Size: 18 (bytes)
+;       Spill Code: -1 (instruction)
+
+
+_hash_key:
+	CALL	__frameset0
+	LD	SP,IX
+	POP	IX
+	RET	
+
+
+;**************************** _hash_key ***************************
+;Name                         Addr/Register   Size   Type
+;key                                   IX+6      3   parameter
+
+
+; Stack Frame Size: 9 (bytes)
+;       Spill Code: -1 (instruction)
+
+
+_nop:
+	CALL	__frameset0
+	LD	SP,IX
+	POP	IX
+	RET	
+
+
+;**************************** _nop ***************************
+;Name                         Addr/Register   Size   Type
+;key                                   IX+6      3   parameter
+
+
+; Stack Frame Size: 9 (bytes)
+;       Spill Code: -1 (instruction)
+
+
+_main:
+	LD	HL,-764
+	CALL	__frameset
+L_228:
+	LD	BC,_asm_ClrLCD
+	PUSH	BC
+	CALL	__OS
+	POP	BC
+	LD	BC,_asm_HomeUp
+	PUSH	BC
+	CALL	__OS
+	POP	BC
+	LD	BC,_asm_DrawStatusBar
+	PUSH	BC
+	CALL	__OS
+	POP	BC
+	LD	BC,L__36
+	PUSH	BC
+	CALL	_os_PutStrFull
+	POP	BC
+	LD	BC,L__37
+	PUSH	BC
+	CALL	_os_PutStrFull
+	POP	BC
+	LD	BC,L__38
+	PUSH	BC
+	CALL	_os_PutStrFull
+	POP	BC
+	LD	BC,L__39
+	PUSH	BC
+	CALL	_os_PutStrFull
+	POP	BC
+	LD	BC,L__40
+	PUSH	BC
+	CALL	_os_PutStrFull
+	POP	BC
+	LD	BC,L__41
+	PUSH	BC
+	CALL	_os_PutStrFull
+	POP	BC
+L_85:
+	CALL	_os_GetCSC
+	OR	A,A
+	JR	Z,L_85
+	LD	BC,_asm_ClrLCD
+	PUSH	BC
+	CALL	__OS
+	POP	BC
+	LD	BC,_asm_HomeUp
+	PUSH	BC
+	CALL	__OS
+	POP	BC
+	LD	BC,_asm_DrawStatusBar
+	PUSH	BC
+	CALL	__OS
+	POP	BC
+	LD	BC,0
+	LD	(IX+-3),BC
+	JR	L_91
+L_89:
+	LD	BC,(IX+-3)
+	LD	HL,IX
+	LD	DE,-570
+	ADD	HL,DE
+	ADD	HL,BC
+	LD	(HL),0
+	LD	BC,(IX+-3)
+	INC	BC
+	LD	(IX+-3),BC
+L_91:
+	LD	BC,130
+	LD	HL,(IX+-3)
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_89
+	PUSH	BC
+	LD	HL,IX
+	LD	BC,-570
+	ADD	HL,BC
+	LD	BC,HL
+	PUSH	BC
+	LD	BC,L__44
+	PUSH	BC
+	CALL	_os_GetStringInput
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	BC,_asm_ClrLCD
+	PUSH	BC
+	CALL	__OS
+	POP	BC
+	LD	BC,_asm_HomeUp
+	PUSH	BC
+	CALL	__OS
+	POP	BC
+	LD	BC,_asm_DrawStatusBar
+	PUSH	BC
+	CALL	__OS
+	POP	BC
+	LD	HL,IX
+	LD	BC,-570
+	ADD	HL,BC
+	LD	BC,129
+	ADD	HL,BC
+	LD	(HL),0
+	LD	BC,0
+	LD	(IX+-3),BC
+	JR	L_99
+L_97:
+	LD	BC,(IX+-3)
+	LD	HL,IX
+	LD	DE,-764
+	ADD	HL,DE
+	ADD	HL,BC
+	LD	(HL),0
+	LD	BC,(IX+-3)
+	INC	BC
+	LD	(IX+-3),BC
+L_99:
+	LD	BC,194
+	LD	HL,(IX+-3)
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_97
+	PUSH	BC
+	LD	HL,IX
+	LD	BC,-764
+	ADD	HL,BC
+	LD	BC,HL
+	PUSH	BC
+	LD	BC,L__46
+	PUSH	BC
+	CALL	_os_GetStringInput
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	BC,_asm_ClrLCD
+	PUSH	BC
+	CALL	__OS
+	POP	BC
+	LD	BC,_asm_HomeUp
+	PUSH	BC
+	CALL	__OS
+	POP	BC
+	LD	BC,_asm_DrawStatusBar
+	PUSH	BC
+	CALL	__OS
+	POP	BC
+	LD	HL,IX
+	LD	BC,-764
+	ADD	HL,BC
+	LD	BC,193
+	ADD	HL,BC
+	LD	(HL),0
+	LD	BC,L__47
+	PUSH	BC
+	CALL	_os_PutStrFull
+	POP	BC
+	LD	BC,L__48
+	PUSH	BC
+	CALL	_os_PutStrFull
+	POP	BC
+	LD	BC,L__49
+	PUSH	BC
+	CALL	_os_PutStrFull
+	POP	BC
+	LD	BC,0
+	LD	(IX+-3),BC
+	JR	L_106
+L_104:
+	LD	BC,(IX+-3)
+	LEA	HL,IX+-22
+	ADD	HL,BC
+	LD	(HL),0
+	LD	BC,(IX+-3)
+	INC	BC
+	LD	(IX+-3),BC
+L_106:
+	LD	BC,16
+	LD	HL,(IX+-3)
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_104
+	PUSH	BC
+	PEA	IX+-22
+	LD	BC,L__51
+	PUSH	BC
+	CALL	_os_GetStringInput
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	BC,_asm_ClrLCD
+	PUSH	BC
+	CALL	__OS
+	POP	BC
+	LD	BC,_asm_HomeUp
+	PUSH	BC
+	CALL	__OS
+	POP	BC
+	LD	BC,_asm_DrawStatusBar
+	PUSH	BC
+	CALL	__OS
+	POP	BC
+	LD	BC,96
+	PUSH	BC
+	LD	HL,IX
+	LD	BC,-182
+	ADD	HL,BC
+	LD	BC,HL
+	PUSH	BC
+	LD	HL,IX
+	LD	BC,-764
+	ADD	HL,BC
+	LD	BC,HL
+	PUSH	BC
+	CALL	_from_hex
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	BC,L__52
+	PUSH	BC
+	CALL	_os_PutStrFull
+	POP	BC
+	LD	A,(IX+-22)
+	UEXT	HL
+	LD	L,A
+	OR	A,A
+	LD	BC,101
+	SBC	HL,BC
+	JR	Z,L_141
+	LD	A,(IX+-22)
+	UEXT	HL
+	LD	L,A
+	OR	A,A
+	LD	BC,69
+	SBC	HL,BC
+	JR	NZ,L_173
+L_141:
+	LD	BC,0
+	LD	(IX+-3),BC
+	JR	L_114
+L_112:
+	LD	HL,IX
+	LD	BC,-570
+	ADD	HL,BC
+	LD	BC,(IX+-3)
+	ADD	HL,BC
+	LD	IY,HL
+	LEA	HL,IX+-86
+	LD	A,(IY)
+	LD	BC,(IX+-3)
+	ADD	HL,BC
+	LD	(HL),A
+	LD	BC,(IX+-3)
+	INC	BC
+	LD	(IX+-3),BC
+L_114:
+	LD	BC,64
+	LD	HL,(IX+-3)
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_112
+	LD	HL,IX
+	LD	BC,-182
+	ADD	HL,BC
+	LD	BC,HL
+	PUSH	BC
+	PEA	IX+-86
+	CALL	_encrypt
+	POP	BC
+	POP	BC
+	LD	BC,64
+	PUSH	BC
+	LD	HL,IX
+	LD	BC,-311
+	ADD	HL,BC
+	LD	BC,HL
+	PUSH	BC
+	PEA	IX+-86
+	CALL	_to_hex
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	HL,IX
+	LD	BC,-311
+	ADD	HL,BC
+	LD	BC,128
+	ADD	HL,BC
+	LD	IY,IX
+	LD	BC,-311
+	ADD	IY,BC
+	LD	BC,IY
+	PUSH	BC
+	LD	BC,L__56
+	PUSH	BC
+	LD	IY,IX
+	LD	BC,-440
+	ADD	IY,BC
+	LD	BC,IY
+	PUSH	BC
+	LD	(HL),0
+	CALL	_sprintf
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	BC,_asm_ClrLCD
+	PUSH	BC
+	CALL	__OS
+	POP	BC
+	LD	BC,_asm_HomeUp
+	PUSH	BC
+	CALL	__OS
+	POP	BC
+	LD	BC,_asm_DrawStatusBar
+	PUSH	BC
+	CALL	__OS
+	POP	BC
+	LD	BC,0
+	LD	(IX+-3),BC
+	JR	L_120
+L_118:
+	LD	BC,(IX+-3)
+	LD	HL,IX
+	LD	DE,-182
+	ADD	HL,DE
+	ADD	HL,BC
+	LD	(HL),0
+	LD	BC,(IX+-3)
+	INC	BC
+	LD	(IX+-3),BC
+L_120:
+	LD	BC,96
+	LD	HL,(IX+-3)
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_118
+	LD	BC,0
+	LD	(IX+-3),BC
+	JR	L_124
+L_122:
+	LD	BC,(IX+-3)
+	LEA	HL,IX+-86
+	ADD	HL,BC
+	LD	(HL),0
+	LD	BC,(IX+-3)
+	INC	BC
+	LD	(IX+-3),BC
+L_124:
+	LD	BC,64
+	LD	HL,(IX+-3)
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_122
+	LD	BC,0
+	LD	(IX+-3),BC
+	JR	L_128
+L_126:
+	LD	BC,(IX+-3)
+	LEA	HL,IX+-22
+	ADD	HL,BC
+	LD	(HL),0
+	LD	BC,(IX+-3)
+	INC	BC
+	LD	(IX+-3),BC
+L_128:
+	LD	BC,16
+	LD	HL,(IX+-3)
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_126
+	LD	BC,0
+	LD	(IX+-3),BC
+	JR	L_132
+L_130:
+	LD	BC,(IX+-3)
+	LD	HL,IX
+	LD	DE,-311
+	ADD	HL,DE
+	ADD	HL,BC
+	LD	(HL),0
+	LD	BC,(IX+-3)
+	INC	BC
+	LD	(IX+-3),BC
+L_132:
+	LD	BC,129
+	LD	HL,(IX+-3)
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_130
+	LD	HL,IX
+	LD	BC,-440
+	ADD	HL,BC
+	LD	BC,HL
+	PUSH	BC
+	CALL	_os_PutStrFull
+	POP	BC
+	LD	BC,0
+	LD	(IX+-3),BC
+	JR	L_137
+L_135:
+	LD	BC,(IX+-3)
+	LD	HL,IX
+	LD	DE,-440
+	ADD	HL,DE
+	ADD	HL,BC
+	LD	(HL),0
+	LD	BC,(IX+-3)
+	INC	BC
+	LD	(IX+-3),BC
+L_137:
+	LD	BC,129
+	LD	HL,(IX+-3)
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_135
+L_139:
+	CALL	_os_GetCSC
+	OR	A,A
+	JR	Z,L_139
+L_173:
+	LD	A,(IX+-22)
+	UEXT	HL
+	LD	L,A
+	OR	A,A
+	LD	BC,100
+	SBC	HL,BC
+	JR	Z,L_172
+	LD	A,(IX+-22)
+	UEXT	HL
+	LD	L,A
+	OR	A,A
+	LD	BC,68
+	SBC	HL,BC
+	JR	NZ,L_217
+L_172:
+	LD	BC,64
+	PUSH	BC
+	PEA	IX+-86
+	LD	HL,IX
+	LD	BC,-570
+	ADD	HL,BC
+	LD	BC,HL
+	PUSH	BC
+	CALL	_from_hex
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	HL,IX
+	LD	BC,-182
+	ADD	HL,BC
+	LD	BC,HL
+	PUSH	BC
+	PEA	IX+-86
+	CALL	_decrypt
+	POP	BC
+	POP	BC
+	LD	BC,0
+	LD	(IX+-3),BC
+	JR	L_145
+L_143:
+	LD	BC,(IX+-3)
+	LEA	HL,IX+-86
+	ADD	HL,BC
+	LD	IY,HL
+	LD	HL,IX
+	LD	BC,-311
+	ADD	HL,BC
+	LD	BC,(IX+-3)
+	ADD	HL,BC
+	LD	A,(IY)
+	LD	(HL),A
+	LD	IY,(IX+-3)
+	LEA	BC,IY+64
+	LD	HL,IX
+	LD	DE,-311
+	ADD	HL,DE
+	ADD	HL,BC
+	LD	(HL),0
+	LD	BC,(IX+-3)
+	INC	BC
+	LD	(IX+-3),BC
+L_145:
+	LD	BC,64
+	LD	HL,(IX+-3)
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_143
+	LD	HL,IX
+	LD	BC,-311
+	ADD	HL,BC
+	LD	BC,HL
+	PUSH	BC
+	LD	BC,L__66
+	PUSH	BC
+	LD	HL,IX
+	LD	BC,-440
+	ADD	HL,BC
+	LD	BC,HL
+	PUSH	BC
+	CALL	_sprintf
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	BC,_asm_ClrLCD
+	PUSH	BC
+	CALL	__OS
+	POP	BC
+	LD	BC,_asm_HomeUp
+	PUSH	BC
+	CALL	__OS
+	POP	BC
+	LD	BC,_asm_DrawStatusBar
+	PUSH	BC
+	CALL	__OS
+	POP	BC
+	LD	BC,0
+	LD	(IX+-3),BC
+	JR	L_151
+L_149:
+	LD	BC,(IX+-3)
+	LD	HL,IX
+	LD	DE,-182
+	ADD	HL,DE
+	ADD	HL,BC
+	LD	(HL),0
+	LD	BC,(IX+-3)
+	INC	BC
+	LD	(IX+-3),BC
+L_151:
+	LD	BC,96
+	LD	HL,(IX+-3)
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_149
+	LD	BC,0
+	LD	(IX+-3),BC
+	JR	L_155
+L_153:
+	LD	BC,(IX+-3)
+	LEA	HL,IX+-86
+	ADD	HL,BC
+	LD	(HL),0
+	LD	BC,(IX+-3)
+	INC	BC
+	LD	(IX+-3),BC
+L_155:
+	LD	BC,64
+	LD	HL,(IX+-3)
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_153
+	LD	BC,0
+	LD	(IX+-3),BC
+	JR	L_159
+L_157:
+	LD	BC,(IX+-3)
+	LEA	HL,IX+-22
+	ADD	HL,BC
+	LD	(HL),0
+	LD	BC,(IX+-3)
+	INC	BC
+	LD	(IX+-3),BC
+L_159:
+	LD	BC,16
+	LD	HL,(IX+-3)
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_157
+	LD	BC,0
+	LD	(IX+-3),BC
+	JR	L_163
+L_161:
+	LD	BC,(IX+-3)
+	LD	HL,IX
+	LD	DE,-311
+	ADD	HL,DE
+	ADD	HL,BC
+	LD	(HL),0
+	LD	BC,(IX+-3)
+	INC	BC
+	LD	(IX+-3),BC
+L_163:
+	LD	BC,129
+	LD	HL,(IX+-3)
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_161
+	LD	HL,IX
+	LD	BC,-440
+	ADD	HL,BC
+	LD	BC,HL
+	PUSH	BC
+	CALL	_os_PutStrFull
+	POP	BC
+	LD	BC,0
+	LD	(IX+-3),BC
+	JR	L_168
+L_166:
+	LD	BC,(IX+-3)
+	LD	HL,IX
+	LD	DE,-440
+	ADD	HL,DE
+	ADD	HL,BC
+	LD	(HL),0
+	LD	BC,(IX+-3)
+	INC	BC
+	LD	(IX+-3),BC
+L_168:
+	LD	BC,129
+	LD	HL,(IX+-3)
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_166
+L_170:
+	CALL	_os_GetCSC
+	OR	A,A
+	JR	Z,L_170
+L_217:
+	LD	A,(IX+-22)
+	UEXT	HL
+	LD	L,A
+	OR	A,A
+	LD	BC,104
+	SBC	HL,BC
+	JR	Z,L_216
+	LD	A,(IX+-22)
+	UEXT	HL
+	LD	L,A
+	OR	A,A
+	LD	BC,72
+	SBC	HL,BC
+	JR	NZ,L_218
+L_216:
+	LD	BC,64
+	PUSH	BC
+	PEA	IX+-86
+	LD	HL,IX
+	LD	BC,-570
+	ADD	HL,BC
+	LD	BC,HL
+	PUSH	BC
+	CALL	_from_hex
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	BC,0
+	LD	(IX+-6),BC
+	JR	L_189
+L_187:
+	LD	BC,0
+	LD	(IX+-3),BC
+	JR	L_177
+L_175:
+	LD	HL,IX
+	LD	BC,-182
+	ADD	HL,BC
+	LD	BC,(IX+-3)
+	ADD	HL,BC
+	LD	IY,HL
+	LEA	HL,IX+-86
+	LD	BC,(IX+-3)
+	ADD	HL,BC
+	LD	A,(HL)
+	LD	B,(IX+-6)
+	XOR	A,B
+	LD	B,A
+	LD	A,(IY)
+	XOR	A,B
+	LD	HL,IX
+	LD	BC,-182
+	ADD	HL,BC
+	LD	BC,(IX+-3)
+	ADD	HL,BC
+	LD	(HL),A
+	LD	BC,(IX+-3)
+	INC	BC
+	LD	(IX+-3),BC
+L_177:
+	LD	BC,96
+	LD	HL,(IX+-3)
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_175
+	LD	HL,IX
+	LD	BC,-182
+	ADD	HL,BC
+	LD	BC,HL
+	PUSH	BC
+	PEA	IX+-86
+	CALL	_encrypt
+	POP	BC
+	POP	BC
+	LD	BC,0
+	LD	(IX+-3),BC
+	JR	L_181
+L_179:
+	LD	HL,IX
+	LD	BC,-182
+	ADD	HL,BC
+	LD	BC,(IX+-3)
+	ADD	HL,BC
+	LD	B,(IX+-3)
+	LD	A,(IX+-6)
+	XOR	A,B
+	LD	B,A
+	LD	A,(HL)
+	XOR	A,B
+	LD	HL,IX
+	LD	BC,-182
+	ADD	HL,BC
+	LD	BC,(IX+-3)
+	ADD	HL,BC
+	LD	(HL),A
+	LD	BC,(IX+-3)
+	INC	BC
+	LD	(IX+-3),BC
+L_181:
+	LD	BC,96
+	LD	HL,(IX+-3)
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_179
+	LD	HL,IX
+	LD	BC,-182
+	ADD	HL,BC
+	LD	BC,HL
+	PUSH	BC
+	PEA	IX+-86
+	CALL	_decrypt
+	POP	BC
+	POP	BC
+	LD	BC,0
+	LD	(IX+-3),BC
+	JR	L_185
+L_183:
+	LD	BC,(IX+-3)
+	LEA	HL,IX+-86
+	ADD	HL,BC
+	LD	A,(HL)
+	UEXT	HL
+	LD	L,A
+	LD	BC,(IX+-6)
+	CALL	__ixor
+	LD	BC,(IX+-3)
+	CALL	__ixor
+	LD	BC,_sbox_enc
+	ADD	HL,BC
+	LD	IY,HL
+	LD	HL,IX
+	LD	BC,-182
+	ADD	HL,BC
+	LD	BC,(IX+-3)
+	ADD	HL,BC
+	LD	A,(IY)
+	XOR	A,(HL)
+	LD	HL,IX
+	LD	BC,-182
+	ADD	HL,BC
+	LD	BC,(IX+-3)
+	ADD	HL,BC
+	LD	(HL),A
+	LD	BC,(IX+-3)
+	INC	BC
+	LD	(IX+-3),BC
+L_185:
+	LD	BC,96
+	LD	HL,(IX+-3)
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_183
+	LD	HL,IX
+	LD	BC,-182
+	ADD	HL,BC
+	LD	BC,HL
+	PUSH	BC
+	PEA	IX+-86
+	CALL	_encrypt
+	POP	BC
+	POP	BC
+	LD	BC,(IX+-6)
+	INC	BC
+	LD	(IX+-6),BC
+L_189:
+	LD	BC,16
+	LD	HL,(IX+-6)
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_187
+	LD	BC,64
+	PUSH	BC
+	LD	HL,IX
+	LD	BC,-311
+	ADD	HL,BC
+	LD	BC,HL
+	PUSH	BC
+	PEA	IX+-86
+	CALL	_to_hex
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	HL,IX
+	LD	BC,-311
+	ADD	HL,BC
+	LD	BC,HL
+	PUSH	BC
+	LD	BC,L__79
+	PUSH	BC
+	LD	HL,IX
+	LD	BC,-440
+	ADD	HL,BC
+	LD	BC,HL
+	PUSH	BC
+	CALL	_sprintf
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	BC,_asm_ClrLCD
+	PUSH	BC
+	CALL	__OS
+	POP	BC
+	LD	BC,_asm_HomeUp
+	PUSH	BC
+	CALL	__OS
+	POP	BC
+	LD	BC,_asm_DrawStatusBar
+	PUSH	BC
+	CALL	__OS
+	POP	BC
+	LD	BC,0
+	LD	(IX+-3),BC
+	JR	L_195
+L_193:
+	LD	BC,(IX+-3)
+	LD	HL,IX
+	LD	DE,-182
+	ADD	HL,DE
+	ADD	HL,BC
+	LD	(HL),0
+	LD	BC,(IX+-3)
+	INC	BC
+	LD	(IX+-3),BC
+L_195:
+	LD	BC,96
+	LD	HL,(IX+-3)
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_193
+	LD	BC,0
+	LD	(IX+-3),BC
+	JR	L_199
+L_197:
+	LD	BC,(IX+-3)
+	LEA	HL,IX+-86
+	ADD	HL,BC
+	LD	(HL),0
+	LD	BC,(IX+-3)
+	INC	BC
+	LD	(IX+-3),BC
+L_199:
+	LD	BC,64
+	LD	HL,(IX+-3)
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_197
+	LD	BC,0
+	LD	(IX+-3),BC
+	JR	L_203
+L_201:
+	LD	BC,(IX+-3)
+	LEA	HL,IX+-22
+	ADD	HL,BC
+	LD	(HL),0
+	LD	BC,(IX+-3)
+	INC	BC
+	LD	(IX+-3),BC
+L_203:
+	LD	BC,16
+	LD	HL,(IX+-3)
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_201
+	LD	BC,0
+	LD	(IX+-3),BC
+	JR	L_207
+L_205:
+	LD	BC,(IX+-3)
+	LD	HL,IX
+	LD	DE,-311
+	ADD	HL,DE
+	ADD	HL,BC
+	LD	(HL),0
+	LD	BC,(IX+-3)
+	INC	BC
+	LD	(IX+-3),BC
+L_207:
+	LD	BC,129
+	LD	HL,(IX+-3)
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_205
+	LD	HL,IX
+	LD	BC,-440
+	ADD	HL,BC
+	LD	BC,HL
+	PUSH	BC
+	CALL	_os_PutStrFull
+	POP	BC
+	LD	BC,0
+	LD	(IX+-3),BC
+	JR	L_212
+L_210:
+	LD	BC,(IX+-3)
+	LD	HL,IX
+	LD	DE,-440
+	ADD	HL,DE
+	ADD	HL,BC
+	LD	(HL),0
+	LD	BC,(IX+-3)
+	INC	BC
+	LD	(IX+-3),BC
+L_212:
+	LD	BC,129
+	LD	HL,(IX+-3)
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_210
+L_214:
+	CALL	_os_GetCSC
+	OR	A,A
+	JR	Z,L_214
+L_218:
+	LD	BC,_asm_ClrLCD
+	PUSH	BC
+	CALL	__OS
+	POP	BC
+	LD	BC,_asm_HomeUp
+	PUSH	BC
+	CALL	__OS
+	POP	BC
+	LD	BC,_asm_DrawStatusBar
+	PUSH	BC
+	CALL	__OS
+	POP	BC
+	LD	BC,16
+	PUSH	BC
+	PEA	IX+-22
+	LD	BC,L__86
+	PUSH	BC
+	CALL	_os_GetStringInput
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	A,(IX+-22)
+	UEXT	HL
+	LD	L,A
+	OR	A,A
+	LD	BC,121
+	SBC	HL,BC
+	JR	Z,L_228
+	LD	A,(IX+-22)
+	UEXT	HL
+	LD	L,A
+	OR	A,A
+	LD	BC,89
+	SBC	HL,BC
+	JR	Z,L_228
+	LD	BC,0
+	LD	(IX+-3),BC
+	JR	L_225
+L_223:
+	LD	BC,(IX+-3)
+	LEA	HL,IX+-22
+	ADD	HL,BC
+	LD	(HL),0
+	LD	BC,(IX+-3)
+	INC	BC
+	LD	(IX+-3),BC
+L_225:
+	LD	BC,16
+	LD	HL,(IX+-3)
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_223
+	OR	A,A
+	SBC	HL,HL
+;    1	#include "psec-crypt.h"
+	LD	SP,IX
+	POP	IX
+	RET	
+
+
+;**************************** _main ***************************
+;Name                         Addr/Register   Size   Type
+;_sbox_enc                           STATIC    256   variable
+;_sprintf                            IMPORT  -----   function
+;_os_GetStringInput                  IMPORT  -----   function
+;_os_GetCSC                          IMPORT  -----   function
+;_os_PutStrFull                      IMPORT  -----   function
+;_asm_DrawStatusBar                  IMPORT  -----   function
+;_asm_HomeUp                         IMPORT  -----   function
+;_asm_ClrLCD                         IMPORT  -----   function
+;__OS                                IMPORT  -----   function
+;key_in                              IX-764    194   variable
+;msg_in                              IX-570    130   variable
+;response                            IX-440    129   variable
+;hex                                 IX-311    129   variable
+;key                                 IX-182     96   variable
+;msg                                  IX-86     64   variable
+;choice                               IX-22     16   variable
+;b                                     IX-6      3   variable
+;a                                     IX-3      3   variable
+
+
+; Stack Frame Size: 770 (bytes)
+;       Spill Code: -1 (instruction)
+
+
+	SEGMENT STRSECT
+L__36:
+	DB	"PARSEC Encryption         "
+	DB	0
+L__37:
+	DB	"--------------------------"
+	DB	0
+L__38:
+	DB	"64-byte (512 bit) block   "
+	DB	0
+L__39:
+	DB	"96-byte (768 bit) key     "
+	DB	0
+L__40:
+	DB	"32 rounds                "
+	DB	0
+L__41:
+	DB	"                          "
+	DB	0
+L__44:
+	DB	"Msg:"
+	DB	0
+L__46:
+	DB	"Key:"
+	DB	0
+L__47:
+	DB	"E = Encrypt               "
+	DB	0
+L__48:
+	DB	"D = Decrypt               "
+	DB	0
+L__49:
+	DB	"H = Hash                  "
+	DB	0
+L__51:
+	DB	"Mode (E/D/H):"
+	DB	0
+L__52:
+	DB	"Working..."
+	DB	0
+L__56:
+	DB	"%s"
+	DB	0
+L__66:
+	DB	"%s"
+	DB	0
+L__79:
+	DB	"%s"
+	DB	0
+L__86:
+	DB	"Another? (y/N):"
+	DB	0
+	XREF _sprintf:ROM
+	XREF _asm_DrawStatusBar:ROM
+	XREF _asm_ClrLCD:ROM
+	XREF _asm_HomeUp:ROM
+	XREF __OS:ROM
+	XREF _os_GetCSC:ROM
+	XREF _os_GetStringInput:ROM
+	XREF _os_PutStrFull:ROM
+	XREF __idivs:ROM
+	XREF __iand:ROM
+	XREF __irems:ROM
+	XREF __iremu:ROM
+	XREF __ixor:ROM
+	XREF __frameset0:ROM
+	XREF __frameset:ROM
+	XDEF _main
+	XDEF _nop
+	XDEF _hash_key
+	XDEF _from_hex
+	XDEF _to_hex
+	XDEF _hex_to_int
+	XDEF _decrypt
+	XDEF _encrypt
+	XDEF _expand_key
+	XDEF _dec
+	XDEF _enc
+	XDEF _round_dec
+	XDEF _round_enc
+	XDEF _round_dec_per
+	XDEF _round_enc_per
+	XDEF _round_dec_sub
+	XDEF _round_enc_sub
+	XDEF _pbox_dec
+	XDEF _pbox_enc
+	XDEF _sbox_dec
+	XDEF _sbox_enc
+	XDEF _hex_enc
+	END

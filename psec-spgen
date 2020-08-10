@@ -1,0 +1,91 @@
+#!/usr/bin/env python3
+
+import sys, secrets
+box_len = 256
+if len(sys.argv) > 1:
+	box_len = int(sys.argv[1])
+
+s_print = print
+def nop(*args1, **args2):
+	pass
+if "+quiet" in sys.argv[1:] or "+q" in sys.argv[1:]:
+	print = nop
+	input = nop
+print("Box length: %s\n" %(box_len))
+all_bytes = list(range(box_len))
+
+def follow(sbox, byte):
+	path = []
+#	current_byte = None
+	index = byte
+	while index not in path:
+		path += [index]
+#		current_byte = sbox[index]
+		index = sbox[index]
+#		path += [index]
+#	path += [index]
+	if index != byte:
+		return None
+	return len(path)
+
+def paths(sbox):
+	all_paths = []
+	for a in sbox:
+#		print(a)
+		x = follow(sbox, a)
+		if x == None:
+			x = box_len
+		all_paths += [[x, a]]
+	return all_paths
+def shortest(sbox):
+	p = paths(sbox)
+	shortest = sorted(p, key=lambda x: x[0])
+	return shortest
+
+#sbox_size = 256
+sbox = []
+
+bytes = all_bytes[:]
+while len(bytes) > 0:
+	bl = len(bytes) - 1
+	x = secrets.randbelow(len(bytes))
+	byte = bytes[x]
+	sbox += [byte]
+	del bytes[x]
+
+#print("sub(%s)" %(sbox))
+s = shortest(sbox)
+#print(s)
+while s[0][0] != box_len:
+#	print(s)
+	a = s[0][1]
+	b = secrets.randbelow(len(sbox))
+	c = sbox[a]
+	d = sbox[b]
+	sbox[a] = d
+	sbox[b] = c
+	s = shortest(sbox)
+#print()
+#print(s)
+#print(shortest(sbox))
+#print()
+s_print(sbox)
+input()
+#print(sbox[0], end="")
+#input()
+for a in sbox:
+#	print(", ", end="")
+	print(a, end="")
+	input()
+#	print(", ", end="")
+o_sbox = sbox[:]
+if "+inv" in sys.argv[1:] or "+invert" in sys.argv[1:]:
+#	o_sbox = sbox[:]
+	for a in range(len(sbox)):
+		sbox[o_sbox[a]] = a
+	s_print(sbox)
+	input()
+	for a in sbox:
+		print(a, end="")
+		input()
+#s_print(paths(o_sbox))
