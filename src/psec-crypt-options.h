@@ -1,8 +1,8 @@
 #ifndef PSEC_CRYPT_OPTIONS_H
 #define PSEC_CRYPT_OPTIONS_H
 
-#define BLK_SIZE_BITS 6 // Block size = 2^6 =  64 bytes =  512 bits, Yes I know the notation is weird
-#define KEY_SIZE_BITS 7 // Key   size = 2^7 = 128 bytes = 1024 bits, Yes I know the notation is weird
+#define BLK_SIZE_BITS 4 // Block size = 2^4 =  16 bytes =  128 bits, Yes I know the notation is weird
+#define KEY_SIZE_BITS 5 // Key   size = 2^5 =  32 bytes =  256 bits, Yes I know the notation is weird
 #define ROUNDS    32    // 32 rounds, to be extra secure
 
 #define ENCRYPT		// build ENCRYPTion code
