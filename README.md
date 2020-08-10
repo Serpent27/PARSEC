@@ -48,3 +48,6 @@ I bundled the script with this repo. Simply run `python3 ./parsec-spgen [box siz
 An S-box should be generated with the size 256, using the command `python3 ./parsec-spgen 256 +q +inv`. It's important to note the size is in bytes, not bits. As such, a 128-bit block cipher would use the box generated from `python3 ./parsec-spgen 16 +q +inv` because `16 bytes = 128 bits`.
 
 
+## Building and running:
+To build, simply run `gcc src/main.c -o [output]`. If you want to use compiler optimizations, run `gcc src/main.c -o [output] -O3`.
+I have already built the file `./lxtest` which should run fine on most Linux systems.
