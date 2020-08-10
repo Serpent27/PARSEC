@@ -11,7 +11,13 @@ PARSEC is an encryption algorithm I made because I was bored. The algorithm is b
 
 This algorithm was originally intended to run on a TI-84+CE calculator, but the calculator build broke from one of the optimizations I made to reduce the risk of timing attacks.
 
-Design:
+***Update:*** It turns out the issue was the `0bX` notation of binary data. As such, I converted instances from binary to hex notation. Apparently the TI-84+CE compiler doesn't support certain notations for integer data (which doesn't surprise me).
+
+For users intending on cross-compatibility between the TI-84+CE and other systems, it should be noted that the Linux build adds a newline to the input, whether you like it or not. Since the TI-84+CE doesn't do the same, your key will always be different between the 2 platforms, preventing cross-compatibility. It should be simple enough to fix this, but I don't feel like fixing it, so you'll have to do it yourself if you really want to.
+
+The TI-84+CE version only uses 128-bit blocks and 256-bit keys. Why? Because it's a calculator and runs out of memory with my ridiculously overkill block and key sizes. You can go larger with the sizes before it breaks on the calculator, but we're not gonna be hiding messages from the Galactic Federation on our TI-84s, now are we?
+
+**Design:**
 
 - The S-box and P-box are generated randomly by a script I wrote, using /dev/urandom to decide the boxes.
     - I did this to limit the possibility of the boxes preserving patterns. Also, because I'm lazy (mostly the latter).
@@ -43,9 +49,10 @@ That said, I don't do *not too bad* so I made my key cycle random, dumb, and mor
 
 ## Potantial changes:
 
-Really just one thing:
+Really just two things:
 
 - Increase the number of rounds. 32 rounds provides full diffusion 3 times, but I'm still not convinced. I'd like to see this algorithm run with 96 rounds (although I could be persuaded to reduce the number). I really only set it to 32 because anything more gets hella slow and runs my calculator out of RAM. Besides, I'd like this algorithm to be actually practical enough to *pretend* it's a real encryption algorithm, if I possibly can.
+- Fix all the damn typos in my documentation... but I won't because I don't actually care.
 
 ## Can I generate my own boxes?
 ***Yes!***

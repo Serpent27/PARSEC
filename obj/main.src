@@ -537,135 +537,39 @@ _sbox_dec:
 	DB	232
 	DB	193
 _pbox_enc:
-	DB	17
-	DB	23
-	DB	21
-	DB	16
-	DB	15
-	DB	18
-	DB	59
-	DB	52
-	DB	27
-	DB	57
-	DB	25
-	DB	8
-	DB	51
-	DB	47
-	DB	36
-	DB	56
-	DB	42
-	DB	6
-	DB	20
-	DB	44
-	DB	2
-	DB	19
-	DB	37
-	DB	61
-	DB	35
-	DB	32
-	DB	63
-	DB	34
-	DB	31
-	DB	10
-	DB	9
-	DB	24
-	DB	46
-	DB	45
-	DB	41
-	DB	40
 	DB	4
-	DB	28
-	DB	55
-	DB	49
-	DB	11
-	DB	29
-	DB	12
-	DB	53
-	DB	50
-	DB	26
-	DB	5
-	DB	33
-	DB	38
-	DB	58
-	DB	54
-	DB	39
-	DB	14
-	DB	48
 	DB	7
-	DB	22
-	DB	3
-	DB	43
+	DB	15
+	DB	6
+	DB	14
+	DB	8
+	DB	2
 	DB	0
-	DB	62
-	DB	30
-	DB	13
+	DB	12
 	DB	1
-	DB	60
+	DB	11
+	DB	3
+	DB	10
+	DB	5
+	DB	13
+	DB	9
 _pbox_dec:
-	DB	58
-	DB	62
-	DB	20
-	DB	56
-	DB	36
-	DB	46
-	DB	17
-	DB	54
-	DB	11
-	DB	30
-	DB	29
-	DB	40
-	DB	42
-	DB	61
-	DB	52
-	DB	4
-	DB	3
-	DB	0
-	DB	5
-	DB	21
-	DB	18
-	DB	2
-	DB	55
-	DB	1
-	DB	31
-	DB	10
-	DB	45
-	DB	8
-	DB	37
-	DB	41
-	DB	60
-	DB	28
-	DB	25
-	DB	47
-	DB	27
-	DB	24
-	DB	14
-	DB	22
-	DB	48
-	DB	51
-	DB	35
-	DB	34
-	DB	16
-	DB	57
-	DB	19
-	DB	33
-	DB	32
-	DB	13
-	DB	53
-	DB	39
-	DB	44
-	DB	12
 	DB	7
-	DB	43
-	DB	50
-	DB	38
-	DB	15
 	DB	9
-	DB	49
 	DB	6
-	DB	63
-	DB	23
-	DB	59
-	DB	26
+	DB	11
+	DB	0
+	DB	13
+	DB	3
+	DB	1
+	DB	5
+	DB	15
+	DB	12
+	DB	10
+	DB	8
+	DB	14
+	DB	4
+	DB	2
 	SEGMENT CODE
 _round_enc_sub:
 	LD	HL,-6
@@ -707,7 +611,7 @@ L_0:
 	INC	BC
 	LD	(IX+-3),BC
 L_2:
-	LD	BC,64
+	LD	BC,16
 	LD	HL,(IX+-3)
 	OR	A,A
 	SBC	HL,BC
@@ -769,7 +673,7 @@ L_4:
 	INC	BC
 	LD	(IX+-3),BC
 L_6:
-	LD	BC,64
+	LD	BC,16
 	LD	HL,(IX+-3)
 	OR	A,A
 	SBC	HL,BC
@@ -791,14 +695,9 @@ L_6:
 ;       Spill Code: 0 (instruction)
 
 
-_round_enc_per:
-	LD	HL,-24
+_round_mix:
+	LD	HL,-10
 	CALL	__frameset
-	LD	HL,(IX+9)
-	LD	A,(HL)
-	UEXT	HL
-	LD	L,A
-	LD	(IX+-6),HL
 	LD	BC,0
 	LD	(IX+-3),BC
 	JR	L_10
@@ -810,14 +709,14 @@ L_8:
 	LD	HL,(IX+12)
 	LD	BC,(IX+-3)
 	ADD	HL,BC
-	LD	(IX+-24),HL
+	LD	(IX+-10),HL
 	LD	A,(IY)
 	LD	(HL),A
 	LD	BC,(IX+-3)
 	INC	BC
 	LD	(IX+-3),BC
 L_10:
-	LD	BC,64
+	LD	BC,16
 	LD	HL,(IX+-3)
 	OR	A,A
 	SBC	HL,BC
@@ -826,37 +725,63 @@ L_10:
 	LD	(IX+-3),BC
 	JR	L_13
 L_11:
-	LD	DE,(IX+-3)
-	LD	(IX+-18),DE	; spill
-	LD	HL,(IX+12)
-	LD	BC,(IX+-6)
-	LD	DE,(IX+6)
-	LD	(IX+-12),DE	; spill
-	LD	DE,(IX+-18)	; unspill
-	ADD	HL,DE
-	LD	IY,HL
-	LD	HL,(IX+-3)
-	LD	DE,_pbox_enc
-	ADD	HL,DE
-	LD	(IX+-21),HL
-	LD	A,(HL)
-	UEXT	HL
-	LD	L,A
-	CALL	__ixor
-	LD	A,L
-	AND	A,63
-	UEXT	HL
-	LD	L,A
-	LD	A,(IY)
-	LD	DE,(IX+-12)	; unspill
-	ADD	HL,DE
-	LD	IY,HL
-	LD	(HL),A
 	LD	BC,(IX+-3)
-	INC	BC
-	LD	(IX+-3),BC
+	LD	HL,(IX+6)
+	ADD	HL,BC
+	LD	IY,HL
+	LD	A,(HL)
+	LD	(IX+-4),A
+	LD	HL,(IX+-3)
+	INC	HL
+	LD	A,L
+	AND	A,15
+	UEXT	HL
+	LD	L,A
+	LD	BC,(IX+6)
+	ADD	HL,BC
+	LD	IY,HL
+	LD	A,(HL)
+	LD	(IX+-5),A
+	LD	A,(IX+-4)
+	AND	A,170
+	LD	C,A
+	LD	A,(IX+-5)
+	AND	A,85
+	LD	B,A
+	LD	A,C
+	OR	A,B
+	LD	(IX+-6),A
+	LD	A,(IX+-5)
+	AND	A,170
+	LD	C,A
+	LD	A,(IX+-4)
+	AND	A,85
+	LD	B,A
+	LD	A,C
+	OR	A,B
+	LD	(IX+-7),A
+	LD	BC,(IX+-3)
+	LD	HL,(IX+6)
+	ADD	HL,BC
+	LD	IY,HL
+	LD	A,(IX+-6)
+	LD	(HL),A
+	LD	HL,(IX+-3)
+	INC	HL
+	LD	A,L
+	AND	A,15
+	UEXT	HL
+	LD	L,A
+	LD	BC,(IX+6)
+	ADD	HL,BC
+	LD	IY,HL
+	LD	A,(IX+-7)
+	LD	(HL),A
+	LD	IY,(IX+-3)
+	LEA	IY,IY+2
+	LD	(IX+-3),IY
 L_13:
-	LD	BC,64
+	LD	BC,16
 	LD	HL,(IX+-3)
 	OR	A,A
 	SBC	HL,BC
@@ -866,28 +791,29 @@ L_13:
 	RET	
 
 
-;**************************** _round_enc_per ***************************
+;**************************** _round_mix ***************************
 ;Name                         Addr/Register   Size   Type
-;_pbox_enc                           STATIC     64   variable
-;b                                     IX-6      3   variable
+;e                                     IX-7      1   variable
+;d                                     IX-6      1   variable
+;c                                     IX-5      1   variable
+;b                                     IX-4      1   variable
 ;a                                     IX-3      3   variable
 ;tmp                                  IX+12      3   parameter
 ;key                                   IX+9      3   parameter
 ;msg                                   IX+6      3   parameter
 
 
-; Stack Frame Size: 39 (bytes)
+; Stack Frame Size: 25 (bytes)
 ;       Spill Code: 0 (instruction)
 
 
-_round_dec_per:
-	LD	HL,-12
+_round_enc_per:
+	LD	HL,-13
 	CALL	__frameset
 	LD	HL,(IX+9)
 	LD	A,(HL)
-	UEXT	HL
-	LD	L,A
-	LD	(IX+-6),HL
+	AND	A,15
+	LD	(IX+-4),A
 	LD	BC,0
 	LD	(IX+-3),BC
 	JR	L_18
@@ -899,14 +825,14 @@ L_16:
 	LD	HL,(IX+12)
 	LD	BC,(IX+-3)
 	ADD	HL,BC
-	LD	(IX+-12),HL
+	LD	(IX+-13),HL
 	LD	A,(IY)
 	LD	(HL),A
 	LD	BC,(IX+-3)
 	INC	BC
 	LD	(IX+-3),BC
 L_18:
-	LD	BC,64
+	LD	BC,16
 	LD	HL,(IX+-3)
 	OR	A,A
 	SBC	HL,BC
@@ -917,31 +843,30 @@ L_18:
 L_19:
 	LD	BC,(IX+-3)
 	LD	HL,(IX+12)
+	LD	A,(IX+-4)
+	LD	DE,(IX+6)
 	ADD	HL,BC
 	LD	IY,HL
-	LD	HL,(IX+-3)
-	LD	BC,(IX+-6)
-	CALL	__ixor
-	LD	A,L
-	AND	A,63
 	UEXT	HL
 	LD	L,A
-	LD	BC,_pbox_dec
+	LD	BC,HL
+	LD	HL,(IX+-3)
+	CALL	__ixor
+	LD	BC,_pbox_enc
 	ADD	HL,BC
-	LD	(IX+-9),HL
-	LD	BC,(IX+6)
+	LD	(IX+-7),HL
 	LD	A,(HL)
 	UEXT	HL
 	LD	L,A
+	ADD	HL,DE
+	LD	(IX+-10),HL
 	LD	A,(IY)
-	ADD	HL,BC
-	LD	IY,HL
 	LD	(HL),A
 	LD	BC,(IX+-3)
 	INC	BC
 	LD	(IX+-3),BC
 L_21:
-	LD	BC,64
+	LD	BC,16
 	LD	HL,(IX+-3)
 	OR	A,A
 	SBC	HL,BC
@@ -951,17 +876,104 @@ L_21:
 	RET	
 
 
-;**************************** _round_dec_per ***************************
+;**************************** _round_enc_per ***************************
 ;Name                         Addr/Register   Size   Type
-;_pbox_dec                           STATIC     64   variable
-;b                                     IX-6      3   variable
+;_pbox_enc                           STATIC     16   variable
+;b                                     IX-4      1   variable
 ;a                                     IX-3      3   variable
 ;tmp                                  IX+12      3   parameter
 ;key                                   IX+9      3   parameter
 ;msg                                   IX+6      3   parameter
 
 
-; Stack Frame Size: 27 (bytes)
+; Stack Frame Size: 28 (bytes)
+;       Spill Code: 0 (instruction)
+
+
+_round_dec_per:
+	LD	HL,-16
+	CALL	__frameset
+	LD	HL,(IX+9)
+	LD	A,(HL)
+	AND	A,15
+	LD	(IX+-4),A
+	LD	BC,0
+	LD	(IX+-3),BC
+	JR	L_26
+L_24:
+	LD	BC,(IX+-3)
+	LD	HL,(IX+6)
+	ADD	HL,BC
+	LD	IY,HL
+	LD	HL,(IX+12)
+	LD	BC,(IX+-3)
+	ADD	HL,BC
+	LD	(IX+-16),HL
+	LD	A,(IY)
+	LD	(HL),A
+	LD	BC,(IX+-3)
+	INC	BC
+	LD	(IX+-3),BC
+L_26:
+	LD	BC,16
+	LD	HL,(IX+-3)
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_24
+	LD	BC,0
+	LD	(IX+-3),BC
+	JR	L_29
+L_27:
+	LD	DE,(IX+-3)
+	LD	HL,(IX+12)
+	LD	BC,(IX+6)
+	LD	(IX+-10),BC	; spill
+	ADD	HL,DE
+	LD	IY,HL
+	LD	HL,(IX+-3)
+	LD	BC,_pbox_dec
+	ADD	HL,BC
+	LD	(IX+-13),HL
+	LD	A,(HL)
+	UEXT	HL
+	LD	L,A
+	LD	DE,HL
+	LD	A,(IX+-4)
+	UEXT	HL
+	LD	L,A
+	LD	A,(IY)
+	LD	BC,HL
+	LD	HL,DE
+	CALL	__ixor
+	LD	BC,(IX+-10)	; unspill
+	ADD	HL,BC
+	LD	IY,HL
+	LD	(HL),A
+	LD	BC,(IX+-3)
+	INC	BC
+	LD	(IX+-3),BC
+L_29:
+	LD	BC,16
+	LD	HL,(IX+-3)
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_27
+	LD	SP,IX
+	POP	IX
+	RET	
+
+
+;**************************** _round_dec_per ***************************
+;Name                         Addr/Register   Size   Type
+;_pbox_dec                           STATIC     16   variable
+;b                                     IX-4      1   variable
+;a                                     IX-3      3   variable
+;tmp                                  IX+12      3   parameter
+;key                                   IX+9      3   parameter
+;msg                                   IX+6      3   parameter
+
+
+; Stack Frame Size: 31 (bytes)
 ;       Spill Code: 0 (instruction)
 
 
@@ -984,6 +996,16 @@ _round_enc:
 	POP	BC
 	POP	BC
 	POP	BC
+	LD	BC,(IX+12)
+	PUSH	BC
+	LD	BC,(IX+9)
+	PUSH	BC
+	LD	BC,(IX+6)
+	PUSH	BC
+	CALL	_round_mix
+	POP	BC
+	POP	BC
+	POP	BC
 	LD	SP,IX
 	POP	IX
 	RET	
@@ -1002,6 +1024,16 @@ _round_enc:
 
 _round_dec:
 	CALL	__frameset0
+	LD	BC,(IX+12)
+	PUSH	BC
+	LD	BC,(IX+9)
+	PUSH	BC
+	LD	BC,(IX+6)
+	PUSH	BC
+	CALL	_round_mix
+	POP	BC
+	POP	BC
+	POP	BC
 	LD	BC,(IX+12)
 	PUSH	BC
 	LD	BC,(IX+9)
@@ -1040,13 +1072,11 @@ _enc:
 	CALL	__frameset
 	LD	BC,0
 	LD	(IX+-3),BC
-	JR	L_28
-L_26:
+	JR	L_36
+L_34:
 	LD	BC,(IX+12)
 	PUSH	BC
 	LD	HL,(IX+-3)
-	ADD	HL,HL
-	ADD	HL,HL
 	ADD	HL,HL
 	ADD	HL,HL
 	ADD	HL,HL
@@ -1063,12 +1093,12 @@ L_26:
 	LD	BC,(IX+-3)
 	INC	BC
 	LD	(IX+-3),BC
-L_28:
+L_36:
 	LD	BC,32
 	LD	HL,(IX+-3)
 	OR	A,A
 	SBC	HL,BC
-	JR	C,L_26
+	JR	C,L_34
 	LD	SP,IX
 	POP	IX
 	RET	
@@ -1091,14 +1121,12 @@ _dec:
 	CALL	__frameset
 	LD	BC,32
 	LD	(IX+-3),BC
-	JR	L_32
-L_30:
+	JR	L_40
+L_38:
 	LD	BC,(IX+12)
 	PUSH	BC
 	LD	IY,(IX+-3)
 	LEA	HL,IY+-1
-	ADD	HL,HL
-	ADD	HL,HL
 	ADD	HL,HL
 	ADD	HL,HL
 	ADD	HL,HL
@@ -1115,13 +1143,13 @@ L_30:
 	LD	IY,(IX+-3)
 	LEA	IY,IY+-1
 	LD	(IX+-3),IY
-L_32:
+L_40:
 	LD	BC,(IX+-3)
 	OR	A,A
 	SBC	HL,HL
 	OR	A,A
 	SBC	HL,BC
-	JR	C,L_30
+	JR	C,L_38
 	LD	SP,IX
 	POP	IX
 	RET	
@@ -1140,12 +1168,12 @@ L_32:
 
 
 _expand_key:
-	LD	HL,-42
+	LD	HL,-45
 	CALL	__frameset
 	LD	BC,0
 	LD	(IX+-3),BC
-	JR	L_36
-L_34:
+	JR	L_44
+L_42:
 	LD	BC,(IX+-3)
 	LD	HL,(IX+9)
 	ADD	HL,BC
@@ -1155,45 +1183,44 @@ L_34:
 	LD	BC,(IX+-3)
 	INC	BC
 	LD	(IX+-3),BC
-L_36:
-	LD	BC,2048
+L_44:
+	LD	BC,512
 	LD	HL,(IX+-3)
 	OR	A,A
 	SBC	HL,BC
-	JR	C,L_34
+	JR	C,L_42
 	LD	BC,0
 	LD	(IX+-3),BC
-	JR	L_42
-L_40:
+	JR	L_50
+L_48:
 	LD	BC,0
 	LD	(IX+-6),BC
-	JR	L_39
-L_37:
+	JR	L_47
+L_45:
 	LD	HL,(IX+-3)
-	LD	BC,(IX+-3)
-	LD	DE,(IX+9)
-	LD	(IX+-9),BC	; spill
-	LD	BC,(IX+6)
-	LD	(IX+-12),BC	; spill
-	LD	BC,(IX+-9)	; unspill
-	LD	(IX+-9),BC	; spill
-	LD	BC,(IX+9)
-	LD	(IX+-15),BC	; spill
-	LD	BC,(IX+-9)	; unspill
 	ADD	HL,HL
 	ADD	HL,HL
 	ADD	HL,HL
 	ADD	HL,HL
-	ADD	HL,HL
-	ADD	HL,HL
-	LD	(IX+-9),BC	; spill
-	LD	(IX+-18),HL	; spill
-	LD	BC,(IX+-9)	; unspill
+	LD	DE,HL
 	LD	HL,(IX+-6)
+	LD	BC,(IX+-3)
 	CALL	__ixor
 	LD	BC,32
 	CALL	__ixor
-	LD	BC,2047
+	LD	BC,(IX+-6)
+	LD	(IX+-9),BC	; spill
+	LD	BC,(IX+9)
+	LD	(IX+-12),BC	; spill
+	LD	BC,(IX+-9)	; unspill
+	LD	(IX+-9),BC	; spill
+	LD	BC,(IX+6)
+	LD	(IX+-15),BC	; spill
+	LD	BC,(IX+-9)	; unspill
+	LD	(IX+-9),BC	; spill
+	LD	BC,(IX+9)
+	LD	(IX+-18),BC	; spill
+	LD	BC,(IX+-9)	; unspill
 	LD	(IX+-9),BC	; spill
 	LD	BC,_sbox_enc
 	LD	(IX+-21),BC	; spill
@@ -1204,29 +1231,30 @@ L_37:
 	LD	BC,(IX+-9)	; unspill
 	LD	IY,HL
 	LD	A,(HL)
+	AND	A,15
 	UEXT	HL
 	LD	L,A
+	ADD	HL,DE
 	LD	(IX+-9),BC	; spill
-	LD	BC,(IX+-18)	; unspill
+	LD	BC,(IX+-12)	; unspill
 	ADD	HL,BC
 	LD	BC,(IX+-9)	; unspill
-	CALL	__iand
-	ADD	HL,DE
-	LD	BC,(IX+-6)
 	LD	IY,HL
 	LD	HL,(IX+-3)
 	LD	DE,_sbox_enc
 	ADD	HL,DE
-	LD	(IX+-36),HL
+	LD	(IX+-39),HL
 	LD	A,(HL)
 	UEXT	HL
 	LD	L,A
 	CALL	__ixor
-	LD	BC,96
-	CALL	__iremu
-	LD	BC,(IX+-12)	; unspill
+	LD	A,L
+	AND	A,31
+	UEXT	HL
+	LD	L,A
+	LD	BC,(IX+-15)	; unspill
 	ADD	HL,BC
-	LD	(IX+-39),HL
+	LD	(IX+-42),HL
 	LD	A,(HL)
 	UEXT	HL
 	LD	L,A
@@ -1239,7 +1267,7 @@ L_37:
 	LD	(IX+-24),DE	; spill
 	LD	DE,(IX+-27)	; unspill
 	ADD	HL,DE
-	LD	(IX+-42),HL
+	LD	(IX+-45),HL
 	LD	A,(HL)
 	UEXT	HL
 	LD	L,A
@@ -1248,7 +1276,7 @@ L_37:
 	CALL	__ixor
 	LD	BC,(IX+-6)
 	CALL	__ixor
-	LD	BC,96
+	LD	BC,32
 	CALL	__ixor
 	LD	BC,(IX+-3)
 	LD	A,(IY)
@@ -1262,8 +1290,6 @@ L_37:
 	ADD	HL,HL
 	ADD	HL,HL
 	ADD	HL,HL
-	ADD	HL,HL
-	ADD	HL,HL
 	LD	(IX+-9),BC	; spill
 	LD	(IX+-30),HL	; spill
 	LD	BC,(IX+-9)	; unspill
@@ -1271,46 +1297,39 @@ L_37:
 	CALL	__ixor
 	LD	BC,32
 	CALL	__ixor
-	LD	BC,2047
-	LD	(IX+-9),BC	; spill
-	LD	BC,_sbox_enc
 	LD	(IX+-33),BC	; spill
-	LD	BC,(IX+-9)	; unspill
-	LD	(IX+-9),BC	; spill
-	LD	BC,(IX+-33)	; unspill
+	LD	BC,_sbox_enc
+	LD	(IX+-36),BC	; spill
 	ADD	HL,BC
-	LD	BC,(IX+-9)	; unspill
 	LD	IY,HL
 	LD	A,(HL)
+	AND	A,15
 	UEXT	HL
 	LD	L,A
-	LD	(IX+-9),BC	; spill
 	LD	BC,(IX+-30)	; unspill
 	ADD	HL,BC
-	LD	BC,(IX+-9)	; unspill
-	CALL	__iand
-	LD	BC,(IX+-15)	; unspill
+	LD	BC,(IX+-18)	; unspill
 	ADD	HL,BC
 	LD	IY,HL
 	LD	(HL),D
 	LD	BC,(IX+-6)
 	INC	BC
 	LD	(IX+-6),BC
-L_39:
-	LD	BC,96
+L_47:
+	LD	BC,32
 	LD	HL,(IX+-6)
 	OR	A,A
 	SBC	HL,BC
-	JR	C,L_37
+	JR	C,L_45
 	LD	BC,(IX+-3)
 	INC	BC
 	LD	(IX+-3),BC
-L_42:
+L_50:
 	LD	BC,32
 	LD	HL,(IX+-3)
 	OR	A,A
 	SBC	HL,BC
-	JR	C,L_40
+	JR	C,L_48
 	LD	SP,IX
 	POP	IX
 	RET	
@@ -1326,15 +1345,15 @@ L_42:
 ;key                                   IX+6      3   parameter
 
 
-; Stack Frame Size: 54 (bytes)
-;       Spill Code: -1 (instruction)
+; Stack Frame Size: 57 (bytes)
+;       Spill Code: -3 (instruction)
 
 
 _encrypt:
-	LD	HL,-2118
+	LD	HL,-534
 	CALL	__frameset
 	LD	HL,IX
-	LD	BC,-2118
+	LD	BC,-534
 	ADD	HL,BC
 	LD	BC,HL
 	PUSH	BC
@@ -1343,9 +1362,9 @@ _encrypt:
 	CALL	_expand_key
 	POP	BC
 	POP	BC
-	PEA	IX+-70
+	PEA	IX+-22
 	LD	HL,IX
-	LD	BC,-2118
+	LD	BC,-534
 	ADD	HL,BC
 	LD	BC,HL
 	PUSH	BC
@@ -1357,8 +1376,8 @@ _encrypt:
 	POP	BC
 	LD	BC,0
 	LD	(IX+-3),BC
-	JR	L_47
-L_45:
+	JR	L_55
+L_53:
 	LD	BC,(IX+-3)
 	LD	HL,(IX+9)
 	ADD	HL,BC
@@ -1367,28 +1386,26 @@ L_45:
 	LD	BC,(IX+-3)
 	INC	BC
 	LD	(IX+-3),BC
-L_47:
-	LD	BC,96
+L_55:
+	LD	BC,32
 	LD	HL,(IX+-3)
 	OR	A,A
 	SBC	HL,BC
-	JR	C,L_45
+	JR	C,L_53
 	LD	BC,0
 	LD	(IX+-3),BC
-	JR	L_53
-L_51:
+	JR	L_61
+L_59:
 	LD	BC,(IX+-3)
-	LEA	HL,IX+-70
+	LEA	HL,IX+-22
 	ADD	HL,BC
 	LD	(HL),0
 	LD	BC,0
 	LD	(IX+-6),BC
-	JR	L_50
-L_48:
+	JR	L_58
+L_56:
 	LD	HL,(IX+-6)
 	LD	BC,(IX+-3)
-	ADD	HL,HL
-	ADD	HL,HL
 	ADD	HL,HL
 	ADD	HL,HL
 	ADD	HL,HL
@@ -1396,28 +1413,28 @@ L_48:
 	ADD	HL,BC
 	LD	BC,HL
 	LD	HL,IX
-	LD	DE,-2118
+	LD	DE,-534
 	ADD	HL,DE
 	ADD	HL,BC
 	LD	(HL),0
 	LD	BC,(IX+-6)
 	INC	BC
 	LD	(IX+-6),BC
-L_50:
+L_58:
 	LD	BC,32
 	LD	HL,(IX+-6)
 	OR	A,A
 	SBC	HL,BC
-	JR	C,L_48
+	JR	C,L_56
 	LD	BC,(IX+-3)
 	INC	BC
 	LD	(IX+-3),BC
-L_53:
-	LD	BC,64
+L_61:
+	LD	BC,16
 	LD	HL,(IX+-3)
 	OR	A,A
 	SBC	HL,BC
-	JR	C,L_51
+	JR	C,L_59
 	LD	SP,IX
 	POP	IX
 	RET	
@@ -1425,23 +1442,23 @@ L_53:
 
 ;**************************** _encrypt ***************************
 ;Name                         Addr/Register   Size   Type
-;exp_key                            IX-2118   2048   variable
-;tmp                                  IX-70     64   variable
+;exp_key                             IX-534    512   variable
+;tmp                                  IX-22     16   variable
 ;b                                     IX-6      3   variable
 ;a                                     IX-3      3   variable
 ;key                                   IX+9      3   parameter
 ;msg                                   IX+6      3   parameter
 
 
-; Stack Frame Size: 2130 (bytes)
-;       Spill Code: -1 (instruction)
+; Stack Frame Size: 546 (bytes)
+;       Spill Code: -3 (instruction)
 
 
 _decrypt:
-	LD	HL,-2118
+	LD	HL,-534
 	CALL	__frameset
 	LD	HL,IX
-	LD	BC,-2118
+	LD	BC,-534
 	ADD	HL,BC
 	LD	BC,HL
 	PUSH	BC
@@ -1450,9 +1467,9 @@ _decrypt:
 	CALL	_expand_key
 	POP	BC
 	POP	BC
-	PEA	IX+-70
+	PEA	IX+-22
 	LD	HL,IX
-	LD	BC,-2118
+	LD	BC,-534
 	ADD	HL,BC
 	LD	BC,HL
 	PUSH	BC
@@ -1464,8 +1481,8 @@ _decrypt:
 	POP	BC
 	LD	BC,0
 	LD	(IX+-3),BC
-	JR	L_58
-L_56:
+	JR	L_66
+L_64:
 	LD	BC,(IX+-3)
 	LD	HL,(IX+9)
 	ADD	HL,BC
@@ -1474,29 +1491,27 @@ L_56:
 	LD	BC,(IX+-3)
 	INC	BC
 	LD	(IX+-3),BC
-L_58:
-	LD	BC,96
+L_66:
+	LD	BC,32
 	LD	HL,(IX+-3)
 	OR	A,A
 	SBC	HL,BC
-	JR	C,L_56
+	JR	C,L_64
 	LD	BC,0
 	LD	(IX+-3),BC
-	JR	L_64
-L_62:
+	JR	L_72
+L_70:
 	LD	BC,(IX+-3)
-	LEA	HL,IX+-70
+	LEA	HL,IX+-22
 	ADD	HL,BC
 	LD	IY,HL
 	LD	(HL),0
 	LD	BC,0
 	LD	(IX+-6),BC
-	JR	L_61
-L_59:
+	JR	L_69
+L_67:
 	LD	HL,(IX+-6)
 	LD	BC,(IX+-3)
-	ADD	HL,HL
-	ADD	HL,HL
 	ADD	HL,HL
 	ADD	HL,HL
 	ADD	HL,HL
@@ -1504,7 +1519,7 @@ L_59:
 	ADD	HL,BC
 	LD	BC,HL
 	LD	HL,IX
-	LD	DE,-2118
+	LD	DE,-534
 	ADD	HL,DE
 	ADD	HL,BC
 	LD	IY,HL
@@ -1512,21 +1527,21 @@ L_59:
 	LD	BC,(IX+-6)
 	INC	BC
 	LD	(IX+-6),BC
-L_61:
+L_69:
 	LD	BC,32
 	LD	HL,(IX+-6)
 	OR	A,A
 	SBC	HL,BC
-	JR	C,L_59
+	JR	C,L_67
 	LD	BC,(IX+-3)
 	INC	BC
 	LD	(IX+-3),BC
-L_64:
-	LD	BC,64
+L_72:
+	LD	BC,16
 	LD	HL,(IX+-3)
 	OR	A,A
 	SBC	HL,BC
-	JR	C,L_62
+	JR	C,L_70
 	LD	SP,IX
 	POP	IX
 	RET	
@@ -1534,16 +1549,16 @@ L_64:
 
 ;**************************** _decrypt ***************************
 ;Name                         Addr/Register   Size   Type
-;exp_key                            IX-2118   2048   variable
-;tmp                                  IX-70     64   variable
+;exp_key                             IX-534    512   variable
+;tmp                                  IX-22     16   variable
 ;b                                     IX-6      3   variable
 ;a                                     IX-3      3   variable
 ;key                                   IX+9      3   parameter
 ;msg                                   IX+6      3   parameter
 
 
-; Stack Frame Size: 2130 (bytes)
-;       Spill Code: -1 (instruction)
+; Stack Frame Size: 546 (bytes)
+;       Spill Code: -3 (instruction)
 
 
 _hex_to_int:
@@ -1572,9 +1587,9 @@ _hex_to_int:
 	LD	(IX+-1),A
 	LD	A,9
 	CP	A,(IX+-1)
-	JR	NC,L_69
+	JR	NC,L_77
 	DEC	(IX+-1)
-L_69:
+L_77:
 	LD	A,(IX+-1)
 	LD	SP,IX
 	POP	IX
@@ -1590,7 +1605,7 @@ L_69:
 
 
 ; Stack Frame Size: 12 (bytes)
-;       Spill Code: -1 (instruction)
+;       Spill Code: -3 (instruction)
 
 
 _to_hex:
@@ -1598,8 +1613,8 @@ _to_hex:
 	CALL	__frameset
 	LD	BC,0
 	LD	(IX+-3),BC
-	JR	L_73
-L_71:
+	JR	L_81
+L_79:
 	LD	BC,(IX+-3)
 	LD	HL,(IX+6)
 	ADD	HL,BC
@@ -1647,12 +1662,12 @@ L_71:
 	LD	BC,(IX+-3)
 	INC	BC
 	LD	(IX+-3),BC
-L_73:
+L_81:
 	LD	BC,(IX+12)
 	LD	HL,(IX+-3)
 	OR	A,A
 	SBC	HL,BC
-	JR	C,L_71
+	JR	C,L_79
 	LD	SP,IX
 	POP	IX
 	RET	
@@ -1668,7 +1683,7 @@ L_73:
 
 
 ; Stack Frame Size: 18 (bytes)
-;       Spill Code: -1 (instruction)
+;       Spill Code: -3 (instruction)
 
 
 _from_hex:
@@ -1676,8 +1691,8 @@ _from_hex:
 	CALL	__frameset
 	LD	BC,0
 	LD	(IX+-3),BC
-	JR	L_77
-L_75:
+	JR	L_85
+L_83:
 	LD	HL,(IX+-3)
 	ADD	HL,HL
 	LD	BC,(IX+6)
@@ -1718,12 +1733,12 @@ L_75:
 	LD	BC,(IX+-3)
 	INC	BC
 	LD	(IX+-3),BC
-L_77:
+L_85:
 	LD	BC,(IX+12)
 	LD	HL,(IX+-3)
 	OR	A,A
 	SBC	HL,BC
-	JR	C,L_75
+	JR	C,L_83
 	LD	SP,IX
 	POP	IX
 	RET	
@@ -1738,7 +1753,7 @@ L_77:
 
 
 ; Stack Frame Size: 18 (bytes)
-;       Spill Code: -1 (instruction)
+;       Spill Code: -3 (instruction)
 
 
 _hash_key:
@@ -1754,11 +1769,223 @@ _hash_key:
 
 
 ; Stack Frame Size: 9 (bytes)
-;       Spill Code: -1 (instruction)
+;       Spill Code: -3 (instruction)
 
 
 _nop:
+;    1	#include "psec-crypt.h"
+;    2	#ifdef OP_TEST
+;    3	#include <sys/time.h>
+;    4	#endif
+;    5	
+;    6	#ifdef OP_TEST
+;    7	#define TEST_ITERS 100000
+;    8	
+;    9	double timediff(struct timeval x , struct timeval y)
+;   10	{
+;   11		double x_ms , y_ms , diff;
+;   12		
+;   13		x_ms = (double)x.tv_sec*1000000 + (double)x.tv_usec;
+;   14		y_ms = (double)y.tv_sec*1000000 + (double)y.tv_usec;
+;   15		
+;   16		diff = (double)y_ms - (double)x_ms;
+;   17		
+;   18		return diff;
+;   19	}
+;   20	#endif
+;   21	
+;   22	#ifndef BUILD_LIB
+;   23	int main(void)
+;   24	{
+;   25		for(;;){
+;   26			/* initialize working buffers */
+;   27			unsigned char msg[MSG_SIZE];
+;   28			unsigned char key[KEY_SIZE];
+;   29	
+;   30			unsigned char msg_in[MSG_IN_SIZE]; // for hex input
+;   31			unsigned char key_in[KEY_IN_SIZE]; // for hex input
+;   32			unsigned char choice[16];
+;   33	
+;   34			//unsigned char exp_key[BLK_SIZE * ROUNDS];
+;   35			unsigned char response[MSG_SIZE * 2 + 1];
+;   36			unsigned char hex[MSG_SIZE * 2 + 1];
+;   37			size_t a;
+;   38			size_t b;
+;   39			#ifdef OP_TEST
+;   40			unsigned char exp_key[EXP_KEY_SIZE];
+;   41			unsigned char tmp[MSG_SIZE];
+;   42			struct timeval start, end;
+;   43			#endif
+;   44			
+;   45			//msg = "Hello";
+;   46			//key = "world";
+;   47		//	fgets(msg, MSG_SIZE, STDIN);
+;   48		//	fgets(key, KEY_SIZE, STDIN);
+;   49		/*
+;   50			printf("Msg: ");
+;   51			gets(msg_in);
+;   52			printf("Key: ");
+;   53			gets(key_in);
+;   54			printf("E/D: ");
+;   55			gets(choice);
+;   56		*/
+;   57	
+;   58			/* Clear the homescreen */
+;   59			os_ClrHome();
+;   60			//           ("PARSEC Encryption123456789");
+;   61			os_PutStrFull("PARSEC Encryption         ");
+;   62			os_PutStrFull("--------------------------");
+;   63			os_PutStrFull("16-byte (128 bit) block   ");
+;   64			os_PutStrFull("32-byte (256 bit) key     ");
+;   65			os_PutStrFull("32 rounds                 ");
+;   66			os_PutStrFull("                          ");
+;   67	
+;   68			/* Waits for a key */
+;   69			while (!os_GetCSC());
+;   70			
+;   71			/* Clear the homescreen */
+;   72			os_ClrHome();
+;   73	
+;   74			/* Ask the user to type a string, which gets stored in `inputBuf` */
+;   75			for(a=0; a<MSG_IN_SIZE; ++a){
+;   76				msg_in[a] = 0;
+;   77			}
+;   78			os_GetStringInput("Msg:", msg_in, MSG_IN_SIZE);
+;   79			os_ClrHome();
+;   80			msg_in[MSG_IN_SIZE - 1] = 0;
+;   81			for(a=0; a<KEY_IN_SIZE; ++a){
+;   82				key_in[a] = 0;
+;   83			}
+;   84			os_GetStringInput("Key:", key_in, KEY_IN_SIZE);
+;   85			os_ClrHome();
+;   86			key_in[KEY_IN_SIZE - 1] = 0;
+;   87			//           ("PARSEC Encryption123456789");
+;   88			os_PutStrFull("E = Encrypt               ");
+;   89			os_PutStrFull("D = Decrypt               ");
+;   90			os_PutStrFull("H = Hash                  ");
+;   91			for(a=0; a<16; ++a){
+;   92				choice[a] = 0;
+;   93			}
+;   94			os_GetStringInput("Mode (E/D/H):", choice, 16);
+;   95			os_ClrHome();
+;   96			
+;   97			//MAKE_KEY(key);
+;   98			from_hex(key_in, key, KEY_SIZE);
+;   99	
+;  100		//	from_hex(key_in, key, KEY_SIZE);
+;  101			
+;  102			//           ("PARSEC Encryption123456789");
+;  103			os_PutStrFull("Working...");
+;  104			#ifdef ENCRYPT
+;  105				#ifdef ENCDEC_CHOICE
+;  106				if(choice[0] == 'e' || choice[0] == 'E'){
+;  107				#endif
+;  108				for(a=0; a<MSG_SIZE; ++a){
+;  109					msg[a] = msg_in[a];
+;  110				}
+;  111				#ifdef IGNORE_KEY
+;  112				for(a=0; a<KEY_SIZE; ++a){
+;  113					key[a] = 0;
+;  114				}
+;  115				#endif
+;  116				encrypt(msg, key);
+;  117				
+;  118				to_hex(msg, hex, MSG_SIZE);
+;  119				hex[MSG_SIZE * 2] = 0;
+;  120				sprintf(response, "%s", hex);
+;  121	
+;  122				/* Build the user response */
+;  123				
+;  124				
+;  125				/* Clear the homescreen and display the built response */
+;  126				os_ClrHome();
+;  127		//		printf(response);
+;  128		//		for(a=0; a<MSG_SIZE; ++a){
+;  129		//			msg_in[a * 2] = response[a * 2];
+;  130		//			msg_in[a * 2 + 1] = response[a * 2 + 1];
+;  131		//		}
+;  132	
+;  133				// Cleanup
+;  134					for(a=0; a<KEY_SIZE; ++a){
+;  135						key[a] = 0;
+;  136					}
+;  137					for(a=0; a<MSG_SIZE; ++a){
+;  138						msg[a] = 0;
+;  139					}
+;  140					for(a=0; a<16; ++a){
+;  141						choice[a] = 0;
+;  142					}
+;  143					for(a=0; a<MSG_SIZE * 2 + 1; ++a){
+;  144						hex[a] = 0;
+;  145					}
+;  146				os_PutStrFull(response);
+;  147					for(a=0; a<MSG_SIZE * 2 + 1; ++a){
+;  148						response[a] = 0;
+;  149					}
+;  150				/* Waits for a key */
+;  151				while (!os_GetCSC());
+;  152				#ifdef ENCDEC_CHOICE
+;  153				}
+;  154				#endif
+;  155			#endif
+;  156			#ifdef DECRYPT
+;  157				#ifdef ENCDEC_CHOICE
+;  158				if(choice[0] == 'd' || choice[0] == 'D'){
+;  159				#endif
+;  160				#ifdef IGNORE_KEY
+;  161				for(a=0; a<KEY_SIZE; ++a){
+;  162					key[a] = 0;
+;  163				}
+;  164				#endif
+;  165				from_hex(msg_in, msg, MSG_SIZE);
+;  166				decrypt(msg, key);
+;  167				//to_hex(msg, hex, MSG_SIZE);
+;  168				for(a=0; a<MSG_SIZE; ++a){
+;  169					hex[a] = msg[a];
+;  170					hex[a + MSG_SIZE] = 0;
+;  171				}
+;  172	
+;  173				/* Build the user response */
+;  174				sprintf(response, "%s", hex);
+;  175				
+;  176				
+;  177				/* Clear the homescreen and display the built response */
+;  178				os_ClrHome();
+;  179		//		printf(response);
+;  180		//		for(a=0; a<MSG_SIZE; ++a){
+;  181		//			msg_in[a * 2] = response[a * 2];
+;  182		//			msg_in[a * 2 + 1] = response[a * 2 + 1];
+;  183		//		}
+;  184	
+;  185				// Cleanup
+;  186					for(a=0; a<KEY_SIZE; ++a){
+;  187						key[a] = 0;
+;  188					}
+;  189					for(a=0; a<MSG_SIZE; ++a){
+;  190						msg[a] = 0;
+;  191					}
+;  192					for(a=0; a<16; ++a){
+;  193						choice[a] = 0;
+;  194					}
+;  195					for(a=0; a<MSG_SIZE * 2 + 1; ++a){
+;  196						hex[a] = 0;
+;  197					}
+;  198				os_PutStrFull(response);
+;  199					for(a=0; a<MSG_SIZE * 2 + 1; ++a){
+;  200						response[a] = 0;
+;  201					}
+;  202				/* Waits for a key */
+;  203				while (!os_GetCSC());
+;  204				#ifdef ENCDEC_CHOICE
+;  205				}
+;  206				#endif
+;  207			#endif
+;  208			#ifdef HASH
+;  209				#ifdef ENCDEC_CHOICE
 	CALL	__frameset0
+;  210				if(choice[0] == 'h' || choice[0] == 'H'){
+;  211				#endif
+;  212				#ifdef IGNORE_KEY
 	LD	SP,IX
 	POP	IX
 	RET	
@@ -1770,13 +1997,13 @@ _nop:
 
 
 ; Stack Frame Size: 9 (bytes)
-;       Spill Code: -1 (instruction)
+;       Spill Code: -3 (instruction)
 
 
 _main:
-	LD	HL,-764
+	LD	HL,-251
 	CALL	__frameset
-L_228:
+L_236:
 	LD	BC,_asm_ClrLCD
 	PUSH	BC
 	CALL	__OS
@@ -1788,18 +2015,6 @@ L_228:
 	LD	BC,_asm_DrawStatusBar
 	PUSH	BC
 	CALL	__OS
-	POP	BC
-	LD	BC,L__36
-	PUSH	BC
-	CALL	_os_PutStrFull
-	POP	BC
-	LD	BC,L__37
-	PUSH	BC
-	CALL	_os_PutStrFull
-	POP	BC
-	LD	BC,L__38
-	PUSH	BC
-	CALL	_os_PutStrFull
 	POP	BC
 	LD	BC,L__39
 	PUSH	BC
@@ -1813,53 +2028,22 @@ L_228:
 	PUSH	BC
 	CALL	_os_PutStrFull
 	POP	BC
-L_85:
-	CALL	_os_GetCSC
-	OR	A,A
-	JR	Z,L_85
-	LD	BC,_asm_ClrLCD
+	LD	BC,L__42
 	PUSH	BC
-	CALL	__OS
+	CALL	_os_PutStrFull
 	POP	BC
-	LD	BC,_asm_HomeUp
+	LD	BC,L__43
 	PUSH	BC
-	CALL	__OS
+	CALL	_os_PutStrFull
 	POP	BC
-	LD	BC,_asm_DrawStatusBar
-	PUSH	BC
-	CALL	__OS
-	POP	BC
-	LD	BC,0
-	LD	(IX+-3),BC
-	JR	L_91
-L_89:
-	LD	BC,(IX+-3)
-	LD	HL,IX
-	LD	DE,-570
-	ADD	HL,DE
-	ADD	HL,BC
-	LD	(HL),0
-	LD	BC,(IX+-3)
-	INC	BC
-	LD	(IX+-3),BC
-L_91:
-	LD	BC,130
-	LD	HL,(IX+-3)
-	OR	A,A
-	SBC	HL,BC
-	JR	C,L_89
-	PUSH	BC
-	LD	HL,IX
-	LD	BC,-570
-	ADD	HL,BC
-	LD	BC,HL
-	PUSH	BC
 	LD	BC,L__44
 	PUSH	BC
-	CALL	_os_GetStringInput
+	CALL	_os_PutStrFull
 	POP	BC
-	POP	BC
-	POP	BC
+L_93:
+	CALL	_os_GetCSC
+	OR	A,A
+	JR	Z,L_93
 	LD	BC,_asm_ClrLCD
 	PUSH	BC
 	CALL	__OS
@@ -1872,19 +2056,13 @@ L_91:
 	PUSH	BC
 	CALL	__OS
 	POP	BC
-	LD	HL,IX
-	LD	BC,-570
-	ADD	HL,BC
-	LD	BC,129
-	ADD	HL,BC
-	LD	(HL),0
 	LD	BC,0
 	LD	(IX+-3),BC
 	JR	L_99
 L_97:
 	LD	BC,(IX+-3)
 	LD	HL,IX
-	LD	DE,-764
+	LD	DE,-170
 	ADD	HL,DE
 	ADD	HL,BC
 	LD	(HL),0
@@ -1892,18 +2070,18 @@ L_97:
 	INC	BC
 	LD	(IX+-3),BC
 L_99:
-	LD	BC,194
+	LD	BC,34
 	LD	HL,(IX+-3)
 	OR	A,A
 	SBC	HL,BC
 	JR	C,L_97
 	PUSH	BC
 	LD	HL,IX
-	LD	BC,-764
+	LD	BC,-170
 	ADD	HL,BC
 	LD	BC,HL
 	PUSH	BC
-	LD	BC,L__46
+	LD	BC,L__47
 	PUSH	BC
 	CALL	_os_GetStringInput
 	POP	BC
@@ -1921,44 +2099,37 @@ L_99:
 	PUSH	BC
 	CALL	__OS
 	POP	BC
-	LD	HL,IX
-	LD	BC,-764
-	ADD	HL,BC
-	LD	BC,193
-	ADD	HL,BC
+	LD	IY,IX
+	LD	BC,-170
+	ADD	IY,BC
+	LEA	HL,IY+33
 	LD	(HL),0
-	LD	BC,L__47
-	PUSH	BC
-	CALL	_os_PutStrFull
-	POP	BC
-	LD	BC,L__48
-	PUSH	BC
-	CALL	_os_PutStrFull
-	POP	BC
-	LD	BC,L__49
-	PUSH	BC
-	CALL	_os_PutStrFull
-	POP	BC
 	LD	BC,0
 	LD	(IX+-3),BC
-	JR	L_106
-L_104:
+	JR	L_107
+L_105:
 	LD	BC,(IX+-3)
-	LEA	HL,IX+-22
+	LD	HL,IX
+	LD	DE,-236
+	ADD	HL,DE
 	ADD	HL,BC
 	LD	(HL),0
 	LD	BC,(IX+-3)
 	INC	BC
 	LD	(IX+-3),BC
-L_106:
-	LD	BC,16
+L_107:
+	LD	BC,66
 	LD	HL,(IX+-3)
 	OR	A,A
 	SBC	HL,BC
-	JR	C,L_104
+	JR	C,L_105
 	PUSH	BC
-	PEA	IX+-22
-	LD	BC,L__51
+	LD	HL,IX
+	LD	BC,-236
+	ADD	HL,BC
+	LD	BC,HL
+	PUSH	BC
+	LD	BC,L__49
 	PUSH	BC
 	CALL	_os_GetStringInput
 	POP	BC
@@ -1976,52 +2147,228 @@ L_106:
 	PUSH	BC
 	CALL	__OS
 	POP	BC
-	LD	BC,96
+	LD	IY,IX
+	LD	BC,-236
+	ADD	IY,BC
+	LEA	HL,IY+65
+	LD	(HL),0
+	LD	BC,L__50
 	PUSH	BC
-	LD	HL,IX
-	LD	BC,-182
-	ADD	HL,BC
-	LD	BC,HL
 	PUSH	BC
-	LD	HL,IX
-	LD	BC,-764
-	ADD	HL,BC
-	LD	BC,HL
-	PUSH	BC
-	CALL	_from_hex
+	PUSH	HL
+	LD	HL,IY
+	LD	BC,-251
+	CALL	__istix
+	POP	HL
 	POP	BC
+	CALL	_os_PutStrFull
+	PUSH	BC
+	LD	BC,-251
+	PUSH	HL
+	CALL	__ildix
+	LD	IY,HL
+	POP	HL
+	POP	BC
+	POP	BC
+	LD	BC,L__51
+	PUSH	BC
+	PUSH	BC
+	PUSH	HL
+	LD	HL,IY
+	LD	BC,-251
+	CALL	__istix
+	POP	HL
+	POP	BC
+	CALL	_os_PutStrFull
+	PUSH	BC
+	LD	BC,-251
+	PUSH	HL
+	CALL	__ildix
+	LD	IY,HL
+	POP	HL
 	POP	BC
 	POP	BC
 	LD	BC,L__52
 	PUSH	BC
-	CALL	_os_PutStrFull
+	PUSH	BC
+	PUSH	HL
+	LD	HL,IY
+	LD	BC,-251
+	CALL	__istix
+	POP	HL
 	POP	BC
-	LD	A,(IX+-22)
+	CALL	_os_PutStrFull
+	PUSH	BC
+	LD	BC,-251
+	PUSH	HL
+	CALL	__ildix
+	LD	IY,HL
+	POP	HL
+	POP	BC
+	POP	BC
+	LD	BC,0
+	LD	(IX+-3),BC
+	JR	L_114
+L_112:
+	LD	BC,(IX+-3)
+	LEA	HL,IX+-38
+	ADD	HL,BC
+	LD	(HL),0
+	LD	BC,(IX+-3)
+	INC	BC
+	LD	(IX+-3),BC
+L_114:
+	LD	BC,16
+	LD	HL,(IX+-3)
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_112
+	PUSH	BC
+	PEA	IX+-38
+	LD	BC,L__54
+	PUSH	BC
+	PUSH	BC
+	PUSH	HL
+	LD	HL,IY
+	LD	BC,-251
+	CALL	__istix
+	POP	HL
+	POP	BC
+	CALL	_os_GetStringInput
+	PUSH	BC
+	LD	BC,-251
+	PUSH	HL
+	CALL	__ildix
+	LD	IY,HL
+	POP	HL
+	POP	BC
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	BC,_asm_ClrLCD
+	PUSH	BC
+	PUSH	BC
+	PUSH	HL
+	LD	HL,IY
+	LD	BC,-251
+	CALL	__istix
+	POP	HL
+	POP	BC
+	CALL	__OS
+	PUSH	BC
+	LD	BC,-251
+	PUSH	HL
+	CALL	__ildix
+	LD	IY,HL
+	POP	HL
+	POP	BC
+	POP	BC
+	LD	BC,_asm_HomeUp
+	PUSH	BC
+	PUSH	BC
+	PUSH	HL
+	LD	HL,IY
+	LD	BC,-251
+	CALL	__istix
+	POP	HL
+	POP	BC
+	CALL	__OS
+	PUSH	BC
+	LD	BC,-251
+	PUSH	HL
+	CALL	__ildix
+	LD	IY,HL
+	POP	HL
+	POP	BC
+	POP	BC
+	LD	BC,_asm_DrawStatusBar
+	PUSH	BC
+	PUSH	BC
+	PUSH	HL
+	LD	HL,IY
+	LD	BC,-251
+	CALL	__istix
+	POP	HL
+	POP	BC
+	CALL	__OS
+	PUSH	BC
+	LD	BC,-251
+	PUSH	HL
+	CALL	__ildix
+	LD	IY,HL
+	POP	HL
+	POP	BC
+	POP	BC
+	LD	BC,32
+	PUSH	BC
+	PEA	IX+-70
+	LD	HL,IX
+	LD	BC,-236
+	ADD	HL,BC
+	LD	BC,HL
+	PUSH	BC
+	PUSH	BC
+	PUSH	HL
+	LD	HL,IY
+	LD	BC,-251
+	CALL	__istix
+	POP	HL
+	POP	BC
+	CALL	_from_hex
+	PUSH	BC
+	LD	BC,-251
+	PUSH	HL
+	CALL	__ildix
+	LD	IY,HL
+	POP	HL
+	POP	BC
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	BC,L__55
+	PUSH	BC
+	PUSH	BC
+	PUSH	HL
+	LD	HL,IY
+	LD	BC,-251
+	CALL	__istix
+	POP	HL
+	POP	BC
+	CALL	_os_PutStrFull
+	PUSH	BC
+	LD	BC,-251
+	PUSH	HL
+	CALL	__ildix
+	LD	IY,HL
+	POP	HL
+	POP	BC
+	POP	BC
+	LD	A,(IX+-38)
 	UEXT	HL
 	LD	L,A
 	OR	A,A
 	LD	BC,101
 	SBC	HL,BC
-	JR	Z,L_141
-	LD	A,(IX+-22)
+	JR	Z,L_149
+	LD	A,(IX+-38)
 	UEXT	HL
 	LD	L,A
 	OR	A,A
 	LD	BC,69
 	SBC	HL,BC
-	JR	NZ,L_173
-L_141:
+	JR	NZ,L_181
+L_149:
 	LD	BC,0
 	LD	(IX+-3),BC
-	JR	L_114
-L_112:
+	JR	L_122
+L_120:
 	LD	HL,IX
-	LD	BC,-570
+	LD	BC,-170
 	ADD	HL,BC
 	LD	BC,(IX+-3)
 	ADD	HL,BC
 	LD	IY,HL
-	LEA	HL,IX+-86
+	LEA	HL,IX+-22
 	LD	A,(IY)
 	LD	BC,(IX+-3)
 	ADD	HL,BC
@@ -2029,116 +2376,121 @@ L_112:
 	LD	BC,(IX+-3)
 	INC	BC
 	LD	(IX+-3),BC
-L_114:
-	LD	BC,64
+L_122:
+	LD	BC,16
 	LD	HL,(IX+-3)
 	OR	A,A
 	SBC	HL,BC
-	JR	C,L_112
-	LD	HL,IX
-	LD	BC,-182
-	ADD	HL,BC
-	LD	BC,HL
-	PUSH	BC
-	PEA	IX+-86
+	JR	C,L_120
+	PEA	IX+-70
+	PEA	IX+-22
 	CALL	_encrypt
 	POP	BC
 	POP	BC
-	LD	BC,64
+	LD	BC,16
 	PUSH	BC
-	LD	HL,IX
-	LD	BC,-311
-	ADD	HL,BC
-	LD	BC,HL
-	PUSH	BC
-	PEA	IX+-86
+	PEA	IX+-103
+	PEA	IX+-22
 	CALL	_to_hex
 	POP	BC
 	POP	BC
 	POP	BC
+	LEA	IY,IX+-103
+	PEA	IX+-103
+	LD	BC,L__59
+	PUSH	BC
 	LD	HL,IX
-	LD	BC,-311
+	LD	BC,-136
 	ADD	HL,BC
-	LD	BC,128
-	ADD	HL,BC
-	LD	IY,IX
-	LD	BC,-311
-	ADD	IY,BC
-	LD	BC,IY
+	LD	BC,HL
 	PUSH	BC
-	LD	BC,L__56
-	PUSH	BC
-	LD	IY,IX
-	LD	BC,-440
-	ADD	IY,BC
-	LD	BC,IY
-	PUSH	BC
+	LEA	HL,IY+32
 	LD	(HL),0
+	PUSH	BC
+	PUSH	HL
+	LD	HL,IY
+	LD	BC,-251
+	CALL	__istix
+	POP	HL
+	POP	BC
 	CALL	_sprintf
+	PUSH	BC
+	LD	BC,-251
+	PUSH	HL
+	CALL	__ildix
+	LD	IY,HL
+	POP	HL
+	POP	BC
 	POP	BC
 	POP	BC
 	POP	BC
 	LD	BC,_asm_ClrLCD
 	PUSH	BC
+	PUSH	BC
+	PUSH	HL
+	LD	HL,IY
+	LD	BC,-251
+	CALL	__istix
+	POP	HL
+	POP	BC
 	CALL	__OS
+	PUSH	BC
+	LD	BC,-251
+	PUSH	HL
+	CALL	__ildix
+	LD	IY,HL
+	POP	HL
+	POP	BC
 	POP	BC
 	LD	BC,_asm_HomeUp
 	PUSH	BC
+	PUSH	BC
+	PUSH	HL
+	LD	HL,IY
+	LD	BC,-251
+	CALL	__istix
+	POP	HL
+	POP	BC
 	CALL	__OS
+	PUSH	BC
+	LD	BC,-251
+	PUSH	HL
+	CALL	__ildix
+	LD	IY,HL
+	POP	HL
+	POP	BC
 	POP	BC
 	LD	BC,_asm_DrawStatusBar
 	PUSH	BC
-	CALL	__OS
+	PUSH	BC
+	PUSH	HL
+	LD	HL,IY
+	LD	BC,-251
+	CALL	__istix
+	POP	HL
 	POP	BC
-	LD	BC,0
-	LD	(IX+-3),BC
-	JR	L_120
-L_118:
-	LD	BC,(IX+-3)
-	LD	HL,IX
-	LD	DE,-182
-	ADD	HL,DE
-	ADD	HL,BC
-	LD	(HL),0
-	LD	BC,(IX+-3)
-	INC	BC
-	LD	(IX+-3),BC
-L_120:
-	LD	BC,96
-	LD	HL,(IX+-3)
-	OR	A,A
-	SBC	HL,BC
-	JR	C,L_118
-	LD	BC,0
-	LD	(IX+-3),BC
-	JR	L_124
-L_122:
-	LD	BC,(IX+-3)
-	LEA	HL,IX+-86
-	ADD	HL,BC
-	LD	(HL),0
-	LD	BC,(IX+-3)
-	INC	BC
-	LD	(IX+-3),BC
-L_124:
-	LD	BC,64
-	LD	HL,(IX+-3)
-	OR	A,A
-	SBC	HL,BC
-	JR	C,L_122
+	CALL	__OS
+	PUSH	BC
+	LD	BC,-251
+	PUSH	HL
+	CALL	__ildix
+	LD	IY,HL
+	POP	HL
+	POP	BC
+	POP	BC
 	LD	BC,0
 	LD	(IX+-3),BC
 	JR	L_128
 L_126:
 	LD	BC,(IX+-3)
-	LEA	HL,IX+-22
+	LEA	HL,IX+-70
 	ADD	HL,BC
 	LD	(HL),0
 	LD	BC,(IX+-3)
 	INC	BC
 	LD	(IX+-3),BC
 L_128:
-	LD	BC,16
+	LD	BC,32
 	LD	HL,(IX+-3)
 	OR	A,A
 	SBC	HL,BC
@@ -2148,85 +2500,71 @@ L_128:
 	JR	L_132
 L_130:
 	LD	BC,(IX+-3)
-	LD	HL,IX
-	LD	DE,-311
-	ADD	HL,DE
+	LEA	HL,IX+-22
 	ADD	HL,BC
 	LD	(HL),0
 	LD	BC,(IX+-3)
 	INC	BC
 	LD	(IX+-3),BC
 L_132:
-	LD	BC,129
+	LD	BC,16
 	LD	HL,(IX+-3)
 	OR	A,A
 	SBC	HL,BC
 	JR	C,L_130
-	LD	HL,IX
-	LD	BC,-440
-	ADD	HL,BC
-	LD	BC,HL
-	PUSH	BC
-	CALL	_os_PutStrFull
-	POP	BC
 	LD	BC,0
 	LD	(IX+-3),BC
-	JR	L_137
-L_135:
+	JR	L_136
+L_134:
 	LD	BC,(IX+-3)
-	LD	HL,IX
-	LD	DE,-440
-	ADD	HL,DE
+	LEA	HL,IX+-38
 	ADD	HL,BC
 	LD	(HL),0
 	LD	BC,(IX+-3)
 	INC	BC
 	LD	(IX+-3),BC
-L_137:
-	LD	BC,129
+L_136:
+	LD	BC,16
 	LD	HL,(IX+-3)
 	OR	A,A
 	SBC	HL,BC
-	JR	C,L_135
-L_139:
-	CALL	_os_GetCSC
+	JR	C,L_134
+	LD	BC,0
+	LD	(IX+-3),BC
+	JR	L_140
+L_138:
+	LD	BC,(IX+-3)
+	LEA	HL,IX+-103
+	ADD	HL,BC
+	LD	(HL),0
+	LD	BC,(IX+-3)
+	INC	BC
+	LD	(IX+-3),BC
+L_140:
+	LD	BC,33
+	LD	HL,(IX+-3)
 	OR	A,A
-	JR	Z,L_139
-L_173:
-	LD	A,(IX+-22)
-	UEXT	HL
-	LD	L,A
-	OR	A,A
-	LD	BC,100
 	SBC	HL,BC
-	JR	Z,L_172
-	LD	A,(IX+-22)
-	UEXT	HL
-	LD	L,A
-	OR	A,A
-	LD	BC,68
-	SBC	HL,BC
-	JR	NZ,L_217
-L_172:
-	LD	BC,64
-	PUSH	BC
-	PEA	IX+-86
+	JR	C,L_138
 	LD	HL,IX
-	LD	BC,-570
+	LD	BC,-136
 	ADD	HL,BC
 	LD	BC,HL
 	PUSH	BC
-	CALL	_from_hex
-	POP	BC
-	POP	BC
-	POP	BC
-	LD	HL,IX
-	LD	BC,-182
-	ADD	HL,BC
-	LD	BC,HL
 	PUSH	BC
-	PEA	IX+-86
-	CALL	_decrypt
+	PUSH	HL
+	LD	HL,IY
+	LD	BC,-251
+	CALL	__istix
+	POP	HL
+	POP	BC
+	CALL	_os_PutStrFull
+	PUSH	BC
+	LD	BC,-251
+	PUSH	HL
+	CALL	__ildix
+	LD	IY,HL
+	POP	HL
 	POP	BC
 	POP	BC
 	LD	BC,0
@@ -2234,20 +2572,8 @@ L_172:
 	JR	L_145
 L_143:
 	LD	BC,(IX+-3)
-	LEA	HL,IX+-86
-	ADD	HL,BC
-	LD	IY,HL
 	LD	HL,IX
-	LD	BC,-311
-	ADD	HL,BC
-	LD	BC,(IX+-3)
-	ADD	HL,BC
-	LD	A,(IY)
-	LD	(HL),A
-	LD	IY,(IX+-3)
-	LEA	BC,IY+64
-	LD	HL,IX
-	LD	DE,-311
+	LD	DE,-136
 	ADD	HL,DE
 	ADD	HL,BC
 	LD	(HL),0
@@ -2255,88 +2581,210 @@ L_143:
 	INC	BC
 	LD	(IX+-3),BC
 L_145:
-	LD	BC,64
+	LD	BC,33
 	LD	HL,(IX+-3)
 	OR	A,A
 	SBC	HL,BC
 	JR	C,L_143
+L_147:
+	PUSH	BC
+	PUSH	HL
+	LD	HL,IY
+	LD	BC,-251
+	CALL	__istix
+	POP	HL
+	POP	BC
+	CALL	_os_GetCSC
+	PUSH	BC
+	LD	BC,-251
+	PUSH	HL
+	CALL	__ildix
+	LD	IY,HL
+	POP	HL
+	POP	BC
+	OR	A,A
+	JR	Z,L_147
+L_181:
+	LD	A,(IX+-38)
+	UEXT	HL
+	LD	L,A
+	OR	A,A
+	LD	BC,100
+	SBC	HL,BC
+	JR	Z,L_180
+	LD	A,(IX+-38)
+	UEXT	HL
+	LD	L,A
+	OR	A,A
+	LD	BC,68
+	SBC	HL,BC
+	JR	NZ,L_225
+L_180:
+	LD	BC,16
+	PUSH	BC
+	PEA	IX+-22
 	LD	HL,IX
-	LD	BC,-311
+	LD	BC,-170
 	ADD	HL,BC
 	LD	BC,HL
 	PUSH	BC
-	LD	BC,L__66
+	PUSH	BC
+	PUSH	HL
+	LD	HL,IY
+	LD	BC,-251
+	CALL	__istix
+	POP	HL
+	POP	BC
+	CALL	_from_hex
+	PUSH	BC
+	LD	BC,-251
+	PUSH	HL
+	CALL	__ildix
+	LD	IY,HL
+	POP	HL
+	POP	BC
+	POP	BC
+	POP	BC
+	POP	BC
+	PEA	IX+-70
+	PEA	IX+-22
+	PUSH	BC
+	PUSH	HL
+	LD	HL,IY
+	LD	BC,-251
+	CALL	__istix
+	POP	HL
+	POP	BC
+	CALL	_decrypt
+	PUSH	BC
+	LD	BC,-251
+	PUSH	HL
+	CALL	__ildix
+	LD	IY,HL
+	POP	HL
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	BC,0
+	LD	(IX+-3),BC
+	JR	L_153
+L_151:
+	LD	BC,(IX+-3)
+	LEA	HL,IX+-22
+	ADD	HL,BC
+	LD	IY,HL
+	LEA	HL,IX+-103
+	LD	BC,(IX+-3)
+	ADD	HL,BC
+	LD	A,(IY)
+	LD	(HL),A
+	LD	IY,(IX+-3)
+	LEA	BC,IY+16
+	LEA	HL,IX+-103
+	ADD	HL,BC
+	LD	(HL),0
+	LD	BC,(IX+-3)
+	INC	BC
+	LD	(IX+-3),BC
+L_153:
+	LD	BC,16
+	LD	HL,(IX+-3)
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_151
+	PEA	IX+-103
+	LD	BC,L__69
 	PUSH	BC
 	LD	HL,IX
-	LD	BC,-440
+	LD	BC,-136
 	ADD	HL,BC
 	LD	BC,HL
 	PUSH	BC
+	PUSH	BC
+	PUSH	HL
+	LD	HL,IY
+	LD	BC,-251
+	CALL	__istix
+	POP	HL
+	POP	BC
 	CALL	_sprintf
+	PUSH	BC
+	LD	BC,-251
+	PUSH	HL
+	CALL	__ildix
+	LD	IY,HL
+	POP	HL
+	POP	BC
 	POP	BC
 	POP	BC
 	POP	BC
 	LD	BC,_asm_ClrLCD
 	PUSH	BC
+	PUSH	BC
+	PUSH	HL
+	LD	HL,IY
+	LD	BC,-251
+	CALL	__istix
+	POP	HL
+	POP	BC
 	CALL	__OS
+	PUSH	BC
+	LD	BC,-251
+	PUSH	HL
+	CALL	__ildix
+	LD	IY,HL
+	POP	HL
+	POP	BC
 	POP	BC
 	LD	BC,_asm_HomeUp
 	PUSH	BC
+	PUSH	BC
+	PUSH	HL
+	LD	HL,IY
+	LD	BC,-251
+	CALL	__istix
+	POP	HL
+	POP	BC
 	CALL	__OS
+	PUSH	BC
+	LD	BC,-251
+	PUSH	HL
+	CALL	__ildix
+	LD	IY,HL
+	POP	HL
+	POP	BC
 	POP	BC
 	LD	BC,_asm_DrawStatusBar
 	PUSH	BC
-	CALL	__OS
+	PUSH	BC
+	PUSH	HL
+	LD	HL,IY
+	LD	BC,-251
+	CALL	__istix
+	POP	HL
 	POP	BC
-	LD	BC,0
-	LD	(IX+-3),BC
-	JR	L_151
-L_149:
-	LD	BC,(IX+-3)
-	LD	HL,IX
-	LD	DE,-182
-	ADD	HL,DE
-	ADD	HL,BC
-	LD	(HL),0
-	LD	BC,(IX+-3)
-	INC	BC
-	LD	(IX+-3),BC
-L_151:
-	LD	BC,96
-	LD	HL,(IX+-3)
-	OR	A,A
-	SBC	HL,BC
-	JR	C,L_149
-	LD	BC,0
-	LD	(IX+-3),BC
-	JR	L_155
-L_153:
-	LD	BC,(IX+-3)
-	LEA	HL,IX+-86
-	ADD	HL,BC
-	LD	(HL),0
-	LD	BC,(IX+-3)
-	INC	BC
-	LD	(IX+-3),BC
-L_155:
-	LD	BC,64
-	LD	HL,(IX+-3)
-	OR	A,A
-	SBC	HL,BC
-	JR	C,L_153
+	CALL	__OS
+	PUSH	BC
+	LD	BC,-251
+	PUSH	HL
+	CALL	__ildix
+	LD	IY,HL
+	POP	HL
+	POP	BC
+	POP	BC
 	LD	BC,0
 	LD	(IX+-3),BC
 	JR	L_159
 L_157:
 	LD	BC,(IX+-3)
-	LEA	HL,IX+-22
+	LEA	HL,IX+-70
 	ADD	HL,BC
 	LD	(HL),0
 	LD	BC,(IX+-3)
 	INC	BC
 	LD	(IX+-3),BC
 L_159:
-	LD	BC,16
+	LD	BC,32
 	LD	HL,(IX+-3)
 	OR	A,A
 	SBC	HL,BC
@@ -2346,170 +2794,297 @@ L_159:
 	JR	L_163
 L_161:
 	LD	BC,(IX+-3)
-	LD	HL,IX
-	LD	DE,-311
-	ADD	HL,DE
+	LEA	HL,IX+-22
 	ADD	HL,BC
 	LD	(HL),0
 	LD	BC,(IX+-3)
 	INC	BC
 	LD	(IX+-3),BC
 L_163:
-	LD	BC,129
+	LD	BC,16
 	LD	HL,(IX+-3)
 	OR	A,A
 	SBC	HL,BC
 	JR	C,L_161
+	LD	BC,0
+	LD	(IX+-3),BC
+	JR	L_167
+L_165:
+	LD	BC,(IX+-3)
+	LEA	HL,IX+-38
+	ADD	HL,BC
+	LD	(HL),0
+	LD	BC,(IX+-3)
+	INC	BC
+	LD	(IX+-3),BC
+L_167:
+	LD	BC,16
+	LD	HL,(IX+-3)
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_165
+	LD	BC,0
+	LD	(IX+-3),BC
+	JR	L_171
+L_169:
+	LD	BC,(IX+-3)
+	LEA	HL,IX+-103
+	ADD	HL,BC
+	LD	(HL),0
+	LD	BC,(IX+-3)
+	INC	BC
+	LD	(IX+-3),BC
+L_171:
+	LD	BC,33
+	LD	HL,(IX+-3)
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_169
 	LD	HL,IX
-	LD	BC,-440
+	LD	BC,-136
 	ADD	HL,BC
 	LD	BC,HL
 	PUSH	BC
+	PUSH	BC
+	PUSH	HL
+	LD	HL,IY
+	LD	BC,-251
+	CALL	__istix
+	POP	HL
+	POP	BC
 	CALL	_os_PutStrFull
+	PUSH	BC
+	LD	BC,-251
+	PUSH	HL
+	CALL	__ildix
+	LD	IY,HL
+	POP	HL
+	POP	BC
 	POP	BC
 	LD	BC,0
 	LD	(IX+-3),BC
-	JR	L_168
-L_166:
+	JR	L_176
+L_174:
 	LD	BC,(IX+-3)
 	LD	HL,IX
-	LD	DE,-440
+	LD	DE,-136
 	ADD	HL,DE
 	ADD	HL,BC
 	LD	(HL),0
 	LD	BC,(IX+-3)
 	INC	BC
 	LD	(IX+-3),BC
-L_168:
-	LD	BC,129
+L_176:
+	LD	BC,33
 	LD	HL,(IX+-3)
 	OR	A,A
 	SBC	HL,BC
-	JR	C,L_166
-L_170:
+	JR	C,L_174
+L_178:
+	PUSH	BC
+	PUSH	HL
+	LD	HL,IY
+	LD	BC,-251
+	CALL	__istix
+	POP	HL
+	POP	BC
 	CALL	_os_GetCSC
+	PUSH	BC
+	LD	BC,-251
+	PUSH	HL
+	CALL	__ildix
+	LD	IY,HL
+	POP	HL
+	POP	BC
 	OR	A,A
-	JR	Z,L_170
-L_217:
-	LD	A,(IX+-22)
+	JR	Z,L_178
+L_225:
+	LD	A,(IX+-38)
 	UEXT	HL
 	LD	L,A
 	OR	A,A
 	LD	BC,104
 	SBC	HL,BC
-	JR	Z,L_216
-	LD	A,(IX+-22)
+	JR	Z,L_224
+	LD	A,(IX+-38)
 	UEXT	HL
 	LD	L,A
 	OR	A,A
 	LD	BC,72
 	SBC	HL,BC
-	JR	NZ,L_218
-L_216:
-	LD	BC,64
+	JR	NZ,L_226
+L_224:
+;  213				for(a=0; a<KEY_SIZE; ++a){
+;  214					key[a] = 0;
+;  215				}
+;  216				#endif
+;  217				from_hex(msg_in, msg, MSG_SIZE); // user inputs message as hex
+	LD	BC,16
 	PUSH	BC
-	PEA	IX+-86
+	PEA	IX+-22
 	LD	HL,IX
-	LD	BC,-570
+	LD	BC,-170
 	ADD	HL,BC
 	LD	BC,HL
 	PUSH	BC
+	PUSH	BC
+	PUSH	HL
+	LD	HL,IY
+	LD	BC,-251
+	CALL	__istix
+	POP	HL
+	POP	BC
 	CALL	_from_hex
+	PUSH	BC
+	LD	BC,-251
+	PUSH	HL
+	CALL	__ildix
+	LD	IY,HL
+	POP	HL
 	POP	BC
 	POP	BC
 	POP	BC
+	POP	BC
+;  218				for(b=0; b<HASH_ITERS; ++b){
 	LD	BC,0
 	LD	(IX+-6),BC
-	JR	L_189
-L_187:
-	LD	BC,0
-	LD	(IX+-3),BC
-	JR	L_177
-L_175:
-	LD	HL,IX
-	LD	BC,-182
-	ADD	HL,BC
-	LD	BC,(IX+-3)
-	ADD	HL,BC
-	LD	IY,HL
-	LEA	HL,IX+-86
-	LD	BC,(IX+-3)
-	ADD	HL,BC
-	LD	A,(HL)
-	LD	B,(IX+-6)
-	XOR	A,B
-	LD	B,A
-	LD	A,(IY)
-	XOR	A,B
-	LD	HL,IX
-	LD	BC,-182
-	ADD	HL,BC
-	LD	BC,(IX+-3)
-	ADD	HL,BC
-	LD	(HL),A
-	LD	BC,(IX+-3)
-	INC	BC
-	LD	(IX+-3),BC
-L_177:
-	LD	BC,96
-	LD	HL,(IX+-3)
-	OR	A,A
-	SBC	HL,BC
-	JR	C,L_175
-	LD	HL,IX
-	LD	BC,-182
-	ADD	HL,BC
-	LD	BC,HL
-	PUSH	BC
-	PEA	IX+-86
-	CALL	_encrypt
-	POP	BC
-	POP	BC
-	LD	BC,0
-	LD	(IX+-3),BC
-	JR	L_181
-L_179:
-	LD	HL,IX
-	LD	BC,-182
-	ADD	HL,BC
-	LD	BC,(IX+-3)
-	ADD	HL,BC
-	LD	B,(IX+-3)
-	LD	A,(IX+-6)
-	XOR	A,B
-	LD	B,A
-	LD	A,(HL)
-	XOR	A,B
-	LD	HL,IX
-	LD	BC,-182
-	ADD	HL,BC
-	LD	BC,(IX+-3)
-	ADD	HL,BC
-	LD	(HL),A
-	LD	BC,(IX+-3)
-	INC	BC
-	LD	(IX+-3),BC
-L_181:
-	LD	BC,96
-	LD	HL,(IX+-3)
-	OR	A,A
-	SBC	HL,BC
-	JR	C,L_179
-	LD	HL,IX
-	LD	BC,-182
-	ADD	HL,BC
-	LD	BC,HL
-	PUSH	BC
-	PEA	IX+-86
-	CALL	_decrypt
-	POP	BC
-	POP	BC
+	JR	L_197
+L_195:
+;  219					/*
+;  220					XOR the message with the next block, for multiple-block messages.
+;  221					The starting value of `msg` would be all ZEROes.
+;  222					Since this only operates on 1 block, there is no XOR done, and the message is simply set to the input message.
+;  223					*/
+;  224					for(a=0; a<KEY_SIZE; ++a){
 	LD	BC,0
 	LD	(IX+-3),BC
 	JR	L_185
 L_183:
+;  225						key[a] ^= msg[a & MOD_BLK_SIZE] ^ b ^ BLK_SIZE;
+	LD	A,(IX+-3)
+	AND	A,15
+	UEXT	HL
+	LD	L,A
+	LD	BC,HL
+	LEA	HL,IX+-22
+	ADD	HL,BC
+	LD	A,(HL)
+	LD	B,(IX+-6)
+	LD	DE,(IX+-3)
+	PUSH	IY
+	LEA	IY,IX+-128	; spill
+	LD	(IY+-117),DE
+	POP	IY
+	LD	DE,(IX+-3)
+	PUSH	IY
+	LEA	IY,IX+-128	; spill
+	LD	(IY+-120),DE	; unspill
+	LD	DE,(IY+-117)
+	POP	IY
+	XOR	A,B
+	XOR	A,16
+	LEA	HL,IX+-70
+	ADD	HL,DE
+	XOR	A,(HL)
+	LEA	HL,IX+-70
+	PUSH	IY
+	LEA	IY,IX+-128	; unspill
+	LD	DE,(IY+-120)
+	POP	IY
+	ADD	HL,DE
+	LD	(HL),A
 	LD	BC,(IX+-3)
-	LEA	HL,IX+-86
+	INC	BC
+	LD	(IX+-3),BC
+;  226					}
+L_185:
+	LD	BC,32
+	LD	HL,(IX+-3)
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_183
+;  227					encrypt(msg, key);
+	PEA	IX+-70
+	PEA	IX+-22
+	PUSH	BC
+	PUSH	HL
+	LD	HL,IY
+	LD	BC,-251
+	CALL	__istix
+	POP	HL
+	POP	BC
+	CALL	_encrypt
+	PUSH	BC
+	LD	BC,-251
+	PUSH	HL
+	CALL	__ildix
+	LD	IY,HL
+	POP	HL
+	POP	BC
+	POP	BC
+	POP	BC
+;  228					for(a=0; a<KEY_SIZE; ++a){
+	LD	BC,0
+	LD	(IX+-3),BC
+	JR	L_189
+L_187:
+;  229						key[a] ^= b ^ a ^ MSG_SIZE; // for non-block length messages or multiple-block messages, `MSG_SIZE` gets substituted for the total length of the message, in bytes.
+	LD	BC,(IX+-3)
+	LEA	HL,IX+-70
+	ADD	HL,BC
+	LD	B,(IX+-3)
+	LD	A,(IX+-6)
+	XOR	A,B
+	XOR	A,16
+	LD	B,A
+	LD	A,(HL)
+	XOR	A,B
+	LEA	HL,IX+-70
+	LD	BC,(IX+-3)
+	ADD	HL,BC
+	LD	(HL),A
+	LD	BC,(IX+-3)
+	INC	BC
+	LD	(IX+-3),BC
+;  230					}
+L_189:
+	LD	BC,32
+	LD	HL,(IX+-3)
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_187
+;  231					decrypt(msg, key);
+	PEA	IX+-70
+	PEA	IX+-22
+	PUSH	BC
+	PUSH	HL
+	LD	HL,IY
+	LD	BC,-251
+	CALL	__istix
+	POP	HL
+	POP	BC
+	CALL	_decrypt
+	PUSH	BC
+	LD	BC,-251
+	PUSH	HL
+	CALL	__ildix
+	LD	IY,HL
+	POP	HL
+	POP	BC
+	POP	BC
+	POP	BC
+;  232					for(a=0; a<KEY_SIZE; ++a){
+	LD	BC,0
+	LD	(IX+-3),BC
+	JR	L_193
+L_191:
+;  233						key[a] ^= sbox_enc[msg[a & MOD_BLK_SIZE] ^ b ^ a];
+	LD	A,(IX+-3)
+	AND	A,15
+	UEXT	HL
+	LD	L,A
+	LD	BC,HL
+	LEA	HL,IX+-22
 	ADD	HL,BC
 	LD	A,(HL)
 	UEXT	HL
@@ -2518,70 +3093,90 @@ L_183:
 	CALL	__ixor
 	LD	BC,(IX+-3)
 	CALL	__ixor
-	LD	BC,_sbox_enc
-	ADD	HL,BC
-	LD	IY,HL
-	LD	HL,IX
-	LD	BC,-182
-	ADD	HL,BC
 	LD	BC,(IX+-3)
+	LD	DE,(IX+-3)
+	PUSH	IY
+	LEA	IY,IX+-128	; spill
+	LD	(IY+-111),DE
+	POP	IY
+	LD	DE,_sbox_enc
+	PUSH	IY
+	LEA	IY,IX+-128	; spill
+	LD	(IY+-114),DE	; unspill
+	LD	DE,(IY+-111)
+	LD	(IY+-111),DE
+	LD	DE,(IY+-114)
+	POP	IY
+	ADD	HL,DE
+	PUSH	IY
+	LEA	IY,IX+-128	; unspill
+	LD	DE,(IY+-111)
+	POP	IY
+	LD	IY,HL
+	LEA	HL,IX+-70
 	ADD	HL,BC
 	LD	A,(IY)
 	XOR	A,(HL)
-	LD	HL,IX
-	LD	BC,-182
-	ADD	HL,BC
-	LD	BC,(IX+-3)
-	ADD	HL,BC
+	LEA	HL,IX+-70
+	ADD	HL,DE
 	LD	(HL),A
 	LD	BC,(IX+-3)
 	INC	BC
 	LD	(IX+-3),BC
-L_185:
-	LD	BC,96
+;  234					}
+L_193:
+	LD	BC,32
 	LD	HL,(IX+-3)
 	OR	A,A
 	SBC	HL,BC
-	JR	C,L_183
-	LD	HL,IX
-	LD	BC,-182
-	ADD	HL,BC
-	LD	BC,HL
+	JR	C,L_191
+;  235					encrypt(msg, key);
+	PEA	IX+-70
+	PEA	IX+-22
 	PUSH	BC
-	PEA	IX+-86
+	PUSH	HL
+	LD	HL,IY
+	LD	BC,-251
+	CALL	__istix
+	POP	HL
+	POP	BC
 	CALL	_encrypt
+	PUSH	BC
+	LD	BC,-251
+	PUSH	HL
+	CALL	__ildix
+	LD	IY,HL
+	POP	HL
+	POP	BC
 	POP	BC
 	POP	BC
 	LD	BC,(IX+-6)
 	INC	BC
 	LD	(IX+-6),BC
-L_189:
-	LD	BC,16
+;  236				}
+L_197:
+	LD	BC,1
 	LD	HL,(IX+-6)
 	OR	A,A
 	SBC	HL,BC
-	JR	C,L_187
-	LD	BC,64
+	JR	C,L_195
+;  237				to_hex(msg, hex, MSG_SIZE);
+	LD	BC,16
 	PUSH	BC
-	LD	HL,IX
-	LD	BC,-311
-	ADD	HL,BC
-	LD	BC,HL
-	PUSH	BC
-	PEA	IX+-86
+	PEA	IX+-103
+	PEA	IX+-22
 	CALL	_to_hex
 	POP	BC
 	POP	BC
 	POP	BC
-	LD	HL,IX
-	LD	BC,-311
-	ADD	HL,BC
-	LD	BC,HL
+;  238	
+;  239				/* Build the user response */
+;  240				sprintf(response, "%s", hex);
+	PEA	IX+-103
+	LD	BC,L__82
 	PUSH	BC
-	LD	BC,L__79
-	PUSH	BC
 	LD	HL,IX
-	LD	BC,-440
+	LD	BC,-136
 	ADD	HL,BC
 	LD	BC,HL
 	PUSH	BC
@@ -2589,6 +3184,11 @@ L_189:
 	POP	BC
 	POP	BC
 	POP	BC
+;  241				
+;  242	
+;  243				
+;  244				/* Clear the homescreen and display the built response */
+;  245				os_ClrHome();
 	LD	BC,_asm_ClrLCD
 	PUSH	BC
 	CALL	__OS
@@ -2601,46 +3201,39 @@ L_189:
 	PUSH	BC
 	CALL	__OS
 	POP	BC
-	LD	BC,0
-	LD	(IX+-3),BC
-	JR	L_195
-L_193:
-	LD	BC,(IX+-3)
-	LD	HL,IX
-	LD	DE,-182
-	ADD	HL,DE
-	ADD	HL,BC
-	LD	(HL),0
-	LD	BC,(IX+-3)
-	INC	BC
-	LD	(IX+-3),BC
-L_195:
-	LD	BC,96
-	LD	HL,(IX+-3)
-	OR	A,A
-	SBC	HL,BC
-	JR	C,L_193
-	LD	BC,0
-	LD	(IX+-3),BC
-	JR	L_199
-L_197:
-	LD	BC,(IX+-3)
-	LEA	HL,IX+-86
-	ADD	HL,BC
-	LD	(HL),0
-	LD	BC,(IX+-3)
-	INC	BC
-	LD	(IX+-3),BC
-L_199:
-	LD	BC,64
-	LD	HL,(IX+-3)
-	OR	A,A
-	SBC	HL,BC
-	JR	C,L_197
+;  246		//		printf(response);
+;  247		//		for(a=0; a<MSG_SIZE; ++a){
+;  248		//			msg_in[a * 2] = response[a * 2];
+;  249		//			msg_in[a * 2 + 1] = response[a * 2 + 1];
+;  250		//		}
+;  251	
+;  252				// Cleanup
+;  253					for(a=0; a<KEY_SIZE; ++a){
 	LD	BC,0
 	LD	(IX+-3),BC
 	JR	L_203
 L_201:
+;  254						key[a] = 0;
+	LD	BC,(IX+-3)
+	LEA	HL,IX+-70
+	ADD	HL,BC
+	LD	(HL),0
+	LD	BC,(IX+-3)
+	INC	BC
+	LD	(IX+-3),BC
+;  255					}
+L_203:
+	LD	BC,32
+	LD	HL,(IX+-3)
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_201
+;  256					for(a=0; a<MSG_SIZE; ++a){
+	LD	BC,0
+	LD	(IX+-3),BC
+	JR	L_207
+L_205:
+;  257						msg[a] = 0;
 	LD	BC,(IX+-3)
 	LEA	HL,IX+-22
 	ADD	HL,BC
@@ -2648,62 +3241,179 @@ L_201:
 	LD	BC,(IX+-3)
 	INC	BC
 	LD	(IX+-3),BC
-L_203:
+;  258					}
+L_207:
 	LD	BC,16
 	LD	HL,(IX+-3)
 	OR	A,A
 	SBC	HL,BC
-	JR	C,L_201
+	JR	C,L_205
+;  259					for(a=0; a<16; ++a){
 	LD	BC,0
 	LD	(IX+-3),BC
-	JR	L_207
-L_205:
+	JR	L_211
+L_209:
+;  260						choice[a] = 0;
 	LD	BC,(IX+-3)
-	LD	HL,IX
-	LD	DE,-311
-	ADD	HL,DE
+	LEA	HL,IX+-38
 	ADD	HL,BC
 	LD	(HL),0
 	LD	BC,(IX+-3)
 	INC	BC
 	LD	(IX+-3),BC
-L_207:
-	LD	BC,129
+;  261					}
+L_211:
+	LD	BC,16
 	LD	HL,(IX+-3)
 	OR	A,A
 	SBC	HL,BC
-	JR	C,L_205
+	JR	C,L_209
+;  262					for(a=0; a<MSG_SIZE * 2 + 1; ++a){
+	LD	BC,0
+	LD	(IX+-3),BC
+	JR	L_215
+L_213:
+;  263						hex[a] = 0;
+	LD	BC,(IX+-3)
+	LEA	HL,IX+-103
+	ADD	HL,BC
+	LD	(HL),0
+	LD	BC,(IX+-3)
+	INC	BC
+	LD	(IX+-3),BC
+;  264					}
+L_215:
+	LD	BC,33
+	LD	HL,(IX+-3)
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_213
+;  265				os_PutStrFull(response);
 	LD	HL,IX
-	LD	BC,-440
+	LD	BC,-136
 	ADD	HL,BC
 	LD	BC,HL
 	PUSH	BC
 	CALL	_os_PutStrFull
 	POP	BC
+;  266					for(a=0; a<MSG_SIZE * 2 + 1; ++a){
 	LD	BC,0
 	LD	(IX+-3),BC
-	JR	L_212
-L_210:
+	JR	L_220
+L_218:
+;  267						response[a] = 0;
 	LD	BC,(IX+-3)
 	LD	HL,IX
-	LD	DE,-440
+	LD	DE,-136
 	ADD	HL,DE
 	ADD	HL,BC
 	LD	(HL),0
 	LD	BC,(IX+-3)
 	INC	BC
 	LD	(IX+-3),BC
-L_212:
-	LD	BC,129
+;  268					}
+L_220:
+	LD	BC,33
 	LD	HL,(IX+-3)
 	OR	A,A
 	SBC	HL,BC
-	JR	C,L_210
-L_214:
+	JR	C,L_218
+;  269				/* Waits for a key */
+;  270				while (!os_GetCSC());
+L_222:
 	CALL	_os_GetCSC
 	OR	A,A
-	JR	Z,L_214
-L_218:
+	JR	Z,L_222
+;  271				#ifdef ENCDEC_CHOICE
+;  272				}
+L_226:
+;  273				#endif
+;  274			#endif
+;  275			#ifdef OP_TEST
+;  276				#ifdef ENCDEC_CHOICE
+;  277				if(choice[0] == 't' || choice[0] == 'T'){
+;  278				#endif
+;  279				#ifdef IGNORE_KEY
+;  280				for(a=0; a<KEY_SIZE; ++a){
+;  281					key[a] = 0;
+;  282				}
+;  283				#endif
+;  284				from_hex(msg_in, msg, MSG_SIZE);
+;  285				printf("\n");
+;  286				
+;  287				expand_key(key, exp_key);
+;  288				
+;  289				gettimeofday(&start, NULL);
+;  290				for(a=0; a<TEST_ITERS; ++a){
+;  291					encrypt(msg, key);
+;  292				}
+;  293				gettimeofday(&end, NULL);
+;  294				/* Build the user response */
+;  295				printf("Encryption (constant key) took %f seconds for %i iters [%i bytes]\nEncryption speed: %lf bytes/second\n", timediff(start, end)/1000000, TEST_ITERS, TEST_ITERS * MSG_SIZE, TEST_ITERS * MSG_SIZE / timediff(start, end) * 1000000);
+;  296				expand_key(key, exp_key);
+;  297				
+;  298				gettimeofday(&start, NULL);
+;  299				for(a=0; a<TEST_ITERS; ++a){
+;  300					decrypt(msg, key);
+;  301				}
+;  302				gettimeofday(&end, NULL);
+;  303				/* Build the user response */
+;  304				printf("Decryption (constant key) took %f seconds for %i iters [%i bytes]\nEncryption speed: %lf bytes/second\n", timediff(start, end)/1000000, TEST_ITERS, TEST_ITERS * MSG_SIZE, TEST_ITERS * MSG_SIZE / timediff(start, end) * 1000000);
+;  305				
+;  306				
+;  307				gettimeofday(&start, NULL);
+;  308				for(a=0; a<TEST_ITERS; ++a){
+;  309					expand_key(key, exp_key);
+;  310					encrypt(msg, key);
+;  311				}
+;  312				gettimeofday(&end, NULL);
+;  313				/* Build the user response */
+;  314				printf("Encryption (dynamic key) took %f seconds for %i iters [%i bytes]\nEncryption speed: %lf bytes/second\n", timediff(start, end)/1000000, TEST_ITERS, TEST_ITERS * MSG_SIZE, TEST_ITERS * MSG_SIZE / timediff(start, end) * 1000000);
+;  315				gettimeofday(&start, NULL);
+;  316				for(a=0; a<TEST_ITERS; ++a){
+;  317					expand_key(key, exp_key);
+;  318					decrypt(msg, key);
+;  319				}
+;  320				gettimeofday(&end, NULL);
+;  321				/* Build the user response */
+;  322				printf("Decryption (dynamic key) took %f seconds for %i iters [%i bytes]\nEncryption speed: %lf bytes/second\n", timediff(start, end)/1000000, TEST_ITERS, TEST_ITERS * MSG_SIZE, TEST_ITERS * MSG_SIZE / timediff(start, end) * 1000000);
+;  323				
+;  324				
+;  325				/* Clear the homescreen and display the built response */
+;  326				os_ClrHome();
+;  327		//		printf(response);
+;  328		//		for(a=0; a<MSG_SIZE; ++a){
+;  329		//			msg_in[a * 2] = response[a * 2];
+;  330		//			msg_in[a * 2 + 1] = response[a * 2 + 1];
+;  331		//		}
+;  332	
+;  333				// Cleanup
+;  334					for(a=0; a<KEY_SIZE; ++a){
+;  335						key[a] = 0;
+;  336					}
+;  337					for(a=0; a<MSG_SIZE; ++a){
+;  338						msg[a] = 0;
+;  339					}
+;  340					for(a=0; a<16; ++a){
+;  341						choice[a] = 0;
+;  342					}
+;  343					for(a=0; a<MSG_SIZE * 2 + 1; ++a){
+;  344						hex[a] = 0;
+;  345					}
+;  346				os_PutStrFull(response);
+;  347					for(a=0; a<MSG_SIZE * 2 + 1; ++a){
+;  348						response[a] = 0;
+;  349					}
+;  350				/* Waits for a key */
+;  351				while (!os_GetCSC());
+;  352				#ifdef ENCDEC_CHOICE
+;  353				}
+;  354				#endif
+;  355			#endif
+;  356			a = 0;
+;  357			b = 0;
+;  358			
+;  359			os_ClrHome();
 	LD	BC,_asm_ClrLCD
 	PUSH	BC
 	CALL	__OS
@@ -2716,49 +3426,59 @@ L_218:
 	PUSH	BC
 	CALL	__OS
 	POP	BC
+;  360			os_GetStringInput("Another? (y/N):", choice, 16);
 	LD	BC,16
 	PUSH	BC
-	PEA	IX+-22
-	LD	BC,L__86
+	PEA	IX+-38
+	LD	BC,L__89
 	PUSH	BC
 	CALL	_os_GetStringInput
 	POP	BC
 	POP	BC
 	POP	BC
-	LD	A,(IX+-22)
+;  361			if(choice[0] != 'y' && choice[0] != 'Y'){
+	LD	A,(IX+-38)
 	UEXT	HL
 	LD	L,A
 	OR	A,A
 	LD	BC,121
 	SBC	HL,BC
-	JR	Z,L_228
-	LD	A,(IX+-22)
+	JR	Z,L_236
+	LD	A,(IX+-38)
 	UEXT	HL
 	LD	L,A
 	OR	A,A
 	LD	BC,89
 	SBC	HL,BC
-	JR	Z,L_228
+	JR	Z,L_236
+;  362				for(a=0; a<16; ++a){
 	LD	BC,0
 	LD	(IX+-3),BC
-	JR	L_225
-L_223:
+	JR	L_233
+L_231:
+;  363					choice[a] = 0;
 	LD	BC,(IX+-3)
-	LEA	HL,IX+-22
+	LEA	HL,IX+-38
 	ADD	HL,BC
 	LD	(HL),0
 	LD	BC,(IX+-3)
 	INC	BC
 	LD	(IX+-3),BC
-L_225:
+;  364				}
+L_233:
 	LD	BC,16
 	LD	HL,(IX+-3)
 	OR	A,A
 	SBC	HL,BC
-	JR	C,L_223
+	JR	C,L_231
 	OR	A,A
+;  365				a = 0;
+;  366				break;
+;  367			}
+;  368		}
+;  369		return 0;
 	SBC	HL,HL
-;    1	#include "psec-crypt.h"
+;  370	}
 	LD	SP,IX
 	POP	IX
 	RET	
@@ -2775,71 +3495,71 @@ L_225:
 ;_asm_HomeUp                         IMPORT  -----   function
 ;_asm_ClrLCD                         IMPORT  -----   function
 ;__OS                                IMPORT  -----   function
-;key_in                              IX-764    194   variable
-;msg_in                              IX-570    130   variable
-;response                            IX-440    129   variable
-;hex                                 IX-311    129   variable
-;key                                 IX-182     96   variable
-;msg                                  IX-86     64   variable
-;choice                               IX-22     16   variable
+;key_in                              IX-236     66   variable
+;msg_in                              IX-170     34   variable
+;response                            IX-136     33   variable
+;hex                                 IX-103     33   variable
+;key                                  IX-70     32   variable
+;choice                               IX-38     16   variable
+;msg                                  IX-22     16   variable
 ;b                                     IX-6      3   variable
 ;a                                     IX-3      3   variable
 
 
-; Stack Frame Size: 770 (bytes)
-;       Spill Code: -1 (instruction)
+; Stack Frame Size: 257 (bytes)
+;       Spill Code: -7 (instruction)
 
 
 	SEGMENT STRSECT
-L__36:
+L__39:
 	DB	"PARSEC Encryption         "
 	DB	0
-L__37:
+L__40:
 	DB	"--------------------------"
 	DB	0
-L__38:
-	DB	"64-byte (512 bit) block   "
-	DB	0
-L__39:
-	DB	"96-byte (768 bit) key     "
-	DB	0
-L__40:
-	DB	"32 rounds                "
-	DB	0
 L__41:
-	DB	"                          "
+	DB	"16-byte (128 bit) block   "
+	DB	0
+L__42:
+	DB	"32-byte (256 bit) key     "
+	DB	0
+L__43:
+	DB	"32 rounds                 "
 	DB	0
 L__44:
-	DB	"Msg:"
-	DB	0
-L__46:
-	DB	"Key:"
+	DB	"                          "
 	DB	0
 L__47:
-	DB	"E = Encrypt               "
-	DB	0
-L__48:
-	DB	"D = Decrypt               "
+	DB	"Msg:"
 	DB	0
 L__49:
-	DB	"H = Hash                  "
+	DB	"Key:"
+	DB	0
+L__50:
+	DB	"E = Encrypt               "
 	DB	0
 L__51:
-	DB	"Mode (E/D/H):"
+	DB	"D = Decrypt               "
 	DB	0
 L__52:
+	DB	"H = Hash                  "
+	DB	0
+L__54:
+	DB	"Mode (E/D/H):"
+	DB	0
+L__55:
 	DB	"Working..."
 	DB	0
-L__56:
+L__59:
 	DB	"%s"
 	DB	0
-L__66:
+L__69:
 	DB	"%s"
 	DB	0
-L__79:
+L__82:
 	DB	"%s"
 	DB	0
-L__86:
+L__89:
 	DB	"Another? (y/N):"
 	DB	0
 	XREF _sprintf:ROM
@@ -2851,10 +3571,10 @@ L__86:
 	XREF _os_GetStringInput:ROM
 	XREF _os_PutStrFull:ROM
 	XREF __idivs:ROM
-	XREF __iand:ROM
 	XREF __irems:ROM
-	XREF __iremu:ROM
 	XREF __ixor:ROM
+	XREF __ildix:ROM
+	XREF __istix:ROM
 	XREF __frameset0:ROM
 	XREF __frameset:ROM
 	XDEF _main
@@ -2872,6 +3592,7 @@ L__86:
 	XDEF _round_enc
 	XDEF _round_dec_per
 	XDEF _round_enc_per
+	XDEF _round_mix
 	XDEF _round_dec_sub
 	XDEF _round_enc_sub
 	XDEF _pbox_dec

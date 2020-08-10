@@ -6,10 +6,10 @@ libs     D1A882 D1A882             0h
 startup  D1A882 D1A8C1            3Fh
 cleanup  D1A8C1 D1A8D5            14h
 exit     D1A8D5 D1A8DB             6h
-code     D1A8DB D1BA42          1167h
-data     D1BA42 D1BCD3           291h
-strsect  D1BCD3 D1BE01           12Eh
-text     D1BE01 D1BE01             0h
+code     D1A8DB D1BDD4          14F9h
+data     D1BDD4 D1C005           231h
+strsect  D1C005 D1C134           12Fh
+text     D1C134 D1C134             0h
 bss      D031F6 D031F6 D13FD6      0h
 header   D1A87F D1A882             3h
 
@@ -157,9 +157,9 @@ __OS                      = D1A9E9
 _sprintf                  = 0000BC
 __frameset                = D1A9F3
 __frameset0               = D1AA01
-__iand                    = 000134
 __ixor                    = 000198
-__iremu                   = 000170
+__istix                   = 00018C
+__ildix                   = 000148
 __idivs                   = 00013C
 __irems                   = 00016C
 __ccleanup                = D1A8C1
@@ -169,25 +169,26 @@ _exit                     = D1A8D7
 __exit                    = D1A8B0
 __exitsp                  = D1A8B0
 __errsp                   = D1A8B0
-_main                     = D1B19B
-_nop                      = D1B192
-_hash_key                 = D1B189
-_from_hex                 = D1B11B
-_to_hex                   = D1B092
-_hex_to_int               = D1B043
-_decrypt                  = D1AF7F
-_encrypt                  = D1AEC1
-_expand_key               = D1AD08
-_dec                      = D1ACBE
-_enc                      = D1AC78
-_round_dec                = D1AC4E
-_round_enc                = D1AC24
-_round_dec_per            = D1AB89
-_round_enc_per            = D1AAE2
+_main                     = D1B259
+_nop                      = D1B250
+_hash_key                 = D1B247
+_from_hex                 = D1B1D9
+_to_hex                   = D1B150
+_hex_to_int               = D1B101
+_decrypt                  = D1B03F
+_encrypt                  = D1AF83
+_expand_key               = D1ADEB
+_dec                      = D1ADA3
+_enc                      = D1AD5F
+_round_dec                = D1AD22
+_round_enc                = D1ACE5
+_round_dec_per            = D1AC43
+_round_enc_per            = D1ABAB
+_round_mix                = D1AAE2
 _round_dec_sub            = D1AA75
 _round_enc_sub            = D1AA0C
-_pbox_dec                 = D1BC93
-_pbox_enc                 = D1BC53
-_sbox_dec                 = D1BB53
-_sbox_enc                 = D1BA53
-_hex_enc                  = D1BA42
+_pbox_dec                 = D1BFF5
+_pbox_enc                 = D1BFE5
+_sbox_dec                 = D1BEE5
+_sbox_enc                 = D1BDE5
+_hex_enc                  = D1BDD4
