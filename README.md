@@ -1,13 +1,16 @@
 # PARSEC Encryption
 #### Created by Alex Anderson < parsec29@protonmail.com >
 
+## License
+I originally published this software under the GPLv3 license, but have since relicensed it under the MIT license.
+
 ## Key size
 
 *In a (slightly embarrassing) realization I remembered I have been using a 1024-bit key, instead of 768 bits, due to an optimization where I replace `n % key_size` with `n & key_size_bitmask`. I made this optimization to mitigate potential timing attacks related to the non-constant timing of the C modulus operator, but then forgot the key size now must be a power of 2.*
 
 *Since the difference doesn't harm security, you can just pretend it's a 768-bit key, then add 256 more bits!*
 
-PARSEC is an encryption algorithm I made because I was bored. The algorithm is based on an SP-Network and uses, by default, a 1024-bit key, 512-bit block, and 32 rounds. Unlike (some) implementations of AES, the key expansion uses only constant-time operations, to prevent certain forms of attacks.
+PARSEC is an encryption algorithm I made because I was bored. The algorithm is based on an SP-Network and uses, by default, a 1024-bit key, 512-bit block, and 32 rounds. The algorithm uses only constant-time operations, because those are the least susceptable to side-channel attacks.
 
 This algorithm was originally intended to run on a TI-84+CE calculator, but the calculator build broke from one of the optimizations I made to reduce the risk of timing attacks.
 
@@ -27,9 +30,9 @@ The TI-84+CE version only uses 128-bit blocks and 256-bit keys. Why? Because it'
 - 1024-bit key because I decided to go ridiculously overboard. In theory, the fastest computer our universe allows to exist can only run at `~10^50` operations/sec. I decided to cut that in half ,because nobody said it couldn't be quantum, right? *right?*, and calculate how large the key would need to be to still be secure.
     - Hint: `10^50` operations/sec means `2^166` operations/sec, which cracks more 128-bit keys than I'll probably generate in my lifetime.
     - I settled on 384 bits of security, post-quantum, which means `2^218` seconds to crack the key for the previously mentioned, theoretical *fastest computer in the universe*. That should prevent the security margin from being closed by a quantum supercomputer orbiting a black hole... But, since the key size is a power of 2, I used a 1024-bit key, which becomes 512 bits of security, and thus increasing the security margin even more; as if anyone cares at that point.
-	- For anyone who actually cares, the 1024-bit key means a key bruteforce will take `2^346` seconds for such an attacker with such an "ideal computer". However, the challenge of bruteforcing the key becomes unimportant when you consider the block size:
+	- For anyone who actually cares, the 1024-bit key means a key bruteforce will take `2^346` seconds for an attacker with such an "ideal computer". However, the challenge of bruteforcing the key becomes unimportant when you consider the block size:
 - 512-bit block size, for the same reason as the key size. This is based on a block-cipher attack where an attacker can break the algorithm for every possible key, with `2^(block size)` bits ciphertext.
-    - I feel comfortable making this smaller than the key, due to a trick I used, where it mixes the key with the P-box, effectively creating `2^256` possible P-boxes. That way, for the purposes of the aforementioned attack, it *should* require `2^768` bits instead of only `2^512`.
+    - I feel comfortable making this smaller than the key, due to a trick I used, where it mixes the key with the P-box, effectively creating `2^256` possible P-boxes. That way, for the purposes of the aforementioned attack, it *should* require `2^768` bits instead of only `2^512`. This security margin increases with each round performed, since the P-box is mixed with 1 byte from the round key each time a round is performed.
 
 ## Why did I make this algorithm so ridiculous?
 #### Because I felt like it, of course!
@@ -47,19 +50,18 @@ If you change the parameters to use a 128-bit block size and 256-bit key (the ap
 
 That said, I don't do *not too bad* so I made my key cycle random, dumb, and more time consuming than it needs to be. All in the name of security!
 
-## Potantial changes:
+## Potential changes:
 
 Really just two things:
 
 - Increase the number of rounds. 32 rounds provides full diffusion 3 times, but I'm still not convinced. I'd like to see this algorithm run with 96 rounds (although I could be persuaded to reduce the number). I really only set it to 32 because anything more gets hella slow and runs my calculator out of RAM. Besides, I'd like this algorithm to be actually practical enough to *pretend* it's a real encryption algorithm, if I possibly can.
-- Fix all the damn typos in my documentation... but I won't because I don't actually care.
 
 ## Can I generate my own boxes?
 ***Yes!***
 
-I bundled the script with this repo. Simply run `python3 ./parsec-spgen [box size] +q +inv`. You'll get 2 lists which can be imported directly into your code, in the syntax appropriate for the language you use. The first one is the box itself, and the second is the inverse box.
+I bundled the script with this repo. Simply run `python3 ./psec-spgen [box size] +q +inv`. You'll get 2 lists which can be imported directly into your code, in the syntax appropriate for the language you use. The first one is the box itself, and the second is the inverse box.
 
-An S-box should be generated with the size 256, using the command `python3 ./parsec-spgen 256 +q +inv`. It's important to note the size is in bytes, not bits. As such, a 128-bit block cipher would use the box generated from `python3 ./parsec-spgen 16 +q +inv` because `16 bytes = 128 bits`.
+An S-box should be generated with the size 256, using the command `python3 ./psec-spgen 256 +q +inv`. It's important to note the size is in bytes, not bits. As such, a 128-bit block cipher would use the box generated from `python3 ./psec-spgen 16 +q +inv` because `16 bytes = 128 bits`.
 
 
 ## Building and running:
