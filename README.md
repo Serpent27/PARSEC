@@ -65,3 +65,18 @@ An S-box should be generated with the size 256, using the command `python3 ./par
 ## Building and running:
 To build, simply run `gcc src/main.c -o [output]`. If you want to use compiler optimizations, run `gcc src/main.c -o [output] -O3`.
 I have already built the file `./lxtest` which should run fine on most Linux systems.
+
+## Encryption modes of operation:
+I decided to create a pseudo-authenticated mode of operation, optimized for full-disk encryption:
+***PCM (PARSEC Counter Mode)***
+
+A mode of operation I'm creating specifically for full-disk encryption.
+The purpose of this mode is to provide a paralleizable, tamper-resistant mode of operation without regenerating the key cycle for each block; since key cycle generation slows throughput.
+
+How do I achieve this? By encrypting the message through 1 substitution round, XORing the block index, then performing the actual encryption.
+This way I don't need to worry about certain(chosen?) plaintexts generating predictable ciphertext - the key is factored into the transformation, and the S-box removes bitwise patterns that can lead to predictable output.
+
+With this mode of operation, any change in the message should lead to random ciphertext.
+It should be noted that this isn't an authenticated encryption mode. It simply ensures that any changes made to the ciphertext become meaningless upon decryption, preventing any intelligent form of data manipulation. Some filesystems, such as BTRFS, store a hash of their file objects (ex. CRC32), which should provide sufficient authentication considering an attacker needs to physically access the machine for each attempt, in such an attack. The hash also doesn't need to be a secure hash, since the encryption itself is meant to provide the security for the hashing algorithm. The hash needs only to detect random changes, which CRC32 does well.
+
+You could make a filesystem that keeps and verifies the SHA-256 of each file, if you really wanted to, and thus increase the security to 128 bits but the attacker needs to physically tamper with the data on-disk for each attempt, and wait for the user to decrypt it, which makes 32 bits of security enough. Also, the hash may be the same but the data on-disk will still be random and meaningless, defeating the entire point of such an attack. The attacker can't predict or control what the data will be, making the attack fairly pointless to try in the first place.

@@ -288,7 +288,7 @@ int main(void)
 			
 			gettimeofday(&start, NULL);
 			for(a=0; a<TEST_ITERS; ++a){
-				encrypt(msg, key);
+				enc(msg, exp_key, tmp);
 			}
 			gettimeofday(&end, NULL);
 			/* Build the user response */
@@ -297,7 +297,7 @@ int main(void)
 			
 			gettimeofday(&start, NULL);
 			for(a=0; a<TEST_ITERS; ++a){
-				decrypt(msg, key);
+				dec(msg, exp_key, tmp);
 			}
 			gettimeofday(&end, NULL);
 			/* Build the user response */
@@ -307,7 +307,7 @@ int main(void)
 			gettimeofday(&start, NULL);
 			for(a=0; a<TEST_ITERS; ++a){
 				expand_key(key, exp_key);
-				encrypt(msg, key);
+				enc(msg, exp_key, tmp);
 			}
 			gettimeofday(&end, NULL);
 			/* Build the user response */
@@ -315,11 +315,32 @@ int main(void)
 			gettimeofday(&start, NULL);
 			for(a=0; a<TEST_ITERS; ++a){
 				expand_key(key, exp_key);
-				decrypt(msg, key);
+				dec(msg, exp_key, tmp);
 			}
 			gettimeofday(&end, NULL);
 			/* Build the user response */
 			printf("Decryption (dynamic key) took %f seconds for %i iters [%i bytes]\nEncryption speed: %lf bytes/second\n", timediff(start, end)/1000000, TEST_ITERS, TEST_ITERS * MSG_SIZE, TEST_ITERS * MSG_SIZE / timediff(start, end) * 1000000);
+			
+			
+			// PCM
+			expand_key(key, exp_key);
+			gettimeofday(&start, NULL);
+			for(a=0; a<TEST_ITERS; ++a){
+				enc_pcm(msg, a, exp_key, tmp);
+			}
+			gettimeofday(&end, NULL);
+			/* Build the user response */
+			printf("Encryption (PCM) took %f seconds for %i iters [%i bytes]\nEncryption speed: %lf bytes/second\n", timediff(start, end)/1000000, TEST_ITERS, TEST_ITERS * MSG_SIZE, TEST_ITERS * MSG_SIZE / timediff(start, end) * 1000000);
+			
+			expand_key(key, exp_key);
+			gettimeofday(&start, NULL);
+			for(a=0; a<TEST_ITERS; ++a){
+				dec_pcm(msg, a, exp_key, tmp);
+			}
+			gettimeofday(&end, NULL);
+			/* Build the user response */
+			printf("Decryption (PCM) took %f seconds for %i iters [%i bytes]\nEncryption speed: %lf bytes/second\n", timediff(start, end)/1000000, TEST_ITERS, TEST_ITERS * MSG_SIZE, TEST_ITERS * MSG_SIZE / timediff(start, end) * 1000000);
+			//
 			
 			
 			/* Clear the homescreen and display the built response */
