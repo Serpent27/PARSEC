@@ -1,6 +1,11 @@
 # PARSEC Encryption
 #### Created by Alex Anderson < parsec29@protonmail.com >
 
+#### *Important:*
+This implementation of PARSEC should not be used on systems that try to cache memory accesses, due to cache timing vulnerabilities. I started working on an x86_64 implementation handling data exclusively on the CPU registers, thereby bypassing caching issues; but I'm not sure I'll actually get around to writing that. Until then you should stick to a good implementation of AES.
+
+Besides, this is basically a reference implementation for an algorithm I personally wouldn't trust until it gets properly reviewed (assuming that ever happens), so yeah...
+
 ## License
 I originally published this software under the GPLv3 license, but have since relicensed it under the MIT license.
 
