@@ -7,7 +7,11 @@ This implementation of PARSEC should not be used on systems that try to cache me
 Besides, this is basically a reference implementation for an algorithm I personally wouldn't trust until it gets properly reviewed (assuming that ever happens), so yeah...
 
 ## License
-I originally published this software under the GPLv3 license, but have since relicensed it under the MIT license.
+PARSEC is licensed under the **MIT** license.
+I originally published this software under the GPLv3 license, but have since relicensed it to allow use in closed-source projects (although I personally despise closed-source).
+
+The TI-84+CE build of this software is compiled by CEDev which can be found at https://github.com/CE-Programming/toolchain/
+CEDev is a separate work and is not created by me.
 
 ## Key size
 
