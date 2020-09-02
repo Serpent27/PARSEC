@@ -6,10 +6,10 @@ libs     D1A882 D1A882             0h
 startup  D1A882 D1A8C1            3Fh
 cleanup  D1A8C1 D1A8D5            14h
 exit     D1A8D5 D1A8DB             6h
-code     D1A8DB D1BE29          154Eh
-data     D1BE29 D1BE29             0h
-strsect  D1BE29 D1BF58           12Fh
-text     D1BF58 D1C189           231h
+code     D1A8DB D1BE10          1535h
+data     D1BE10 D1BE10             0h
+strsect  D1BE10 D1BF3F           12Fh
+text     D1BF3F D1C170           231h
 bss      D031F6 D031F6 D13FD6      0h
 header   D1A87F D1A882             3h
 
@@ -169,16 +169,16 @@ _exit                     = D1A8D7
 __exit                    = D1A8B0
 __exitsp                  = D1A8B0
 __errsp                   = D1A8B0
-_main                     = D1B2AE
-_nop                      = D1B2A5
-_hash_key                 = D1B29C
-_from_hex                 = D1B22E
-_to_hex                   = D1B1A5
-_hex_to_int               = D1B156
-_decrypt                  = D1B09D
-_encrypt                  = D1AFE4
-_dec_pcm_l                = D1AF7D
-_enc_pcm_l                = D1AF16
+_main                     = D1B295
+_nop                      = D1B28C
+_hash_key                 = D1B283
+_from_hex                 = D1B215
+_to_hex                   = D1B18C
+_hex_to_int               = D1B13D
+_decrypt                  = D1B084
+_encrypt                  = D1AFCB
+_dec_pcm_l                = D1AF64
+_enc_pcm_l                = D1AEFD
 _expand_key               = D1ADA8
 _dec                      = D1AD60
 _enc                      = D1AD1C
@@ -189,8 +189,8 @@ _round_enc_per            = D1AB8A
 _round_mix                = D1AAD0
 _round_dec_sub            = D1AA69
 _round_enc_sub            = D1AA0C
-_pbox_dec                 = D1C179
-_pbox_enc                 = D1C169
-_sbox_dec                 = D1C069
-_sbox_enc                 = D1BF69
-_hex_enc                  = D1BF58
+_pbox_dec                 = D1C160
+_pbox_enc                 = D1C150
+_sbox_dec                 = D1C050
+_sbox_enc                 = D1BF50
+_hex_enc                  = D1BF3F

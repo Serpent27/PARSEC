@@ -1142,7 +1142,7 @@ L_40:
 
 
 _expand_key:
-	LD	HL,-33
+	LD	HL,-14
 	CALL	__frameset
 	LD	BC,0
 	LD	(IX+-3),BC
@@ -1170,108 +1170,105 @@ L_48:
 	LD	(IX+-6),BC
 	JR	L_47
 L_45:
-	LD	HL,(IX+-3)
-	ADD	HL,HL
-	ADD	HL,HL
-	ADD	HL,HL
-	ADD	HL,HL
-	LD	DE,HL
-	LD	HL,(IX+-6)
-	LD	BC,(IX+-3)
-	CALL	__ixor
-	LD	BC,32
-	CALL	__ixor
 	LD	BC,_sbox_enc
+	LD	HL,(IX+-3)
 	ADD	HL,BC
 	LD	A,(HL)
-	AND	A,15
 	UEXT	HL
 	LD	L,A
 	LD	BC,(IX+-6)
-	LD	(IX+-9),BC	; spill
-	LD	BC,(IX+9)
-	LD	(IX+-12),BC	; spill
-	LD	BC,(IX+-9)	; unspill
-	LD	(IX+-9),BC	; spill
-	LD	BC,(IX+6)
-	LD	(IX+-15),BC	; spill
-	LD	BC,(IX+-9)	; unspill
-	LD	(IX+-9),BC	; spill
-	LD	BC,(IX+9)
-	LD	(IX+-18),BC	; spill
-	LD	BC,(IX+-9)	; unspill
-	ADD	HL,DE
-	LD	(IX+-9),BC	; spill
-	LD	BC,(IX+-12)	; unspill
-	ADD	HL,BC
-	LD	BC,(IX+-9)	; unspill
-	LD	IY,HL
-	LD	HL,(IX+-3)
-	LD	DE,_sbox_enc
-	ADD	HL,DE
-	LD	A,(HL)
-	UEXT	HL
-	LD	L,A
 	CALL	__ixor
 	LD	A,L
 	AND	A,31
 	UEXT	HL
 	LD	L,A
-	LD	BC,(IX+-15)	; unspill
+	LD	BC,(IX+6)
 	ADD	HL,BC
 	LD	A,(HL)
 	UEXT	HL
 	LD	L,A
 	LD	DE,HL
 	LD	HL,(IX+-3)
-	LD	(IX+-21),DE	; spill
-	LD	DE,_sbox_dec
-	LD	(IX+-24),DE	; spill
-	LD	DE,(IX+-21)	; unspill
-	LD	(IX+-21),DE	; spill
-	LD	DE,(IX+-24)	; unspill
-	ADD	HL,DE
+	LD	BC,_sbox_dec
+	ADD	HL,BC
 	LD	A,(HL)
 	UEXT	HL
 	LD	L,A
-	LD	A,(IY)
 	LD	BC,HL
-	LD	HL,(IX+-21)
+	LD	HL,DE
 	CALL	__ixor
-	LD	BC,(IX+-6)
+	LD	DE,HL
+	LD	HL,(IX+-6)
+	LD	BC,_sbox_enc
+	ADD	HL,BC
+	LD	A,(HL)
+	UEXT	HL
+	LD	L,A
+	LD	BC,HL
+	LD	HL,DE
 	CALL	__ixor
 	LD	BC,32
 	CALL	__ixor
-	LD	BC,(IX+-3)
-	LD	DE,_sbox_enc
-	ADD	HL,DE
-	XOR	A,(HL)
-	LD	D,A
+	LD	BC,_sbox_enc
+	ADD	HL,BC
+	LD	IY,HL
 	LD	HL,(IX+-3)
 	ADD	HL,HL
 	ADD	HL,HL
 	ADD	HL,HL
 	ADD	HL,HL
-	LD	(IX+-9),BC	; spill
-	LD	(IX+-27),HL	; spill
-	LD	BC,(IX+-9)	; unspill
+	LD	DE,HL
 	LD	HL,(IX+-6)
+	LD	BC,(IX+-3)
 	CALL	__ixor
 	LD	BC,32
 	CALL	__ixor
-	LD	(IX+-30),BC	; spill
-	LD	BC,_sbox_enc
-	LD	(IX+-33),BC	; spill
-	ADD	HL,BC
-	LD	A,(HL)
+	LD	A,L
 	AND	A,15
 	UEXT	HL
 	LD	L,A
-	LD	BC,(IX+-27)	; unspill
+	LD	BC,_pbox_enc
 	ADD	HL,BC
-	LD	BC,(IX+-18)	; unspill
+	LD	A,(HL)
+	UEXT	HL
+	LD	L,A
+	ADD	HL,DE
+	LD	BC,(IX+9)
 	ADD	HL,BC
-	LD	(HL),D
+	LD	A,(IY)
+	XOR	A,(HL)
+	LD	HL,(IX+-3)
+	ADD	HL,HL
+	ADD	HL,HL
+	ADD	HL,HL
+	ADD	HL,HL
+	LD	DE,HL
+	LD	HL,(IX+-6)
+	LD	BC,(IX+-3)
+	CALL	__ixor
+	LD	BC,32
+	LD	(IX+-8),A	; spill
+	CALL	__ixor
+	LD	A,L
+	AND	A,15
+	UEXT	HL
+	LD	L,A
+	LD	BC,(IX+9)
+	LD	(IX+-11),BC	; spill
+	LD	BC,_pbox_enc
+	LD	(IX+-14),BC	; spill
+	LD	BC,(IX+-11)	; unspill
+	LD	(IX+-11),BC	; spill
+	LD	BC,(IX+-14)	; unspill
+	ADD	HL,BC
+	LD	BC,(IX+-11)	; unspill
+	LD	A,(HL)
+	UEXT	HL
+	LD	L,A
+	ADD	HL,DE
+	ADD	HL,BC
+	LD	A,(IX+-8)	; unspill
+	LD	(HL),A
 	LD	BC,(IX+-6)
 	INC	BC
 	LD	(IX+-6),BC
@@ -1297,6 +1294,7 @@ L_50:
 
 ;**************************** _expand_key ***************************
 ;Name                         Addr/Register   Size   Type
+;_pbox_enc                           STATIC     16   variable
 ;_sbox_dec                           STATIC    256   variable
 ;_sbox_enc                           STATIC    256   variable
 ;b                                     IX-6      3   variable
@@ -1305,8 +1303,8 @@ L_50:
 ;key                                   IX+6      3   parameter
 
 
-; Stack Frame Size: 45 (bytes)
-;       Spill Code: -3 (instruction)
+; Stack Frame Size: 26 (bytes)
+;       Spill Code: 0 (instruction)
 
 
 _enc_pcm_l:
@@ -1370,7 +1368,7 @@ L_55:
 
 
 ; Stack Frame Size: 21 (bytes)
-;       Spill Code: -3 (instruction)
+;       Spill Code: 0 (instruction)
 
 
 _dec_pcm_l:
@@ -1434,7 +1432,7 @@ L_60:
 
 
 ; Stack Frame Size: 21 (bytes)
-;       Spill Code: -3 (instruction)
+;       Spill Code: 0 (instruction)
 
 
 _encrypt:
@@ -1538,7 +1536,7 @@ L_71:
 
 
 ; Stack Frame Size: 546 (bytes)
-;       Spill Code: -3 (instruction)
+;       Spill Code: 0 (instruction)
 
 
 _decrypt:
@@ -1642,7 +1640,7 @@ L_82:
 
 
 ; Stack Frame Size: 546 (bytes)
-;       Spill Code: -3 (instruction)
+;       Spill Code: 0 (instruction)
 
 
 _hex_to_int:
@@ -1689,7 +1687,7 @@ L_87:
 
 
 ; Stack Frame Size: 12 (bytes)
-;       Spill Code: -3 (instruction)
+;       Spill Code: 0 (instruction)
 
 
 _to_hex:
@@ -1767,7 +1765,7 @@ L_91:
 
 
 ; Stack Frame Size: 18 (bytes)
-;       Spill Code: -3 (instruction)
+;       Spill Code: 0 (instruction)
 
 
 _from_hex:
@@ -1837,7 +1835,7 @@ L_95:
 
 
 ; Stack Frame Size: 18 (bytes)
-;       Spill Code: -3 (instruction)
+;       Spill Code: 0 (instruction)
 
 
 _hash_key:
@@ -1853,7 +1851,7 @@ _hash_key:
 
 
 ; Stack Frame Size: 9 (bytes)
-;       Spill Code: -3 (instruction)
+;       Spill Code: 0 (instruction)
 
 
 _nop:
@@ -2152,10 +2150,14 @@ _nop:
 ;  293				gettimeofday(&end, NULL);
 ;  294				/* Build the user response */
 ;  295				printf("Encryption (constant key) took %f seconds for %i iters [%i bytes]\nEncryption speed: %lf bytes/second\n", timediff(start, end)/1000000, TEST_ITERS, TEST_ITERS * MSG_SIZE, TEST_ITERS * MSG_SIZE / timediff(start, end) * 1000000);
-	CALL	__frameset0
 ;  296				expand_key(key, exp_key);
 ;  297				
 ;  298				gettimeofday(&start, NULL);
+;  299				for(a=0; a<TEST_ITERS; ++a){
+	CALL	__frameset0
+;  300					dec(msg, exp_key, tmp);
+;  301				}
+;  302				gettimeofday(&end, NULL);
 	LD	SP,IX
 	POP	IX
 	RET	
@@ -2167,7 +2169,7 @@ _nop:
 
 
 ; Stack Frame Size: 9 (bytes)
-;       Spill Code: -3 (instruction)
+;       Spill Code: 0 (instruction)
 
 
 _main:
@@ -3437,10 +3439,6 @@ L_232:
 	OR	A,A
 	JR	Z,L_232
 L_236:
-;  299				for(a=0; a<TEST_ITERS; ++a){
-;  300					dec(msg, exp_key, tmp);
-;  301				}
-;  302				gettimeofday(&end, NULL);
 ;  303				/* Build the user response */
 ;  304				printf("Decryption (constant key) took %f seconds for %i iters [%i bytes]\nEncryption speed: %lf bytes/second\n", timediff(start, end)/1000000, TEST_ITERS, TEST_ITERS * MSG_SIZE, TEST_ITERS * MSG_SIZE / timediff(start, end) * 1000000);
 ;  305				
@@ -3612,7 +3610,7 @@ L_243:
 
 
 ; Stack Frame Size: 257 (bytes)
-;       Spill Code: -7 (instruction)
+;       Spill Code: -4 (instruction)
 
 
 	SEGMENT STRSECT

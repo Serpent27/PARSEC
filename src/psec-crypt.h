@@ -150,13 +150,17 @@ void expand_key(unsigned char *key, unsigned char *exp_key){
 	size_t a;
 	size_t b;
 	for(a=0; a<EXP_KEY_SIZE; ++a){
+		#ifdef PC_STATS
+		exp_key[a] = 0;
+		#else
 		exp_key[a] = a;
+		#endif
 	}
 	for(a=0; a<ROUNDS; ++a){
 		for(b=0; b<KEY_SIZE; ++b){
 			//os_ClrHome();
 //			os_PutStrFull(text);
-			exp_key[a * MSG_SIZE + (sbox_enc[b ^ a ^ ROUNDS] & MOD_BLK_SIZE)] ^= sbox_enc[key[(b ^ sbox_enc[a]) & MOD_KEY_SIZE] ^ sbox_dec[a] ^ b ^ KEY_SIZE];
+			exp_key[a * MSG_SIZE + pbox_enc[(b ^ a ^ ROUNDS) & MOD_BLK_SIZE]] ^= sbox_enc[key[(b ^ sbox_enc[a]) & MOD_KEY_SIZE] ^ sbox_dec[a] ^ sbox_enc[b] ^ KEY_SIZE];
 		}
 	}
 }
