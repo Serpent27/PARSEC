@@ -24,8 +24,8 @@ int main(void)
 {
 	for(;;){
 		/* initialize working buffers */
-		unsigned char msg[MSG_SIZE];
-		unsigned char key[KEY_SIZE];
+		unsigned char msg[MSG_SIZE + 1];
+		unsigned char key[KEY_SIZE + 1];
 
 		unsigned char msg_in[MSG_IN_SIZE]; // for hex input
 		unsigned char key_in[KEY_IN_SIZE]; // for hex input
@@ -130,23 +130,8 @@ int main(void)
 	//			msg_in[a * 2 + 1] = response[a * 2 + 1];
 	//		}
 
-			// Cleanup
-				for(a=0; a<KEY_SIZE; ++a){
-					key[a] = 0;
-				}
-				for(a=0; a<MSG_SIZE; ++a){
-					msg[a] = 0;
-				}
-				for(a=0; a<16; ++a){
-					choice[a] = 0;
-				}
-				for(a=0; a<MSG_SIZE * 2 + 1; ++a){
-					hex[a] = 0;
-				}
 			os_PutStrFull(response);
-				for(a=0; a<MSG_SIZE * 2 + 1; ++a){
-					response[a] = 0;
-				}
+
 			/* Waits for a key */
 			while (!os_GetCSC());
 			#ifdef ENCDEC_CHOICE
@@ -182,23 +167,8 @@ int main(void)
 	//			msg_in[a * 2 + 1] = response[a * 2 + 1];
 	//		}
 
-			// Cleanup
-				for(a=0; a<KEY_SIZE; ++a){
-					key[a] = 0;
-				}
-				for(a=0; a<MSG_SIZE; ++a){
-					msg[a] = 0;
-				}
-				for(a=0; a<16; ++a){
-					choice[a] = 0;
-				}
-				for(a=0; a<MSG_SIZE * 2 + 1; ++a){
-					hex[a] = 0;
-				}
 			os_PutStrFull(response);
-				for(a=0; a<MSG_SIZE * 2 + 1; ++a){
-					response[a] = 0;
-				}
+
 			/* Waits for a key */
 			while (!os_GetCSC());
 			#ifdef ENCDEC_CHOICE
@@ -249,23 +219,8 @@ int main(void)
 	//			msg_in[a * 2 + 1] = response[a * 2 + 1];
 	//		}
 
-			// Cleanup
-				for(a=0; a<KEY_SIZE; ++a){
-					key[a] = 0;
-				}
-				for(a=0; a<MSG_SIZE; ++a){
-					msg[a] = 0;
-				}
-				for(a=0; a<16; ++a){
-					choice[a] = 0;
-				}
-				for(a=0; a<MSG_SIZE * 2 + 1; ++a){
-					hex[a] = 0;
-				}
 			os_PutStrFull(response);
-				for(a=0; a<MSG_SIZE * 2 + 1; ++a){
-					response[a] = 0;
-				}
+
 			/* Waits for a key */
 			while (!os_GetCSC());
 			#ifdef ENCDEC_CHOICE
@@ -351,6 +306,44 @@ int main(void)
 	//			msg_in[a * 2 + 1] = response[a * 2 + 1];
 	//		}
 
+			os_PutStrFull(response);
+			/* Waits for a key */
+			while (!os_GetCSC());
+			#ifdef ENCDEC_CHOICE
+			}
+			#endif
+		#endif
+		
+		#ifdef ENCDEC_CHOICE
+			if(choice[0] == 'x' || choice[0] == 'X'){
+			for(a=0; a<MSG_SIZE; ++a){
+				msg[a] = msg_in[a];
+			}
+			for(a=0; a<KEY_SIZE; ++a){
+				key[a] = key_in[a];
+			}
+			key[KEY_SIZE] = 0;
+			
+			#ifdef IGNORE_KEY
+			for(a=0; a<KEY_SIZE; ++a){
+				key[a] = 0;
+			}
+			#endif
+			
+			to_hex(msg, msg_in, MSG_SIZE);
+			to_hex(key, key_in, KEY_SIZE);
+
+			/* Build the user response */
+			
+			
+			/* Clear the homescreen and display the built response */
+			os_ClrHome();
+	//		printf(response);
+	//		for(a=0; a<MSG_SIZE; ++a){
+	//			msg_in[a * 2] = response[a * 2];
+	//			msg_in[a * 2 + 1] = response[a * 2 + 1];
+	//		}
+			
 			// Cleanup
 				for(a=0; a<KEY_SIZE; ++a){
 					key[a] = 0;
@@ -364,16 +357,116 @@ int main(void)
 				for(a=0; a<MSG_SIZE * 2 + 1; ++a){
 					hex[a] = 0;
 				}
-			os_PutStrFull(response);
 				for(a=0; a<MSG_SIZE * 2 + 1; ++a){
 					response[a] = 0;
 				}
+				
+				os_PutStrFull(msg_in);
+				/* Waits for a key */
+				while (!os_GetCSC());
+				os_ClrHome();
+				os_PutStrFull(key_in);
 			/* Waits for a key */
 			while (!os_GetCSC());
-			#ifdef ENCDEC_CHOICE
+			}
+		#endif
+		#ifdef ENCDEC_CHOICE
+			if(choice[0] == 'u' || choice[0] == 'U'){
+			for(a=0; a<MSG_SIZE; ++a){
+				msg[a] = msg_in[a];
+			}
+			for(a=0; a<KEY_SIZE; ++a){
+				key[a] = key_in[a];
+			}
+			key[KEY_SIZE] = 0;
+			
+			#ifdef IGNORE_KEY
+			for(a=0; a<KEY_SIZE; ++a){
+				key[a] = 0;
 			}
 			#endif
+			
+			from_hex(msg_in, msg, MSG_SIZE);
+			from_hex(key_in, key, KEY_SIZE);
+
+			/* Build the user response */
+			
+			
+			/* Clear the homescreen and display the built response */
+			os_ClrHome();
+	//		printf(response);
+	//		for(a=0; a<MSG_SIZE; ++a){
+	//			msg_in[a * 2] = response[a * 2];
+	//			msg_in[a * 2 + 1] = response[a * 2 + 1];
+	//		}
+			
+			// Cleanup
+				for(a=0; a<16; ++a){
+					choice[a] = 0;
+				}
+				for(a=0; a<MSG_SIZE * 2 + 1; ++a){
+					hex[a] = 0;
+				}
+				for(a=0; a<MSG_SIZE * 2 + 1; ++a){
+					response[a] = 0;
+				}
+				
+				os_PutStrFull(msg);
+				/* Waits for a key */
+				while (!os_GetCSC());
+				os_ClrHome();
+				os_PutStrFull(key);
+			/* Waits for a key */
+			while (!os_GetCSC());
+			}
 		#endif
+		/*
+		
+		unsigned char msg[MSG_SIZE];
+		unsigned char key[KEY_SIZE];
+
+		unsigned char msg_in[MSG_IN_SIZE]; // for hex input
+		unsigned char key_in[KEY_IN_SIZE]; // for hex input
+		unsigned char choice[16];
+
+		//unsigned char exp_key[BLK_SIZE * ROUNDS];
+		unsigned char response[MSG_SIZE * 2 + 1];
+		unsigned char hex[MSG_SIZE * 2 + 1];
+		size_t a;
+		size_t b;
+		#ifdef OP_TEST
+		unsigned char exp_key[EXP_KEY_SIZE];
+		unsigned char tmp[MSG_SIZE];
+		#endif
+		
+		*/
+				for(a=0; a<KEY_SIZE; ++a){
+					key[a] = 0;
+				}
+				for(a=0; a<MSG_SIZE; ++a){
+					msg[a] = 0;
+					#ifdef OP_TEST
+					tmp[a] = 0;
+					#endif
+				}
+				for(a=0; a<KEY_IN_SIZE; ++a){
+					key_in[a] = 0;
+				}
+				for(a=0; a<MSG_IN_SIZE; ++a){
+					msg_in[a] = 0;
+				}
+				for(a=0; a<16; ++a){
+					choice[a] = 0;
+				}
+				for(a=0; a<MSG_SIZE * 2 + 1; ++a){
+					hex[a] = 0;
+					response[a] = 0;
+				}
+				#ifdef OP_TEST
+				for(a=0; a<EXP_KEY_SIZE; ++a){
+					exp_key[a] = 0;
+				}
+				#endif
 		a = 0;
 		b = 0;
 		

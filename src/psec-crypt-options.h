@@ -10,7 +10,7 @@
 #define HASH		// build HASH code
 			// currently only hashes 1 block of data, but it's simple enough to change that.
 			// I have comments in 'main.c' explaining how
-//#define OP_TEST		// build performance test code
+#define OP_TEST		// build performance test code
 			// Runs single-core encryption using the current settings	
 #define ENCDEC_CHOICE	// Provides the user with a menu to choose operation
 			// [E]ncrypt/[D]ecrypt/[H]ash/[T]est

@@ -6,10 +6,10 @@ libs     D1A882 D1A882             0h
 startup  D1A882 D1A8C1            3Fh
 cleanup  D1A8C1 D1A8D5            14h
 exit     D1A8D5 D1A8DB             6h
-code     D1A8DB D1BE10          1535h
-data     D1BE10 D1BE10             0h
-strsect  D1BE10 D1BF3F           12Fh
-text     D1BF3F D1C170           231h
+code     D1A8DB D1C041          1766h
+data     D1C041 D1C041             0h
+strsect  D1C041 D1C170           12Fh
+text     D1C170 D1C3A1           231h
 bss      D031F6 D031F6 D13FD6      0h
 header   D1A87F D1A882             3h
 
@@ -189,8 +189,8 @@ _round_enc_per            = D1AB8A
 _round_mix                = D1AAD0
 _round_dec_sub            = D1AA69
 _round_enc_sub            = D1AA0C
-_pbox_dec                 = D1C160
-_pbox_enc                 = D1C150
-_sbox_dec                 = D1C050
-_sbox_enc                 = D1BF50
-_hex_enc                  = D1BF3F
+_pbox_dec                 = D1C391
+_pbox_enc                 = D1C381
+_sbox_dec                 = D1C281
+_sbox_enc                 = D1C181
+_hex_enc                  = D1C170
