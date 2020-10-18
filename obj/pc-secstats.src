@@ -1539,7 +1539,7 @@ L_71:
 ;       Spill Code: 0 (instruction)
 
 
-_decrypt:
+_encrypt_pcm:
 	LD	HL,-534
 	CALL	__frameset
 	LD	HL,IX
@@ -1558,9 +1558,12 @@ _decrypt:
 	ADD	HL,BC
 	LD	BC,HL
 	PUSH	BC
+	LD	BC,(IX+12)
+	PUSH	BC
 	LD	BC,(IX+6)
 	PUSH	BC
-	CALL	_dec
+	CALL	_enc_pcm_l
+	POP	BC
 	POP	BC
 	POP	BC
 	POP	BC
@@ -1629,6 +1632,111 @@ L_82:
 	RET	
 
 
+;**************************** _encrypt_pcm ***************************
+;Name                         Addr/Register   Size   Type
+;exp_key                             IX-534    512   variable
+;tmp                                  IX-22     16   variable
+;b                                     IX-6      3   variable
+;a                                     IX-3      3   variable
+;block_id                             IX+12      3   parameter
+;key                                   IX+9      3   parameter
+;msg                                   IX+6      3   parameter
+
+
+; Stack Frame Size: 549 (bytes)
+;       Spill Code: 0 (instruction)
+
+
+_decrypt:
+	LD	HL,-534
+	CALL	__frameset
+	LD	HL,IX
+	LD	BC,-534
+	ADD	HL,BC
+	LD	BC,HL
+	PUSH	BC
+	LD	BC,(IX+9)
+	PUSH	BC
+	CALL	_expand_key
+	POP	BC
+	POP	BC
+	PEA	IX+-22
+	LD	HL,IX
+	LD	BC,-534
+	ADD	HL,BC
+	LD	BC,HL
+	PUSH	BC
+	LD	BC,(IX+6)
+	PUSH	BC
+	CALL	_dec
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	BC,0
+	LD	(IX+-3),BC
+	JR	L_87
+L_85:
+	LD	BC,(IX+-3)
+	LD	HL,(IX+9)
+	ADD	HL,BC
+	LD	(HL),0
+	LD	BC,(IX+-3)
+	INC	BC
+	LD	(IX+-3),BC
+L_87:
+	LD	BC,32
+	LD	HL,(IX+-3)
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_85
+	LD	BC,0
+	LD	(IX+-3),BC
+	JR	L_93
+L_91:
+	LD	BC,(IX+-3)
+	LEA	HL,IX+-22
+	ADD	HL,BC
+	LD	(HL),0
+	LD	BC,0
+	LD	(IX+-6),BC
+	JR	L_90
+L_88:
+	LD	HL,(IX+-6)
+	LD	BC,(IX+-3)
+	ADD	HL,HL
+	ADD	HL,HL
+	ADD	HL,HL
+	ADD	HL,HL
+	ADD	HL,BC
+	LD	BC,HL
+	LD	HL,IX
+	LD	DE,-534
+	ADD	HL,DE
+	ADD	HL,BC
+	LD	(HL),0
+	LD	BC,(IX+-6)
+	INC	BC
+	LD	(IX+-6),BC
+L_90:
+	LD	BC,32
+	LD	HL,(IX+-6)
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_88
+	LD	BC,(IX+-3)
+	INC	BC
+	LD	(IX+-3),BC
+L_93:
+	LD	BC,16
+	LD	HL,(IX+-3)
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_91
+	LD	SP,IX
+	POP	IX
+	RET	
+
+
 ;**************************** _decrypt ***************************
 ;Name                         Addr/Register   Size   Type
 ;exp_key                             IX-534    512   variable
@@ -1640,6 +1748,114 @@ L_82:
 
 
 ; Stack Frame Size: 546 (bytes)
+;       Spill Code: 0 (instruction)
+
+
+_decrypt_pcm:
+	LD	HL,-534
+	CALL	__frameset
+	LD	HL,IX
+	LD	BC,-534
+	ADD	HL,BC
+	LD	BC,HL
+	PUSH	BC
+	LD	BC,(IX+9)
+	PUSH	BC
+	CALL	_expand_key
+	POP	BC
+	POP	BC
+	PEA	IX+-22
+	LD	HL,IX
+	LD	BC,-534
+	ADD	HL,BC
+	LD	BC,HL
+	PUSH	BC
+	LD	BC,(IX+12)
+	PUSH	BC
+	LD	BC,(IX+6)
+	PUSH	BC
+	CALL	_dec_pcm_l
+	POP	BC
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	BC,0
+	LD	(IX+-3),BC
+	JR	L_98
+L_96:
+	LD	BC,(IX+-3)
+	LD	HL,(IX+9)
+	ADD	HL,BC
+	LD	(HL),0
+	LD	BC,(IX+-3)
+	INC	BC
+	LD	(IX+-3),BC
+L_98:
+	LD	BC,32
+	LD	HL,(IX+-3)
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_96
+	LD	BC,0
+	LD	(IX+-3),BC
+	JR	L_104
+L_102:
+	LD	BC,(IX+-3)
+	LEA	HL,IX+-22
+	ADD	HL,BC
+	LD	(HL),0
+	LD	BC,0
+	LD	(IX+-6),BC
+	JR	L_101
+L_99:
+	LD	HL,(IX+-6)
+	LD	BC,(IX+-3)
+	ADD	HL,HL
+	ADD	HL,HL
+	ADD	HL,HL
+	ADD	HL,HL
+	ADD	HL,BC
+	LD	BC,HL
+	LD	HL,IX
+	LD	DE,-534
+	ADD	HL,DE
+	ADD	HL,BC
+	LD	(HL),0
+	LD	BC,(IX+-6)
+	INC	BC
+	LD	(IX+-6),BC
+L_101:
+	LD	BC,32
+	LD	HL,(IX+-6)
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_99
+	LD	BC,(IX+-3)
+	INC	BC
+	LD	(IX+-3),BC
+L_104:
+	LD	BC,16
+	LD	HL,(IX+-3)
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_102
+	LD	SP,IX
+	POP	IX
+	RET	
+
+
+;**************************** _decrypt_pcm ***************************
+;Name                         Addr/Register   Size   Type
+;exp_key                             IX-534    512   variable
+;tmp                                  IX-22     16   variable
+;b                                     IX-6      3   variable
+;a                                     IX-3      3   variable
+;block_id                             IX+12      3   parameter
+;key                                   IX+9      3   parameter
+;msg                                   IX+6      3   parameter
+
+
+; Stack Frame Size: 549 (bytes)
 ;       Spill Code: 0 (instruction)
 
 
@@ -1669,9 +1885,9 @@ _hex_to_int:
 	LD	(IX+-1),A
 	LD	A,9
 	CP	A,(IX+-1)
-	JR	NC,L_87
+	JR	NC,L_109
 	DEC	(IX+-1)
-L_87:
+L_109:
 	LD	A,(IX+-1)
 	LD	SP,IX
 	POP	IX
@@ -1695,8 +1911,8 @@ _to_hex:
 	CALL	__frameset
 	LD	BC,0
 	LD	(IX+-3),BC
-	JR	L_91
-L_89:
+	JR	L_113
+L_111:
 	LD	BC,(IX+-3)
 	LD	HL,(IX+6)
 	ADD	HL,BC
@@ -1744,12 +1960,12 @@ L_89:
 	LD	BC,(IX+-3)
 	INC	BC
 	LD	(IX+-3),BC
-L_91:
+L_113:
 	LD	BC,(IX+12)
 	LD	HL,(IX+-3)
 	OR	A,A
 	SBC	HL,BC
-	JR	C,L_89
+	JR	C,L_111
 	LD	SP,IX
 	POP	IX
 	RET	
@@ -1773,8 +1989,8 @@ _from_hex:
 	CALL	__frameset
 	LD	BC,0
 	LD	(IX+-3),BC
-	JR	L_95
-L_93:
+	JR	L_117
+L_115:
 	LD	HL,(IX+-3)
 	ADD	HL,HL
 	LD	BC,(IX+6)
@@ -1815,12 +2031,12 @@ L_93:
 	LD	BC,(IX+-3)
 	INC	BC
 	LD	(IX+-3),BC
-L_95:
+L_117:
 	LD	BC,(IX+12)
 	LD	HL,(IX+-3)
 	OR	A,A
 	SBC	HL,BC
-	JR	C,L_93
+	JR	C,L_115
 	LD	SP,IX
 	POP	IX
 	RET	
@@ -1984,7 +2200,9 @@ _nop:
 	XDEF _from_hex
 	XDEF _to_hex
 	XDEF _hex_to_int
+	XDEF _decrypt_pcm
 	XDEF _decrypt
+	XDEF _encrypt_pcm
 	XDEF _encrypt
 	XDEF _dec_pcm_l
 	XDEF _enc_pcm_l

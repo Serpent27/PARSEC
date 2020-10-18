@@ -250,6 +250,26 @@ void encrypt(unsigned char *msg, unsigned char *key){
 		}
 	}
 }
+void encrypt_pcm(unsigned char *msg, unsigned char *key, unsigned char *block_id){
+	unsigned char exp_key[EXP_KEY_SIZE];
+	unsigned char tmp[MSG_SIZE];
+//	char text[16];
+	size_t a;
+	size_t b;
+	expand_key(key, exp_key);
+	enc_pcm_l(msg, block_id, exp_key, tmp);
+	for(a=0; a<KEY_SIZE; ++a){
+		key[a] = 0;
+	}
+	for(a=0; a<MSG_SIZE; ++a){
+		tmp[a] = 0;
+		for(b=0; b<ROUNDS; ++b){
+			//os_ClrHome();
+			//os_PutStrFull(text);
+			exp_key[b * MSG_SIZE + a] = 0;
+		}
+	}
+}
 void decrypt(unsigned char *msg, unsigned char *key){
 	unsigned char exp_key[EXP_KEY_SIZE];
 	unsigned char tmp[MSG_SIZE];
@@ -258,6 +278,26 @@ void decrypt(unsigned char *msg, unsigned char *key){
 	size_t b;
 	expand_key(key, exp_key);
 	dec(msg, exp_key, tmp);
+	for(a=0; a<KEY_SIZE; ++a){
+		key[a] = 0;
+	}
+	for(a=0; a<MSG_SIZE; ++a){
+		tmp[a] = 0;
+		for(b=0; b<ROUNDS; ++b){
+			//os_ClrHome();
+			//os_PutStrFull(text);
+			exp_key[b * MSG_SIZE + a] = 0;
+		}
+	}
+}
+void decrypt_pcm(unsigned char *msg, unsigned char *key, unsigned char *block_id){
+	unsigned char exp_key[EXP_KEY_SIZE];
+	unsigned char tmp[MSG_SIZE];
+//	char text[16];
+	size_t a;
+	size_t b;
+	expand_key(key, exp_key);
+	dec_pcm_l(msg, block_id, exp_key, tmp);
 	for(a=0; a<KEY_SIZE; ++a){
 		key[a] = 0;
 	}

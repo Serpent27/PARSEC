@@ -25,9 +25,11 @@ int main(void)
 	for(;;){
 		/* initialize working buffers */
 		unsigned char msg[MSG_SIZE + 1];
+		unsigned char bix[MSG_SIZE + 1];
 		unsigned char key[KEY_SIZE + 1];
 
 		unsigned char msg_in[MSG_IN_SIZE]; // for hex input
+		unsigned char bix_in[MSG_IN_SIZE]; // for hex input
 		unsigned char key_in[KEY_IN_SIZE]; // for hex input
 		unsigned char choice[16];
 
@@ -78,12 +80,18 @@ int main(void)
 		os_GetStringInput("Msg:", msg_in, MSG_IN_SIZE);
 		os_ClrHome();
 		msg_in[MSG_IN_SIZE - 1] = 0;
+		
 		for(a=0; a<KEY_IN_SIZE; ++a){
 			key_in[a] = 0;
 		}
 		os_GetStringInput("Key:", key_in, KEY_IN_SIZE);
 		os_ClrHome();
 		key_in[KEY_IN_SIZE - 1] = 0;
+		
+		os_GetStringInput("Block ID:", bix_in, MSG_IN_SIZE);
+		os_ClrHome();
+		bix_in[MSG_IN_SIZE - 1] = 0;
+		
 		//           ("PARSEC Encryption123456789");
 		os_PutStrFull("E = Encrypt               ");
 		os_PutStrFull("D = Decrypt               ");
@@ -96,6 +104,7 @@ int main(void)
 		
 		//MAKE_KEY(key);
 		from_hex(key_in, key, KEY_SIZE);
+		from_hex(bix_in, bix, MSG_SIZE);
 
 	//	from_hex(key_in, key, KEY_SIZE);
 		
@@ -113,7 +122,7 @@ int main(void)
 				key[a] = 0;
 			}
 			#endif
-			encrypt(msg, key);
+			encrypt_pcm(msg, key, bix);
 			
 			to_hex(msg, hex, MSG_SIZE);
 			hex[MSG_SIZE * 2] = 0;
@@ -148,7 +157,7 @@ int main(void)
 			}
 			#endif
 			from_hex(msg_in, msg, MSG_SIZE);
-			decrypt(msg, key);
+			decrypt_pcm(msg, key, bix);
 			//to_hex(msg, hex, MSG_SIZE);
 			for(a=0; a<MSG_SIZE; ++a){
 				hex[a] = msg[a];
