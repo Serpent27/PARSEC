@@ -328,10 +328,6 @@ int main(void)
 			for(a=0; a<MSG_SIZE; ++a){
 				msg[a] = msg_in[a];
 			}
-			for(a=0; a<KEY_SIZE; ++a){
-				key[a] = key_in[a];
-			}
-			key[KEY_SIZE] = 0;
 			
 			#ifdef IGNORE_KEY
 			for(a=0; a<KEY_SIZE; ++a){
@@ -341,6 +337,7 @@ int main(void)
 			
 			to_hex(msg, msg_in, MSG_SIZE);
 			to_hex(key, key_in, KEY_SIZE);
+			to_hex(bix, bix_in, MSG_SIZE);
 
 			/* Build the user response */
 			
@@ -375,6 +372,10 @@ int main(void)
 				while (!os_GetCSC());
 				os_ClrHome();
 				os_PutStrFull(key_in);
+				/* Waits for a key */
+				while (!os_GetCSC());
+				os_ClrHome();
+				os_PutStrFull(bix_in);
 			/* Waits for a key */
 			while (!os_GetCSC());
 			}
@@ -397,6 +398,7 @@ int main(void)
 			
 			from_hex(msg_in, msg, MSG_SIZE);
 			from_hex(key_in, key, KEY_SIZE);
+			from_hex(bix_in, bix, MSG_SIZE);
 
 			/* Build the user response */
 			
@@ -425,6 +427,10 @@ int main(void)
 				while (!os_GetCSC());
 				os_ClrHome();
 				os_PutStrFull(key);
+				/* Waits for a key */
+				while (!os_GetCSC());
+				os_ClrHome();
+				os_PutStrFull(bix);
 			/* Waits for a key */
 			while (!os_GetCSC());
 			}
