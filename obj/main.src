@@ -2155,14 +2155,14 @@ _nop:
 ;   82			msg_in[MSG_IN_SIZE - 1] = 0;
 ;   83			
 ;   84			for(a=0; a<KEY_IN_SIZE; ++a){
-;   85				key_in[a] = 0;
+;   85				key_in[a] = '0';
 ;   86			}
 ;   87			os_GetStringInput("Key:", key_in, KEY_IN_SIZE);
 ;   88			os_ClrHome();
 ;   89			key_in[KEY_IN_SIZE - 1] = 0;
 ;   90			
 ;   91			for(a=0; a<MSG_IN_SIZE; ++a){
-;   92				bix_in[a] = 0;
+;   92				bix_in[a] = '0';
 ;   93			}
 ;   94			os_GetStringInput("Block ID:", bix_in, MSG_IN_SIZE);
 ;   95			os_ClrHome();
@@ -2532,7 +2532,7 @@ L_137:
 	LD	DE,-289
 	ADD	HL,DE
 	ADD	HL,BC
-	LD	(HL),0
+	LD	(HL),48
 	LD	BC,(IX+-3)
 	INC	BC
 	LD	(IX+-3),BC
@@ -2580,7 +2580,7 @@ L_144:
 	LD	DE,-223
 	ADD	HL,DE
 	ADD	HL,BC
-	LD	(HL),0
+	LD	(HL),48
 	LD	BC,(IX+-3)
 	INC	BC
 	LD	(IX+-3),BC
