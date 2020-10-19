@@ -2161,259 +2161,259 @@ _nop:
 ;   88			os_ClrHome();
 ;   89			key_in[KEY_IN_SIZE - 1] = 0;
 ;   90			
-;   91			os_GetStringInput("Block ID:", bix_in, MSG_IN_SIZE);
-;   92			os_ClrHome();
-;   93			bix_in[MSG_IN_SIZE - 1] = 0;
-;   94			
-;   95			//           ("PARSEC Encryption123456789");
-;   96			os_PutStrFull("E = Encrypt               ");
-;   97			os_PutStrFull("D = Decrypt               ");
-;   98			os_PutStrFull("H = Hash                  ");
-;   99			for(a=0; a<16; ++a){
-;  100				choice[a] = 0;
-;  101			}
-;  102			os_GetStringInput("Mode (E/D/H):", choice, 16);
-;  103			os_ClrHome();
-;  104			
-;  105			//MAKE_KEY(key);
-;  106			from_hex(key_in, key, KEY_SIZE);
-;  107			from_hex(bix_in, bix, MSG_SIZE);
-;  108	
-;  109		//	from_hex(key_in, key, KEY_SIZE);
-;  110			
-;  111			//           ("PARSEC Encryption123456789");
-;  112			os_PutStrFull("Working...");
-;  113			#ifdef ENCRYPT
-;  114				#ifdef ENCDEC_CHOICE
-;  115				if(choice[0] == 'e' || choice[0] == 'E'){
-;  116				#endif
-;  117				for(a=0; a<MSG_SIZE; ++a){
-;  118					msg[a] = msg_in[a];
-;  119				}
-;  120				#ifdef IGNORE_KEY
-;  121				for(a=0; a<KEY_SIZE; ++a){
-;  122					key[a] = 0;
-;  123				}
-;  124				#endif
-;  125				encrypt_pcm(msg, key, bix);
-;  126				
-;  127				to_hex(msg, hex, MSG_SIZE);
-;  128				hex[MSG_SIZE * 2] = 0;
-;  129				sprintf(response, "%s", hex);
-;  130	
-;  131				/* Build the user response */
-;  132				
-;  133				
-;  134				/* Clear the homescreen and display the built response */
-;  135				os_ClrHome();
-;  136		//		printf(response);
-;  137		//		for(a=0; a<MSG_SIZE; ++a){
-;  138		//			msg_in[a * 2] = response[a * 2];
-;  139		//			msg_in[a * 2 + 1] = response[a * 2 + 1];
-;  140		//		}
-;  141	
-;  142				os_PutStrFull(response);
-;  143	
-;  144				/* Waits for a key */
-;  145				while (!os_GetCSC());
-;  146				#ifdef ENCDEC_CHOICE
-;  147				}
-;  148				#endif
-;  149			#endif
-;  150			#ifdef DECRYPT
-;  151				#ifdef ENCDEC_CHOICE
-;  152				if(choice[0] == 'd' || choice[0] == 'D'){
-;  153				#endif
-;  154				#ifdef IGNORE_KEY
-;  155				for(a=0; a<KEY_SIZE; ++a){
-;  156					key[a] = 0;
-;  157				}
-;  158				#endif
-;  159				from_hex(msg_in, msg, MSG_SIZE);
-;  160				decrypt_pcm(msg, key, bix);
-;  161				//to_hex(msg, hex, MSG_SIZE);
-;  162				for(a=0; a<MSG_SIZE; ++a){
-;  163					hex[a] = msg[a];
-;  164					hex[a + MSG_SIZE] = 0;
-;  165				}
-;  166	
-;  167				/* Build the user response */
-;  168				sprintf(response, "%s", hex);
-;  169				
-;  170				
-;  171				/* Clear the homescreen and display the built response */
-;  172				os_ClrHome();
-;  173		//		printf(response);
-;  174		//		for(a=0; a<MSG_SIZE; ++a){
-;  175		//			msg_in[a * 2] = response[a * 2];
-;  176		//			msg_in[a * 2 + 1] = response[a * 2 + 1];
-;  177		//		}
-;  178	
-;  179				os_PutStrFull(response);
-;  180	
-;  181				/* Waits for a key */
-;  182				while (!os_GetCSC());
-;  183				#ifdef ENCDEC_CHOICE
-;  184				}
-;  185				#endif
-;  186			#endif
-;  187			#ifdef HASH
-;  188				#ifdef ENCDEC_CHOICE
-;  189				if(choice[0] == 'h' || choice[0] == 'H'){
-;  190				#endif
-;  191				#ifdef IGNORE_KEY
-;  192				for(a=0; a<KEY_SIZE; ++a){
-;  193					key[a] = 0;
-;  194				}
-;  195				#endif
-;  196				from_hex(msg_in, msg, MSG_SIZE); // user inputs message as hex
-;  197				for(b=0; b<HASH_ITERS; ++b){
-;  198					/*
-;  199					XOR the message with the next block, for multiple-block messages.
-;  200					The starting value of `msg` would be all ZEROes.
-;  201					Since this only operates on 1 block, there is no XOR done, and the message is simply set to the input message.
-;  202					*/
-;  203					for(a=0; a<KEY_SIZE; ++a){
-;  204						key[a] ^= msg[a & MOD_BLK_SIZE] ^ b ^ BLK_SIZE;
-;  205					}
-;  206					encrypt(msg, key);
-;  207					for(a=0; a<KEY_SIZE; ++a){
-;  208						key[a] ^= b ^ a ^ MSG_SIZE; // for non-block length messages or multiple-block messages, `MSG_SIZE` gets substituted for the total length of the message, in bytes.
-;  209					}
-;  210					decrypt(msg, key);
-;  211					for(a=0; a<KEY_SIZE; ++a){
-;  212						key[a] ^= sbox_enc[msg[a & MOD_BLK_SIZE] ^ b ^ a];
-;  213					}
-;  214					encrypt(msg, key);
-;  215				}
-;  216				to_hex(msg, hex, MSG_SIZE);
-;  217	
-;  218				/* Build the user response */
-;  219				sprintf(response, "%s", hex);
-;  220				
-;  221	
-;  222				
-;  223				/* Clear the homescreen and display the built response */
-;  224				os_ClrHome();
-;  225		//		printf(response);
-;  226		//		for(a=0; a<MSG_SIZE; ++a){
-;  227		//			msg_in[a * 2] = response[a * 2];
-;  228		//			msg_in[a * 2 + 1] = response[a * 2 + 1];
-;  229		//		}
-;  230	
-;  231				os_PutStrFull(response);
-;  232	
-;  233				/* Waits for a key */
-;  234				while (!os_GetCSC());
-;  235				#ifdef ENCDEC_CHOICE
-;  236				}
-;  237				#endif
-;  238			#endif
-;  239			#ifdef OP_TEST
-;  240				#ifdef ENCDEC_CHOICE
-;  241				if(choice[0] == 't' || choice[0] == 'T'){
-;  242				#endif
-;  243				#ifdef IGNORE_KEY
-;  244				for(a=0; a<KEY_SIZE; ++a){
-;  245					key[a] = 0;
-;  246				}
-;  247				#endif
-;  248				from_hex(msg_in, msg, MSG_SIZE);
-;  249				printf("\n");
-;  250				
-;  251				expand_key(key, exp_key);
-;  252				
-;  253				gettimeofday(&start, NULL);
-;  254				for(a=0; a<TEST_ITERS; ++a){
-;  255					enc(msg, exp_key, tmp);
-;  256				}
-;  257				gettimeofday(&end, NULL);
-;  258				/* Build the user response */
-;  259				printf("Encryption (constant key) took %f seconds for %i iters [%i bytes]\nEncryption speed: %lf bytes/second\n", timediff(start, end)/1000000, TEST_ITERS, TEST_ITERS * MSG_SIZE, TEST_ITERS * MSG_SIZE / timediff(start, end) * 1000000);
-;  260				expand_key(key, exp_key);
-;  261				
-;  262				gettimeofday(&start, NULL);
-;  263				for(a=0; a<TEST_ITERS; ++a){
-;  264					dec(msg, exp_key, tmp);
-;  265				}
-;  266				gettimeofday(&end, NULL);
-;  267				/* Build the user response */
-;  268				printf("Decryption (constant key) took %f seconds for %i iters [%i bytes]\nEncryption speed: %lf bytes/second\n", timediff(start, end)/1000000, TEST_ITERS, TEST_ITERS * MSG_SIZE, TEST_ITERS * MSG_SIZE / timediff(start, end) * 1000000);
-;  269				
-;  270				
-;  271				gettimeofday(&start, NULL);
-;  272				for(a=0; a<TEST_ITERS; ++a){
-;  273					expand_key(key, exp_key);
-;  274					enc(msg, exp_key, tmp);
-;  275				}
-;  276				gettimeofday(&end, NULL);
-;  277				/* Build the user response */
-;  278				printf("Encryption (dynamic key) took %f seconds for %i iters [%i bytes]\nEncryption speed: %lf bytes/second\n", timediff(start, end)/1000000, TEST_ITERS, TEST_ITERS * MSG_SIZE, TEST_ITERS * MSG_SIZE / timediff(start, end) * 1000000);
-;  279				gettimeofday(&start, NULL);
-;  280				for(a=0; a<TEST_ITERS; ++a){
-;  281					expand_key(key, exp_key);
-;  282					dec(msg, exp_key, tmp);
-;  283				}
-;  284				gettimeofday(&end, NULL);
-;  285				/* Build the user response */
-;  286				printf("Decryption (dynamic key) took %f seconds for %i iters [%i bytes]\nEncryption speed: %lf bytes/second\n", timediff(start, end)/1000000, TEST_ITERS, TEST_ITERS * MSG_SIZE, TEST_ITERS * MSG_SIZE / timediff(start, end) * 1000000);
-;  287				
-;  288				
-;  289				// PCM
-;  290				expand_key(key, exp_key);
-;  291				gettimeofday(&start, NULL);
-;  292				for(a=0; a<TEST_ITERS; ++a){
-;  293					enc_pcm(msg, a, exp_key, tmp);
-;  294				}
-;  295				gettimeofday(&end, NULL);
-;  296				/* Build the user response */
-;  297				printf("Encryption (PCM) took %f seconds for %i iters [%i bytes]\nEncryption speed: %lf bytes/second\n", timediff(start, end)/1000000, TEST_ITERS, TEST_ITERS * MSG_SIZE, TEST_ITERS * MSG_SIZE / timediff(start, end) * 1000000);
-;  298				
-;  299				expand_key(key, exp_key);
-;  300				gettimeofday(&start, NULL);
-;  301				for(a=0; a<TEST_ITERS; ++a){
-;  302					dec_pcm(msg, a, exp_key, tmp);
-;  303				}
-;  304				gettimeofday(&end, NULL);
-;  305				/* Build the user response */
-;  306				printf("Decryption (PCM) took %f seconds for %i iters [%i bytes]\nEncryption speed: %lf bytes/second\n", timediff(start, end)/1000000, TEST_ITERS, TEST_ITERS * MSG_SIZE, TEST_ITERS * MSG_SIZE / timediff(start, end) * 1000000);
-;  307				//
-;  308				
-;  309				
-;  310				/* Clear the homescreen and display the built response */
-;  311				os_ClrHome();
-;  312		//		printf(response);
-;  313		//		for(a=0; a<MSG_SIZE; ++a){
-;  314		//			msg_in[a * 2] = response[a * 2];
-;  315		//			msg_in[a * 2 + 1] = response[a * 2 + 1];
-;  316		//		}
-;  317	
-;  318				os_PutStrFull(response);
-;  319				/* Waits for a key */
-;  320				while (!os_GetCSC());
-;  321				#ifdef ENCDEC_CHOICE
-;  322				}
-;  323				#endif
-;  324			#endif
-;  325			
-;  326			#ifdef ENCDEC_CHOICE
-;  327				if(choice[0] == 'x' || choice[0] == 'X'){
-;  328				for(a=0; a<MSG_SIZE; ++a){
-;  329					msg[a] = msg_in[a];
-;  330				}
-;  331				
-;  332				#ifdef IGNORE_KEY
-;  333				for(a=0; a<KEY_SIZE; ++a){
-;  334					key[a] = 0;
-;  335				}
-;  336				#endif
-;  337				
-;  338				to_hex(msg, msg_in, MSG_SIZE);
-;  339				to_hex(key, key_in, KEY_SIZE);
+;   91			for(a=0; a<MSG_IN_SIZE; ++a){
+;   92				bix_in[a] = 0;
+;   93			}
+;   94			os_GetStringInput("Block ID:", bix_in, MSG_IN_SIZE);
+;   95			os_ClrHome();
+;   96			bix_in[MSG_IN_SIZE - 1] = 0;
+;   97			
+;   98			//           ("PARSEC Encryption123456789");
+;   99			os_PutStrFull("E = Encrypt               ");
+;  100			os_PutStrFull("D = Decrypt               ");
+;  101			os_PutStrFull("H = Hash                  ");
+;  102			for(a=0; a<16; ++a){
+;  103				choice[a] = 0;
+;  104			}
+;  105			os_GetStringInput("Mode (E/D/H):", choice, 16);
+;  106			os_ClrHome();
+;  107			
+;  108			//MAKE_KEY(key);
+;  109			from_hex(key_in, key, KEY_SIZE);
+;  110			from_hex(bix_in, bix, MSG_SIZE);
+;  111	
+;  112		//	from_hex(key_in, key, KEY_SIZE);
+;  113			
+;  114			//           ("PARSEC Encryption123456789");
+;  115			os_PutStrFull("Working...");
+;  116			#ifdef ENCRYPT
+;  117				#ifdef ENCDEC_CHOICE
+;  118				if(choice[0] == 'e' || choice[0] == 'E'){
+;  119				#endif
+;  120				for(a=0; a<MSG_SIZE; ++a){
+;  121					msg[a] = msg_in[a];
+;  122				}
+;  123				#ifdef IGNORE_KEY
+;  124				for(a=0; a<KEY_SIZE; ++a){
+;  125					key[a] = 0;
+;  126				}
+;  127				#endif
+;  128				encrypt_pcm(msg, key, bix);
+;  129				
+;  130				to_hex(msg, hex, MSG_SIZE);
+;  131				hex[MSG_SIZE * 2] = 0;
+;  132				sprintf(response, "%s", hex);
+;  133	
+;  134				/* Build the user response */
+;  135				
+;  136				
+;  137				/* Clear the homescreen and display the built response */
+;  138				os_ClrHome();
+;  139		//		printf(response);
+;  140		//		for(a=0; a<MSG_SIZE; ++a){
+;  141		//			msg_in[a * 2] = response[a * 2];
+;  142		//			msg_in[a * 2 + 1] = response[a * 2 + 1];
+;  143		//		}
+;  144	
+;  145				os_PutStrFull(response);
+;  146	
+;  147				/* Waits for a key */
+;  148				while (!os_GetCSC());
+;  149				#ifdef ENCDEC_CHOICE
+;  150				}
+;  151				#endif
+;  152			#endif
+;  153			#ifdef DECRYPT
+;  154				#ifdef ENCDEC_CHOICE
+;  155				if(choice[0] == 'd' || choice[0] == 'D'){
+;  156				#endif
+;  157				#ifdef IGNORE_KEY
+;  158				for(a=0; a<KEY_SIZE; ++a){
+;  159					key[a] = 0;
+;  160				}
+;  161				#endif
+;  162				from_hex(msg_in, msg, MSG_SIZE);
+;  163				decrypt_pcm(msg, key, bix);
+;  164				//to_hex(msg, hex, MSG_SIZE);
+;  165				for(a=0; a<MSG_SIZE; ++a){
+;  166					hex[a] = msg[a];
+;  167					hex[a + MSG_SIZE] = 0;
+;  168				}
+;  169	
+;  170				/* Build the user response */
+;  171				sprintf(response, "%s", hex);
+;  172				
+;  173				
+;  174				/* Clear the homescreen and display the built response */
+;  175				os_ClrHome();
+;  176		//		printf(response);
+;  177		//		for(a=0; a<MSG_SIZE; ++a){
+;  178		//			msg_in[a * 2] = response[a * 2];
+;  179		//			msg_in[a * 2 + 1] = response[a * 2 + 1];
+;  180		//		}
+;  181	
+;  182				os_PutStrFull(response);
+;  183	
+;  184				/* Waits for a key */
+;  185				while (!os_GetCSC());
+;  186				#ifdef ENCDEC_CHOICE
+;  187				}
+;  188				#endif
+;  189			#endif
+;  190			#ifdef HASH
+;  191				#ifdef ENCDEC_CHOICE
+;  192				if(choice[0] == 'h' || choice[0] == 'H'){
+;  193				#endif
+;  194				#ifdef IGNORE_KEY
+;  195				for(a=0; a<KEY_SIZE; ++a){
+;  196					key[a] = 0;
+;  197				}
+;  198				#endif
+;  199				from_hex(msg_in, msg, MSG_SIZE); // user inputs message as hex
+;  200				for(b=0; b<HASH_ITERS; ++b){
+;  201					/*
+;  202					XOR the message with the next block, for multiple-block messages.
+;  203					The starting value of `msg` would be all ZEROes.
+;  204					Since this only operates on 1 block, there is no XOR done, and the message is simply set to the input message.
+;  205					*/
+;  206					for(a=0; a<KEY_SIZE; ++a){
+;  207						key[a] ^= msg[a & MOD_BLK_SIZE] ^ b ^ BLK_SIZE;
+;  208					}
+;  209					encrypt(msg, key);
+;  210					for(a=0; a<KEY_SIZE; ++a){
+;  211						key[a] ^= b ^ a ^ MSG_SIZE; // for non-block length messages or multiple-block messages, `MSG_SIZE` gets substituted for the total length of the message, in bytes.
+;  212					}
+;  213					decrypt(msg, key);
+;  214					for(a=0; a<KEY_SIZE; ++a){
+;  215						key[a] ^= sbox_enc[msg[a & MOD_BLK_SIZE] ^ b ^ a];
+;  216					}
+;  217					encrypt(msg, key);
+;  218				}
+;  219				to_hex(msg, hex, MSG_SIZE);
+;  220	
+;  221				/* Build the user response */
+;  222				sprintf(response, "%s", hex);
+;  223				
+;  224	
+;  225				
+;  226				/* Clear the homescreen and display the built response */
+;  227				os_ClrHome();
+;  228		//		printf(response);
+;  229		//		for(a=0; a<MSG_SIZE; ++a){
+;  230		//			msg_in[a * 2] = response[a * 2];
+;  231		//			msg_in[a * 2 + 1] = response[a * 2 + 1];
+;  232		//		}
+;  233	
+;  234				os_PutStrFull(response);
+;  235	
+;  236				/* Waits for a key */
+;  237				while (!os_GetCSC());
+;  238				#ifdef ENCDEC_CHOICE
+;  239				}
+;  240				#endif
+;  241			#endif
+;  242			#ifdef OP_TEST
+;  243				#ifdef ENCDEC_CHOICE
+;  244				if(choice[0] == 't' || choice[0] == 'T'){
+;  245				#endif
+;  246				#ifdef IGNORE_KEY
+;  247				for(a=0; a<KEY_SIZE; ++a){
+;  248					key[a] = 0;
+;  249				}
+;  250				#endif
+;  251				from_hex(msg_in, msg, MSG_SIZE);
+;  252				printf("\n");
+;  253				
+;  254				expand_key(key, exp_key);
+;  255				
+;  256				gettimeofday(&start, NULL);
+;  257				for(a=0; a<TEST_ITERS; ++a){
+;  258					enc(msg, exp_key, tmp);
+;  259				}
+;  260				gettimeofday(&end, NULL);
+;  261				/* Build the user response */
+;  262				printf("Encryption (constant key) took %f seconds for %i iters [%i bytes]\nEncryption speed: %lf bytes/second\n", timediff(start, end)/1000000, TEST_ITERS, TEST_ITERS * MSG_SIZE, TEST_ITERS * MSG_SIZE / timediff(start, end) * 1000000);
+;  263				expand_key(key, exp_key);
+;  264				
+;  265				gettimeofday(&start, NULL);
+;  266				for(a=0; a<TEST_ITERS; ++a){
+;  267					dec(msg, exp_key, tmp);
+;  268				}
+;  269				gettimeofday(&end, NULL);
+;  270				/* Build the user response */
+;  271				printf("Decryption (constant key) took %f seconds for %i iters [%i bytes]\nEncryption speed: %lf bytes/second\n", timediff(start, end)/1000000, TEST_ITERS, TEST_ITERS * MSG_SIZE, TEST_ITERS * MSG_SIZE / timediff(start, end) * 1000000);
+;  272				
+;  273				
+;  274				gettimeofday(&start, NULL);
+;  275				for(a=0; a<TEST_ITERS; ++a){
+;  276					expand_key(key, exp_key);
+;  277					enc(msg, exp_key, tmp);
+;  278				}
+;  279				gettimeofday(&end, NULL);
+;  280				/* Build the user response */
+;  281				printf("Encryption (dynamic key) took %f seconds for %i iters [%i bytes]\nEncryption speed: %lf bytes/second\n", timediff(start, end)/1000000, TEST_ITERS, TEST_ITERS * MSG_SIZE, TEST_ITERS * MSG_SIZE / timediff(start, end) * 1000000);
+;  282				gettimeofday(&start, NULL);
+;  283				for(a=0; a<TEST_ITERS; ++a){
+;  284					expand_key(key, exp_key);
+;  285					dec(msg, exp_key, tmp);
+;  286				}
+;  287				gettimeofday(&end, NULL);
+;  288				/* Build the user response */
+;  289				printf("Decryption (dynamic key) took %f seconds for %i iters [%i bytes]\nEncryption speed: %lf bytes/second\n", timediff(start, end)/1000000, TEST_ITERS, TEST_ITERS * MSG_SIZE, TEST_ITERS * MSG_SIZE / timediff(start, end) * 1000000);
+;  290				
+;  291				
+;  292				// PCM
+;  293				expand_key(key, exp_key);
+;  294				gettimeofday(&start, NULL);
+;  295				for(a=0; a<TEST_ITERS; ++a){
+;  296					enc_pcm(msg, a, exp_key, tmp);
+;  297				}
+;  298				gettimeofday(&end, NULL);
+;  299				/* Build the user response */
+;  300				printf("Encryption (PCM) took %f seconds for %i iters [%i bytes]\nEncryption speed: %lf bytes/second\n", timediff(start, end)/1000000, TEST_ITERS, TEST_ITERS * MSG_SIZE, TEST_ITERS * MSG_SIZE / timediff(start, end) * 1000000);
+;  301				
+;  302				expand_key(key, exp_key);
+;  303				gettimeofday(&start, NULL);
+;  304				for(a=0; a<TEST_ITERS; ++a){
+;  305					dec_pcm(msg, a, exp_key, tmp);
+;  306				}
+;  307				gettimeofday(&end, NULL);
+;  308				/* Build the user response */
+;  309				printf("Decryption (PCM) took %f seconds for %i iters [%i bytes]\nEncryption speed: %lf bytes/second\n", timediff(start, end)/1000000, TEST_ITERS, TEST_ITERS * MSG_SIZE, TEST_ITERS * MSG_SIZE / timediff(start, end) * 1000000);
+;  310				//
+;  311				
+;  312				
+;  313				/* Clear the homescreen and display the built response */
+;  314				os_ClrHome();
+;  315		//		printf(response);
+;  316		//		for(a=0; a<MSG_SIZE; ++a){
+;  317		//			msg_in[a * 2] = response[a * 2];
+;  318		//			msg_in[a * 2 + 1] = response[a * 2 + 1];
+;  319		//		}
+;  320	
+;  321				os_PutStrFull(response);
+;  322				/* Waits for a key */
+;  323				while (!os_GetCSC());
+;  324				#ifdef ENCDEC_CHOICE
+;  325				}
+;  326				#endif
+;  327			#endif
+;  328			
+;  329			#ifdef ENCDEC_CHOICE
+;  330				if(choice[0] == 'x' || choice[0] == 'X'){
+;  331				for(a=0; a<MSG_SIZE; ++a){
+;  332					msg[a] = msg_in[a];
+;  333				}
+;  334				
+;  335				#ifdef IGNORE_KEY
+;  336				for(a=0; a<KEY_SIZE; ++a){
+;  337					key[a] = 0;
+;  338				}
+;  339				#endif
 	CALL	__frameset0
-;  340				to_hex(bix, bix_in, MSG_SIZE);
-;  341	
-;  342				/* Build the user response */
+;  340				
+;  341				to_hex(msg, msg_in, MSG_SIZE);
+;  342				to_hex(key, key_in, KEY_SIZE);
 	LD	SP,IX
 	POP	IX
 	RET	
@@ -2431,7 +2431,7 @@ _nop:
 _main:
 	LD	HL,-301
 	CALL	__frameset
-L_319:
+L_323:
 	LD	BC,_asm_ClrLCD
 	PUSH	BC
 	CALL	__OS
@@ -2569,17 +2569,35 @@ L_139:
 	LD	IY,IX
 	LD	BC,-289
 	ADD	IY,BC
+	LEA	HL,IY+65
+	LD	(HL),0
+	LD	BC,0
+	LD	(IX+-3),BC
+	JR	L_146
+L_144:
+	LD	BC,(IX+-3)
+	LD	HL,IX
+	LD	DE,-223
+	ADD	HL,DE
+	ADD	HL,BC
+	LD	(HL),0
+	LD	BC,(IX+-3)
+	INC	BC
+	LD	(IX+-3),BC
+L_146:
 	LD	BC,34
+	LD	HL,(IX+-3)
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_144
 	PUSH	BC
 	LD	HL,IX
 	LD	BC,-223
 	ADD	HL,BC
 	LD	BC,HL
 	PUSH	BC
-	LEA	HL,IY+65
-	LD	BC,L__62
+	LD	BC,L__63
 	PUSH	BC
-	LD	(HL),0
 	CALL	_os_GetStringInput
 	POP	BC
 	POP	BC
@@ -2601,10 +2619,6 @@ L_139:
 	ADD	IY,BC
 	LEA	HL,IY+33
 	LD	(HL),0
-	LD	BC,L__63
-	PUSH	BC
-	CALL	_os_PutStrFull
-	POP	BC
 	LD	BC,L__64
 	PUSH	BC
 	CALL	_os_PutStrFull
@@ -2613,10 +2627,14 @@ L_139:
 	PUSH	BC
 	CALL	_os_PutStrFull
 	POP	BC
+	LD	BC,L__66
+	PUSH	BC
+	CALL	_os_PutStrFull
+	POP	BC
 	LD	BC,0
 	LD	(IX+-3),BC
-	JR	L_149
-L_147:
+	JR	L_153
+L_151:
 	LD	BC,(IX+-3)
 	LEA	HL,IX+-39
 	ADD	HL,BC
@@ -2624,15 +2642,15 @@ L_147:
 	LD	BC,(IX+-3)
 	INC	BC
 	LD	(IX+-3),BC
-L_149:
+L_153:
 	LD	BC,16
 	LD	HL,(IX+-3)
 	OR	A,A
 	SBC	HL,BC
-	JR	C,L_147
+	JR	C,L_151
 	PUSH	BC
 	PEA	IX+-39
-	LD	BC,L__67
+	LD	BC,L__68
 	PUSH	BC
 	CALL	_os_GetStringInput
 	POP	BC
@@ -2674,7 +2692,7 @@ L_149:
 	POP	BC
 	POP	BC
 	POP	BC
-	LD	BC,L__68
+	LD	BC,L__69
 	PUSH	BC
 	CALL	_os_PutStrFull
 	POP	BC
@@ -2684,19 +2702,19 @@ L_149:
 	OR	A,A
 	LD	BC,101
 	SBC	HL,BC
-	JR	Z,L_164
+	JR	Z,L_168
 	LD	A,(IX+-39)
 	UEXT	HL
 	LD	L,A
 	OR	A,A
 	LD	BC,69
 	SBC	HL,BC
-	JR	NZ,L_176
-L_164:
+	JR	NZ,L_180
+L_168:
 	LD	BC,0
 	LD	(IX+-3),BC
-	JR	L_157
-L_155:
+	JR	L_161
+L_159:
 	LD	BC,(IX+-3)
 	LEA	HL,IX+-123
 	ADD	HL,BC
@@ -2709,12 +2727,12 @@ L_155:
 	LD	BC,(IX+-3)
 	INC	BC
 	LD	(IX+-3),BC
-L_157:
+L_161:
 	LD	BC,16
 	LD	HL,(IX+-3)
 	OR	A,A
 	SBC	HL,BC
-	JR	C,L_155
+	JR	C,L_159
 	PEA	IX+-56
 	PEA	IX+-89
 	PEA	IX+-23
@@ -2741,7 +2759,7 @@ L_157:
 	ADD	HL,BC
 	LD	BC,HL
 	PUSH	BC
-	LD	BC,L__72
+	LD	BC,L__73
 	PUSH	BC
 	LD	HL,IX
 	LD	BC,-189
@@ -2773,26 +2791,26 @@ L_157:
 	PUSH	BC
 	CALL	_os_PutStrFull
 	POP	BC
-L_163:
+L_167:
 	CALL	_os_GetCSC
 	OR	A,A
-	JR	Z,L_163
-L_176:
+	JR	Z,L_167
+L_180:
 	LD	A,(IX+-39)
 	UEXT	HL
 	LD	L,A
 	OR	A,A
 	LD	BC,100
 	SBC	HL,BC
-	JR	Z,L_175
+	JR	Z,L_179
 	LD	A,(IX+-39)
 	UEXT	HL
 	LD	L,A
 	OR	A,A
 	LD	BC,68
 	SBC	HL,BC
-	JR	NZ,L_200
-L_175:
+	JR	NZ,L_204
+L_179:
 	LD	BC,16
 	PUSH	BC
 	PEA	IX+-23
@@ -2810,8 +2828,8 @@ L_175:
 	POP	BC
 	LD	BC,0
 	LD	(IX+-3),BC
-	JR	L_168
-L_166:
+	JR	L_172
+L_170:
 	LD	BC,(IX+-3)
 	LEA	HL,IX+-23
 	ADD	HL,BC
@@ -2833,18 +2851,18 @@ L_166:
 	LD	BC,(IX+-3)
 	INC	BC
 	LD	(IX+-3),BC
-L_168:
+L_172:
 	LD	BC,16
 	LD	HL,(IX+-3)
 	OR	A,A
 	SBC	HL,BC
-	JR	C,L_166
+	JR	C,L_170
 	LD	HL,IX
 	LD	BC,-156
 	ADD	HL,BC
 	LD	BC,HL
 	PUSH	BC
-	LD	BC,L__77
+	LD	BC,L__78
 	PUSH	BC
 	LD	HL,IX
 	LD	BC,-189
@@ -2874,26 +2892,26 @@ L_168:
 	PUSH	BC
 	CALL	_os_PutStrFull
 	POP	BC
-L_174:
+L_178:
 	CALL	_os_GetCSC
 	OR	A,A
-	JR	Z,L_174
-L_200:
+	JR	Z,L_178
+L_204:
 	LD	A,(IX+-39)
 	UEXT	HL
 	LD	L,A
 	OR	A,A
 	LD	BC,104
 	SBC	HL,BC
-	JR	Z,L_199
+	JR	Z,L_203
 	LD	A,(IX+-39)
 	UEXT	HL
 	LD	L,A
 	OR	A,A
 	LD	BC,72
 	SBC	HL,BC
-	JR	NZ,L_244
-L_199:
+	JR	NZ,L_248
+L_203:
 	LD	BC,16
 	PUSH	BC
 	PEA	IX+-23
@@ -2904,12 +2922,12 @@ L_199:
 	POP	BC
 	LD	BC,0
 	LD	(IX+-6),BC
-	JR	L_192
-L_190:
+	JR	L_196
+L_194:
 	LD	BC,0
 	LD	(IX+-3),BC
-	JR	L_180
-L_178:
+	JR	L_184
+L_182:
 	LD	A,(IX+-3)
 	AND	A,15
 	UEXT	HL
@@ -2952,12 +2970,12 @@ L_178:
 	LD	BC,(IX+-3)
 	INC	BC
 	LD	(IX+-3),BC
-L_180:
+L_184:
 	LD	BC,32
 	LD	HL,(IX+-3)
 	OR	A,A
 	SBC	HL,BC
-	JR	C,L_178
+	JR	C,L_182
 	PEA	IX+-89
 	PEA	IX+-23
 	CALL	_encrypt
@@ -2965,8 +2983,8 @@ L_180:
 	POP	BC
 	LD	BC,0
 	LD	(IX+-3),BC
-	JR	L_184
-L_182:
+	JR	L_188
+L_186:
 	LD	BC,(IX+-3)
 	LEA	HL,IX+-89
 	ADD	HL,BC
@@ -2984,12 +3002,12 @@ L_182:
 	LD	BC,(IX+-3)
 	INC	BC
 	LD	(IX+-3),BC
-L_184:
+L_188:
 	LD	BC,32
 	LD	HL,(IX+-3)
 	OR	A,A
 	SBC	HL,BC
-	JR	C,L_182
+	JR	C,L_186
 	PEA	IX+-89
 	PEA	IX+-23
 	CALL	_decrypt
@@ -2997,8 +3015,8 @@ L_184:
 	POP	BC
 	LD	BC,0
 	LD	(IX+-3),BC
-	JR	L_188
-L_186:
+	JR	L_192
+L_190:
 	LD	A,(IX+-3)
 	AND	A,15
 	UEXT	HL
@@ -3059,12 +3077,12 @@ L_186:
 	LD	BC,(IX+-3)
 	INC	BC
 	LD	(IX+-3),BC
-L_188:
+L_192:
 	LD	BC,32
 	LD	HL,(IX+-3)
 	OR	A,A
 	SBC	HL,BC
-	JR	C,L_186
+	JR	C,L_190
 	PEA	IX+-89
 	PEA	IX+-23
 	CALL	_encrypt
@@ -3073,12 +3091,12 @@ L_188:
 	LD	BC,(IX+-6)
 	INC	BC
 	LD	(IX+-6),BC
-L_192:
+L_196:
 	LD	BC,1
 	LD	HL,(IX+-6)
 	OR	A,A
 	SBC	HL,BC
-	JR	C,L_190
+	JR	C,L_194
 	LD	BC,16
 	PUSH	BC
 	LD	HL,IX
@@ -3096,7 +3114,7 @@ L_192:
 	ADD	HL,BC
 	LD	BC,HL
 	PUSH	BC
-	LD	BC,L__85
+	LD	BC,L__86
 	PUSH	BC
 	LD	HL,IX
 	LD	BC,-189
@@ -3126,30 +3144,30 @@ L_192:
 	PUSH	BC
 	CALL	_os_PutStrFull
 	POP	BC
-L_198:
+L_202:
 	CALL	_os_GetCSC
 	OR	A,A
-	JR	Z,L_198
-L_244:
+	JR	Z,L_202
+L_248:
 	LD	A,(IX+-39)
 	UEXT	HL
 	LD	L,A
 	OR	A,A
 	LD	BC,120
 	SBC	HL,BC
-	JR	Z,L_243
+	JR	Z,L_247
 	LD	A,(IX+-39)
 	UEXT	HL
 	LD	L,A
 	OR	A,A
 	LD	BC,88
 	SBC	HL,BC
-	JR	NZ,L_284
-L_243:
+	JR	NZ,L_288
+L_247:
 	LD	BC,0
 	LD	(IX+-3),BC
-	JR	L_204
-L_202:
+	JR	L_208
+L_206:
 	LD	BC,(IX+-3)
 	LEA	HL,IX+-123
 	ADD	HL,BC
@@ -3162,12 +3180,12 @@ L_202:
 	LD	BC,(IX+-3)
 	INC	BC
 	LD	(IX+-3),BC
-L_204:
+L_208:
 	LD	BC,16
 	LD	HL,(IX+-3)
 	OR	A,A
 	SBC	HL,BC
-	JR	C,L_202
+	JR	C,L_206
 	PUSH	BC
 	PEA	IX+-123
 	PEA	IX+-23
@@ -3187,6 +3205,7 @@ L_204:
 	POP	BC
 	POP	BC
 	POP	BC
+;  343				to_hex(bix, bix_in, MSG_SIZE);
 	LD	BC,16
 	PUSH	BC
 	LD	HL,IX
@@ -3199,10 +3218,12 @@ L_204:
 	POP	BC
 	POP	BC
 	POP	BC
-;  343				
-;  344				
-;  345				/* Clear the homescreen and display the built response */
-;  346				os_ClrHome();
+;  344	
+;  345				/* Build the user response */
+;  346				
+;  347				
+;  348				/* Clear the homescreen and display the built response */
+;  349				os_ClrHome();
 	LD	BC,_asm_ClrLCD
 	PUSH	BC
 	CALL	__OS
@@ -3215,19 +3236,19 @@ L_204:
 	PUSH	BC
 	CALL	__OS
 	POP	BC
-;  347		//		printf(response);
-;  348		//		for(a=0; a<MSG_SIZE; ++a){
-;  349		//			msg_in[a * 2] = response[a * 2];
-;  350		//			msg_in[a * 2 + 1] = response[a * 2 + 1];
-;  351		//		}
-;  352				
-;  353				// Cleanup
-;  354					for(a=0; a<KEY_SIZE; ++a){
+;  350		//		printf(response);
+;  351		//		for(a=0; a<MSG_SIZE; ++a){
+;  352		//			msg_in[a * 2] = response[a * 2];
+;  353		//			msg_in[a * 2 + 1] = response[a * 2 + 1];
+;  354		//		}
+;  355				
+;  356				// Cleanup
+;  357					for(a=0; a<KEY_SIZE; ++a){
 	LD	BC,0
 	LD	(IX+-3),BC
-	JR	L_210
-L_208:
-;  355						key[a] = 0;
+	JR	L_214
+L_212:
+;  358						key[a] = 0;
 	LD	BC,(IX+-3)
 	LEA	HL,IX+-89
 	ADD	HL,BC
@@ -3235,41 +3256,21 @@ L_208:
 	LD	BC,(IX+-3)
 	INC	BC
 	LD	(IX+-3),BC
-;  356					}
-L_210:
+;  359					}
+L_214:
 	LD	BC,32
 	LD	HL,(IX+-3)
 	OR	A,A
 	SBC	HL,BC
-	JR	C,L_208
-;  357					for(a=0; a<MSG_SIZE; ++a){
-	LD	BC,0
-	LD	(IX+-3),BC
-	JR	L_214
-L_212:
-;  358						msg[a] = 0;
-	LD	BC,(IX+-3)
-	LEA	HL,IX+-23
-	ADD	HL,BC
-	LD	(HL),0
-	LD	BC,(IX+-3)
-	INC	BC
-	LD	(IX+-3),BC
-;  359					}
-L_214:
-	LD	BC,16
-	LD	HL,(IX+-3)
-	OR	A,A
-	SBC	HL,BC
 	JR	C,L_212
-;  360					for(a=0; a<16; ++a){
+;  360					for(a=0; a<MSG_SIZE; ++a){
 	LD	BC,0
 	LD	(IX+-3),BC
 	JR	L_218
 L_216:
-;  361						choice[a] = 0;
+;  361						msg[a] = 0;
 	LD	BC,(IX+-3)
-	LEA	HL,IX+-39
+	LEA	HL,IX+-23
 	ADD	HL,BC
 	LD	(HL),0
 	LD	BC,(IX+-3)
@@ -3282,16 +3283,14 @@ L_218:
 	OR	A,A
 	SBC	HL,BC
 	JR	C,L_216
-;  363					for(a=0; a<MSG_SIZE * 2 + 1; ++a){
+;  363					for(a=0; a<16; ++a){
 	LD	BC,0
 	LD	(IX+-3),BC
 	JR	L_222
 L_220:
-;  364						hex[a] = 0;
+;  364						choice[a] = 0;
 	LD	BC,(IX+-3)
-	LD	HL,IX
-	LD	DE,-156
-	ADD	HL,DE
+	LEA	HL,IX+-39
 	ADD	HL,BC
 	LD	(HL),0
 	LD	BC,(IX+-3)
@@ -3299,7 +3298,7 @@ L_220:
 	LD	(IX+-3),BC
 ;  365					}
 L_222:
-	LD	BC,33
+	LD	BC,16
 	LD	HL,(IX+-3)
 	OR	A,A
 	SBC	HL,BC
@@ -3309,10 +3308,10 @@ L_222:
 	LD	(IX+-3),BC
 	JR	L_226
 L_224:
-;  367						response[a] = 0;
+;  367						hex[a] = 0;
 	LD	BC,(IX+-3)
 	LD	HL,IX
-	LD	DE,-189
+	LD	DE,-156
 	ADD	HL,DE
 	ADD	HL,BC
 	LD	(HL),0
@@ -3326,18 +3325,40 @@ L_226:
 	OR	A,A
 	SBC	HL,BC
 	JR	C,L_224
-;  369					
-;  370					os_PutStrFull(msg_in);
+;  369					for(a=0; a<MSG_SIZE * 2 + 1; ++a){
+	LD	BC,0
+	LD	(IX+-3),BC
+	JR	L_230
+L_228:
+;  370						response[a] = 0;
+	LD	BC,(IX+-3)
+	LD	HL,IX
+	LD	DE,-189
+	ADD	HL,DE
+	ADD	HL,BC
+	LD	(HL),0
+	LD	BC,(IX+-3)
+	INC	BC
+	LD	(IX+-3),BC
+;  371					}
+L_230:
+	LD	BC,33
+	LD	HL,(IX+-3)
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_228
+;  372					
+;  373					os_PutStrFull(msg_in);
 	PEA	IX+-123
 	CALL	_os_PutStrFull
 	POP	BC
-;  371					/* Waits for a key */
-;  372					while (!os_GetCSC());
-L_230:
+;  374					/* Waits for a key */
+;  375					while (!os_GetCSC());
+L_234:
 	CALL	_os_GetCSC
 	OR	A,A
-	JR	Z,L_230
-;  373					os_ClrHome();
+	JR	Z,L_234
+;  376					os_ClrHome();
 	LD	BC,_asm_ClrLCD
 	PUSH	BC
 	CALL	__OS
@@ -3350,7 +3371,7 @@ L_230:
 	PUSH	BC
 	CALL	__OS
 	POP	BC
-;  374					os_PutStrFull(key_in);
+;  377					os_PutStrFull(key_in);
 	LD	HL,IX
 	LD	BC,-289
 	ADD	HL,BC
@@ -3358,13 +3379,13 @@ L_230:
 	PUSH	BC
 	CALL	_os_PutStrFull
 	POP	BC
-;  375					/* Waits for a key */
-;  376					while (!os_GetCSC());
-L_236:
+;  378					/* Waits for a key */
+;  379					while (!os_GetCSC());
+L_240:
 	CALL	_os_GetCSC
 	OR	A,A
-	JR	Z,L_236
-;  377					os_ClrHome();
+	JR	Z,L_240
+;  380					os_ClrHome();
 	LD	BC,_asm_ClrLCD
 	PUSH	BC
 	CALL	__OS
@@ -3377,7 +3398,7 @@ L_236:
 	PUSH	BC
 	CALL	__OS
 	POP	BC
-;  378					os_PutStrFull(bix_in);
+;  381					os_PutStrFull(bix_in);
 	LD	HL,IX
 	LD	BC,-223
 	ADD	HL,BC
@@ -3385,38 +3406,38 @@ L_236:
 	PUSH	BC
 	CALL	_os_PutStrFull
 	POP	BC
-;  379				/* Waits for a key */
-;  380				while (!os_GetCSC());
-L_242:
+;  382				/* Waits for a key */
+;  383				while (!os_GetCSC());
+L_246:
 	CALL	_os_GetCSC
 	OR	A,A
-	JR	Z,L_242
-;  381				}
-L_284:
-;  382			#endif
-;  383			#ifdef ENCDEC_CHOICE
-;  384				if(choice[0] == 'u' || choice[0] == 'U'){
+	JR	Z,L_246
+;  384				}
+L_288:
+;  385			#endif
+;  386			#ifdef ENCDEC_CHOICE
+;  387				if(choice[0] == 'u' || choice[0] == 'U'){
 	LD	A,(IX+-39)
 	UEXT	HL
 	LD	L,A
 	OR	A,A
 	LD	BC,117
 	SBC	HL,BC
-	JR	Z,L_283
+	JR	Z,L_287
 	LD	A,(IX+-39)
 	UEXT	HL
 	LD	L,A
 	OR	A,A
 	LD	BC,85
 	SBC	HL,BC
-	JR	NZ,L_288
-L_283:
-;  385				for(a=0; a<MSG_SIZE; ++a){
+	JR	NZ,L_292
+L_287:
+;  388				for(a=0; a<MSG_SIZE; ++a){
 	LD	BC,0
 	LD	(IX+-3),BC
-	JR	L_248
-L_246:
-;  386					msg[a] = msg_in[a];
+	JR	L_252
+L_250:
+;  389					msg[a] = msg_in[a];
 	LD	BC,(IX+-3)
 	LEA	HL,IX+-123
 	ADD	HL,BC
@@ -3429,19 +3450,19 @@ L_246:
 	LD	BC,(IX+-3)
 	INC	BC
 	LD	(IX+-3),BC
-;  387				}
-L_248:
+;  390				}
+L_252:
 	LD	BC,16
 	LD	HL,(IX+-3)
 	OR	A,A
 	SBC	HL,BC
-	JR	C,L_246
-;  388				for(a=0; a<KEY_SIZE; ++a){
+	JR	C,L_250
+;  391				for(a=0; a<KEY_SIZE; ++a){
 	LD	BC,0
 	LD	(IX+-3),BC
-	JR	L_251
-L_249:
-;  389					key[a] = key_in[a];
+	JR	L_255
+L_253:
+;  392					key[a] = key_in[a];
 	LD	HL,IX
 	LD	BC,-289
 	ADD	HL,BC
@@ -3456,22 +3477,22 @@ L_249:
 	LD	BC,(IX+-3)
 	INC	BC
 	LD	(IX+-3),BC
-;  390				}
-L_251:
+;  393				}
+L_255:
 	LD	BC,32
 	LD	HL,(IX+-3)
 	OR	A,A
 	SBC	HL,BC
-	JR	C,L_249
-;  391				key[KEY_SIZE] = 0;
-;  392				
-;  393				#ifdef IGNORE_KEY
-;  394				for(a=0; a<KEY_SIZE; ++a){
-;  395					key[a] = 0;
-;  396				}
-;  397				#endif
-;  398				
-;  399				from_hex(msg_in, msg, MSG_SIZE);
+	JR	C,L_253
+;  394				key[KEY_SIZE] = 0;
+;  395				
+;  396				#ifdef IGNORE_KEY
+;  397				for(a=0; a<KEY_SIZE; ++a){
+;  398					key[a] = 0;
+;  399				}
+;  400				#endif
+;  401				
+;  402				from_hex(msg_in, msg, MSG_SIZE);
 	LD	BC,16
 	PUSH	BC
 	PEA	IX+-23
@@ -3482,7 +3503,7 @@ L_251:
 	POP	BC
 	POP	BC
 	POP	BC
-;  400				from_hex(key_in, key, KEY_SIZE);
+;  403				from_hex(key_in, key, KEY_SIZE);
 	LD	BC,32
 	PUSH	BC
 	PEA	IX+-89
@@ -3495,7 +3516,7 @@ L_251:
 	POP	BC
 	POP	BC
 	POP	BC
-;  401				from_hex(bix_in, bix, MSG_SIZE);
+;  404				from_hex(bix_in, bix, MSG_SIZE);
 	LD	BC,16
 	PUSH	BC
 	PEA	IX+-56
@@ -3508,12 +3529,12 @@ L_251:
 	POP	BC
 	POP	BC
 	POP	BC
-;  402	
-;  403				/* Build the user response */
-;  404				
-;  405				
-;  406				/* Clear the homescreen and display the built response */
-;  407				os_ClrHome();
+;  405	
+;  406				/* Build the user response */
+;  407				
+;  408				
+;  409				/* Clear the homescreen and display the built response */
+;  410				os_ClrHome();
 	LD	BC,_asm_ClrLCD
 	PUSH	BC
 	CALL	__OS
@@ -3526,19 +3547,19 @@ L_251:
 	PUSH	BC
 	CALL	__OS
 	POP	BC
-;  408		//		printf(response);
-;  409		//		for(a=0; a<MSG_SIZE; ++a){
-;  410		//			msg_in[a * 2] = response[a * 2];
-;  411		//			msg_in[a * 2 + 1] = response[a * 2 + 1];
-;  412		//		}
-;  413				
-;  414				// Cleanup
-;  415					for(a=0; a<16; ++a){
+;  411		//		printf(response);
+;  412		//		for(a=0; a<MSG_SIZE; ++a){
+;  413		//			msg_in[a * 2] = response[a * 2];
+;  414		//			msg_in[a * 2 + 1] = response[a * 2 + 1];
+;  415		//		}
+;  416				
+;  417				// Cleanup
+;  418					for(a=0; a<16; ++a){
 	LD	BC,0
 	LD	(IX+-3),BC
-	JR	L_258
-L_256:
-;  416						choice[a] = 0;
+	JR	L_262
+L_260:
+;  419						choice[a] = 0;
 	LD	BC,(IX+-3)
 	LEA	HL,IX+-39
 	ADD	HL,BC
@@ -3546,31 +3567,9 @@ L_256:
 	LD	BC,(IX+-3)
 	INC	BC
 	LD	(IX+-3),BC
-;  417					}
-L_258:
-	LD	BC,16
-	LD	HL,(IX+-3)
-	OR	A,A
-	SBC	HL,BC
-	JR	C,L_256
-;  418					for(a=0; a<MSG_SIZE * 2 + 1; ++a){
-	LD	BC,0
-	LD	(IX+-3),BC
-	JR	L_262
-L_260:
-;  419						hex[a] = 0;
-	LD	BC,(IX+-3)
-	LD	HL,IX
-	LD	DE,-156
-	ADD	HL,DE
-	ADD	HL,BC
-	LD	(HL),0
-	LD	BC,(IX+-3)
-	INC	BC
-	LD	(IX+-3),BC
 ;  420					}
 L_262:
-	LD	BC,33
+	LD	BC,16
 	LD	HL,(IX+-3)
 	OR	A,A
 	SBC	HL,BC
@@ -3580,10 +3579,10 @@ L_262:
 	LD	(IX+-3),BC
 	JR	L_266
 L_264:
-;  422						response[a] = 0;
+;  422						hex[a] = 0;
 	LD	BC,(IX+-3)
 	LD	HL,IX
-	LD	DE,-189
+	LD	DE,-156
 	ADD	HL,DE
 	ADD	HL,BC
 	LD	(HL),0
@@ -3597,204 +3596,12 @@ L_266:
 	OR	A,A
 	SBC	HL,BC
 	JR	C,L_264
-;  424					
-;  425					os_PutStrFull(msg);
-	PEA	IX+-23
-	CALL	_os_PutStrFull
-	POP	BC
-;  426					/* Waits for a key */
-;  427					while (!os_GetCSC());
-L_270:
-	CALL	_os_GetCSC
-	OR	A,A
-	JR	Z,L_270
-;  428					os_ClrHome();
-	LD	BC,_asm_ClrLCD
-	PUSH	BC
-	CALL	__OS
-	POP	BC
-	LD	BC,_asm_HomeUp
-	PUSH	BC
-	CALL	__OS
-	POP	BC
-	LD	BC,_asm_DrawStatusBar
-	PUSH	BC
-	CALL	__OS
-	POP	BC
-;  429					os_PutStrFull(key);
-	PEA	IX+-89
-	CALL	_os_PutStrFull
-	POP	BC
-;  430					/* Waits for a key */
-;  431					while (!os_GetCSC());
-L_276:
-	CALL	_os_GetCSC
-	OR	A,A
-	JR	Z,L_276
-;  432					os_ClrHome();
-	LD	BC,_asm_ClrLCD
-	PUSH	BC
-	CALL	__OS
-	POP	BC
-	LD	BC,_asm_HomeUp
-	PUSH	BC
-	CALL	__OS
-	POP	BC
-	LD	BC,_asm_DrawStatusBar
-	PUSH	BC
-	CALL	__OS
-	POP	BC
-;  433					os_PutStrFull(bix);
-	PEA	IX+-56
-	CALL	_os_PutStrFull
-	POP	BC
-;  434				/* Waits for a key */
-;  435				while (!os_GetCSC());
-L_282:
-	CALL	_os_GetCSC
-	OR	A,A
-	JR	Z,L_282
-;  436				}
-L_288:
-;  437			#endif
-;  438			/*
-;  439			
-;  440			unsigned char msg[MSG_SIZE];
-;  441			unsigned char key[KEY_SIZE];
-;  442	
-;  443			unsigned char msg_in[MSG_IN_SIZE]; // for hex input
-;  444			unsigned char key_in[KEY_IN_SIZE]; // for hex input
-;  445			unsigned char choice[16];
-;  446	
-;  447			//unsigned char exp_key[BLK_SIZE * ROUNDS];
-;  448			unsigned char response[MSG_SIZE * 2 + 1];
-;  449			unsigned char hex[MSG_SIZE * 2 + 1];
-;  450			size_t a;
-;  451			size_t b;
-;  452			#ifdef OP_TEST
-;  453			unsigned char exp_key[EXP_KEY_SIZE];
-;  454			unsigned char tmp[MSG_SIZE];
-;  455			#endif
-;  456			
-;  457			*/
-;  458					for(a=0; a<KEY_SIZE; ++a){
+;  424					for(a=0; a<MSG_SIZE * 2 + 1; ++a){
 	LD	BC,0
 	LD	(IX+-3),BC
-	JR	L_287
-L_285:
-;  459						key[a] = 0;
-	LD	BC,(IX+-3)
-	LEA	HL,IX+-89
-	ADD	HL,BC
-	LD	(HL),0
-	LD	BC,(IX+-3)
-	INC	BC
-	LD	(IX+-3),BC
-;  460					}
-L_287:
-	LD	BC,32
-	LD	HL,(IX+-3)
-	OR	A,A
-	SBC	HL,BC
-	JR	C,L_285
-;  461					for(a=0; a<MSG_SIZE; ++a){
-	LD	BC,0
-	LD	(IX+-3),BC
-	JR	L_291
-L_289:
-;  462						msg[a] = 0;
-	LD	BC,(IX+-3)
-	LEA	HL,IX+-23
-	ADD	HL,BC
-	LD	(HL),0
-	LD	BC,(IX+-3)
-	INC	BC
-	LD	(IX+-3),BC
-;  463						#ifdef OP_TEST
-;  464						tmp[a] = 0;
-;  465						#endif
-;  466					}
-L_291:
-	LD	BC,16
-	LD	HL,(IX+-3)
-	OR	A,A
-	SBC	HL,BC
-	JR	C,L_289
-;  467					for(a=0; a<KEY_IN_SIZE; ++a){
-	LD	BC,0
-	LD	(IX+-3),BC
-	JR	L_295
-L_293:
-;  468						key_in[a] = 0;
-	LD	BC,(IX+-3)
-	LD	HL,IX
-	LD	DE,-289
-	ADD	HL,DE
-	ADD	HL,BC
-	LD	(HL),0
-	LD	BC,(IX+-3)
-	INC	BC
-	LD	(IX+-3),BC
-;  469					}
-L_295:
-	LD	BC,66
-	LD	HL,(IX+-3)
-	OR	A,A
-	SBC	HL,BC
-	JR	C,L_293
-;  470					for(a=0; a<MSG_IN_SIZE; ++a){
-	LD	BC,0
-	LD	(IX+-3),BC
-	JR	L_299
-L_297:
-;  471						msg_in[a] = 0;
-	LD	BC,(IX+-3)
-	LEA	HL,IX+-123
-	ADD	HL,BC
-	LD	(HL),0
-	LD	BC,(IX+-3)
-	INC	BC
-	LD	(IX+-3),BC
-;  472					}
-L_299:
-	LD	BC,34
-	LD	HL,(IX+-3)
-	OR	A,A
-	SBC	HL,BC
-	JR	C,L_297
-;  473					for(a=0; a<16; ++a){
-	LD	BC,0
-	LD	(IX+-3),BC
-	JR	L_303
-L_301:
-;  474						choice[a] = 0;
-	LD	BC,(IX+-3)
-	LEA	HL,IX+-39
-	ADD	HL,BC
-	LD	(HL),0
-	LD	BC,(IX+-3)
-	INC	BC
-	LD	(IX+-3),BC
-;  475					}
-L_303:
-	LD	BC,16
-	LD	HL,(IX+-3)
-	OR	A,A
-	SBC	HL,BC
-	JR	C,L_301
-;  476					for(a=0; a<MSG_SIZE * 2 + 1; ++a){
-	LD	BC,0
-	LD	(IX+-3),BC
-	JR	L_307
-L_305:
-;  477						hex[a] = 0;
-	LD	HL,IX
-	LD	BC,-156
-	ADD	HL,BC
-	LD	BC,(IX+-3)
-	ADD	HL,BC
-	LD	(HL),0
-;  478						response[a] = 0;
+	JR	L_270
+L_268:
+;  425						response[a] = 0;
 	LD	BC,(IX+-3)
 	LD	HL,IX
 	LD	DE,-189
@@ -3804,22 +3611,25 @@ L_305:
 	LD	BC,(IX+-3)
 	INC	BC
 	LD	(IX+-3),BC
-;  479					}
-L_307:
+;  426					}
+L_270:
 	LD	BC,33
 	LD	HL,(IX+-3)
 	OR	A,A
 	SBC	HL,BC
-	JR	C,L_305
-;  480					#ifdef OP_TEST
-;  481					for(a=0; a<EXP_KEY_SIZE; ++a){
-;  482						exp_key[a] = 0;
-;  483					}
-;  484					#endif
-;  485			a = 0;
-;  486			b = 0;
-;  487			
-;  488			os_ClrHome();
+	JR	C,L_268
+;  427					
+;  428					os_PutStrFull(msg);
+	PEA	IX+-23
+	CALL	_os_PutStrFull
+	POP	BC
+;  429					/* Waits for a key */
+;  430					while (!os_GetCSC());
+L_274:
+	CALL	_os_GetCSC
+	OR	A,A
+	JR	Z,L_274
+;  431					os_ClrHome();
 	LD	BC,_asm_ClrLCD
 	PUSH	BC
 	CALL	__OS
@@ -3832,37 +3642,153 @@ L_307:
 	PUSH	BC
 	CALL	__OS
 	POP	BC
-;  489			os_GetStringInput("Another? (y/N):", choice, 16);
-	LD	BC,16
-	PUSH	BC
-	PEA	IX+-39
-	LD	BC,L__114
-	PUSH	BC
-	CALL	_os_GetStringInput
+;  432					os_PutStrFull(key);
+	PEA	IX+-89
+	CALL	_os_PutStrFull
 	POP	BC
-	POP	BC
-	POP	BC
-;  490			if(choice[0] != 'y' && choice[0] != 'Y'){
-	LD	A,(IX+-39)
-	UEXT	HL
-	LD	L,A
+;  433					/* Waits for a key */
+;  434					while (!os_GetCSC());
+L_280:
+	CALL	_os_GetCSC
 	OR	A,A
-	LD	BC,121
-	SBC	HL,BC
-	JR	Z,L_319
-	LD	A,(IX+-39)
-	UEXT	HL
-	LD	L,A
+	JR	Z,L_280
+;  435					os_ClrHome();
+	LD	BC,_asm_ClrLCD
+	PUSH	BC
+	CALL	__OS
+	POP	BC
+	LD	BC,_asm_HomeUp
+	PUSH	BC
+	CALL	__OS
+	POP	BC
+	LD	BC,_asm_DrawStatusBar
+	PUSH	BC
+	CALL	__OS
+	POP	BC
+;  436					os_PutStrFull(bix);
+	PEA	IX+-56
+	CALL	_os_PutStrFull
+	POP	BC
+;  437				/* Waits for a key */
+;  438				while (!os_GetCSC());
+L_286:
+	CALL	_os_GetCSC
 	OR	A,A
-	LD	BC,89
-	SBC	HL,BC
-	JR	Z,L_319
-;  491				for(a=0; a<16; ++a){
+	JR	Z,L_286
+;  439				}
+L_292:
+;  440			#endif
+;  441			/*
+;  442			
+;  443			unsigned char msg[MSG_SIZE];
+;  444			unsigned char key[KEY_SIZE];
+;  445	
+;  446			unsigned char msg_in[MSG_IN_SIZE]; // for hex input
+;  447			unsigned char key_in[KEY_IN_SIZE]; // for hex input
+;  448			unsigned char choice[16];
+;  449	
+;  450			//unsigned char exp_key[BLK_SIZE * ROUNDS];
+;  451			unsigned char response[MSG_SIZE * 2 + 1];
+;  452			unsigned char hex[MSG_SIZE * 2 + 1];
+;  453			size_t a;
+;  454			size_t b;
+;  455			#ifdef OP_TEST
+;  456			unsigned char exp_key[EXP_KEY_SIZE];
+;  457			unsigned char tmp[MSG_SIZE];
+;  458			#endif
+;  459			
+;  460			*/
+;  461					for(a=0; a<KEY_SIZE; ++a){
 	LD	BC,0
 	LD	(IX+-3),BC
-	JR	L_316
-L_314:
-;  492					choice[a] = 0;
+	JR	L_291
+L_289:
+;  462						key[a] = 0;
+	LD	BC,(IX+-3)
+	LEA	HL,IX+-89
+	ADD	HL,BC
+	LD	(HL),0
+	LD	BC,(IX+-3)
+	INC	BC
+	LD	(IX+-3),BC
+;  463					}
+L_291:
+	LD	BC,32
+	LD	HL,(IX+-3)
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_289
+;  464					for(a=0; a<MSG_SIZE; ++a){
+	LD	BC,0
+	LD	(IX+-3),BC
+	JR	L_295
+L_293:
+;  465						msg[a] = 0;
+	LD	BC,(IX+-3)
+	LEA	HL,IX+-23
+	ADD	HL,BC
+	LD	(HL),0
+	LD	BC,(IX+-3)
+	INC	BC
+	LD	(IX+-3),BC
+;  466						#ifdef OP_TEST
+;  467						tmp[a] = 0;
+;  468						#endif
+;  469					}
+L_295:
+	LD	BC,16
+	LD	HL,(IX+-3)
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_293
+;  470					for(a=0; a<KEY_IN_SIZE; ++a){
+	LD	BC,0
+	LD	(IX+-3),BC
+	JR	L_299
+L_297:
+;  471						key_in[a] = 0;
+	LD	BC,(IX+-3)
+	LD	HL,IX
+	LD	DE,-289
+	ADD	HL,DE
+	ADD	HL,BC
+	LD	(HL),0
+	LD	BC,(IX+-3)
+	INC	BC
+	LD	(IX+-3),BC
+;  472					}
+L_299:
+	LD	BC,66
+	LD	HL,(IX+-3)
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_297
+;  473					for(a=0; a<MSG_IN_SIZE; ++a){
+	LD	BC,0
+	LD	(IX+-3),BC
+	JR	L_303
+L_301:
+;  474						msg_in[a] = 0;
+	LD	BC,(IX+-3)
+	LEA	HL,IX+-123
+	ADD	HL,BC
+	LD	(HL),0
+	LD	BC,(IX+-3)
+	INC	BC
+	LD	(IX+-3),BC
+;  475					}
+L_303:
+	LD	BC,34
+	LD	HL,(IX+-3)
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_301
+;  476					for(a=0; a<16; ++a){
+	LD	BC,0
+	LD	(IX+-3),BC
+	JR	L_307
+L_305:
+;  477						choice[a] = 0;
 	LD	BC,(IX+-3)
 	LEA	HL,IX+-39
 	ADD	HL,BC
@@ -3870,21 +3796,116 @@ L_314:
 	LD	BC,(IX+-3)
 	INC	BC
 	LD	(IX+-3),BC
-;  493				}
-L_316:
+;  478					}
+L_307:
 	LD	BC,16
 	LD	HL,(IX+-3)
 	OR	A,A
 	SBC	HL,BC
-	JR	C,L_314
+	JR	C,L_305
+;  479					for(a=0; a<MSG_SIZE * 2 + 1; ++a){
+	LD	BC,0
+	LD	(IX+-3),BC
+	JR	L_311
+L_309:
+;  480						hex[a] = 0;
+	LD	HL,IX
+	LD	BC,-156
+	ADD	HL,BC
+	LD	BC,(IX+-3)
+	ADD	HL,BC
+	LD	(HL),0
+;  481						response[a] = 0;
+	LD	BC,(IX+-3)
+	LD	HL,IX
+	LD	DE,-189
+	ADD	HL,DE
+	ADD	HL,BC
+	LD	(HL),0
+	LD	BC,(IX+-3)
+	INC	BC
+	LD	(IX+-3),BC
+;  482					}
+L_311:
+	LD	BC,33
+	LD	HL,(IX+-3)
 	OR	A,A
-;  494				a = 0;
-;  495				break;
-;  496			}
-;  497		}
-;  498		return 0;
+	SBC	HL,BC
+	JR	C,L_309
+;  483					#ifdef OP_TEST
+;  484					for(a=0; a<EXP_KEY_SIZE; ++a){
+;  485						exp_key[a] = 0;
+;  486					}
+;  487					#endif
+;  488			a = 0;
+;  489			b = 0;
+;  490			
+;  491			os_ClrHome();
+	LD	BC,_asm_ClrLCD
+	PUSH	BC
+	CALL	__OS
+	POP	BC
+	LD	BC,_asm_HomeUp
+	PUSH	BC
+	CALL	__OS
+	POP	BC
+	LD	BC,_asm_DrawStatusBar
+	PUSH	BC
+	CALL	__OS
+	POP	BC
+;  492			os_GetStringInput("Another? (y/N):", choice, 16);
+	LD	BC,16
+	PUSH	BC
+	PEA	IX+-39
+	LD	BC,L__115
+	PUSH	BC
+	CALL	_os_GetStringInput
+	POP	BC
+	POP	BC
+	POP	BC
+;  493			if(choice[0] != 'y' && choice[0] != 'Y'){
+	LD	A,(IX+-39)
+	UEXT	HL
+	LD	L,A
+	OR	A,A
+	LD	BC,121
+	SBC	HL,BC
+	JR	Z,L_323
+	LD	A,(IX+-39)
+	UEXT	HL
+	LD	L,A
+	OR	A,A
+	LD	BC,89
+	SBC	HL,BC
+	JR	Z,L_323
+;  494				for(a=0; a<16; ++a){
+	LD	BC,0
+	LD	(IX+-3),BC
+	JR	L_320
+L_318:
+;  495					choice[a] = 0;
+	LD	BC,(IX+-3)
+	LEA	HL,IX+-39
+	ADD	HL,BC
+	LD	(HL),0
+	LD	BC,(IX+-3)
+	INC	BC
+	LD	(IX+-3),BC
+;  496				}
+L_320:
+	LD	BC,16
+	LD	HL,(IX+-3)
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_318
+	OR	A,A
+;  497				a = 0;
+;  498				break;
+;  499			}
+;  500		}
+;  501		return 0;
 	SBC	HL,HL
-;  499	}
+;  502	}
 	LD	SP,IX
 	POP	IX
 	RET	
@@ -3943,34 +3964,34 @@ L__59:
 L__61:
 	DB	"Key:"
 	DB	0
-L__62:
+L__63:
 	DB	"Block ID:"
 	DB	0
-L__63:
+L__64:
 	DB	"E = Encrypt               "
 	DB	0
-L__64:
+L__65:
 	DB	"D = Decrypt               "
 	DB	0
-L__65:
+L__66:
 	DB	"H = Hash                  "
 	DB	0
-L__67:
+L__68:
 	DB	"Mode (E/D/H):"
 	DB	0
-L__68:
+L__69:
 	DB	"Working..."
 	DB	0
-L__72:
+L__73:
 	DB	"%s"
 	DB	0
-L__77:
+L__78:
 	DB	"%s"
 	DB	0
-L__85:
+L__86:
 	DB	"%s"
 	DB	0
-L__114:
+L__115:
 	DB	"Another? (y/N):"
 	DB	0
 	XREF _sprintf:ROM

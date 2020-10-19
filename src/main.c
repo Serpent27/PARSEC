@@ -88,6 +88,9 @@ int main(void)
 		os_ClrHome();
 		key_in[KEY_IN_SIZE - 1] = 0;
 		
+		for(a=0; a<MSG_IN_SIZE; ++a){
+			bix_in[a] = 0;
+		}
 		os_GetStringInput("Block ID:", bix_in, MSG_IN_SIZE);
 		os_ClrHome();
 		bix_in[MSG_IN_SIZE - 1] = 0;
