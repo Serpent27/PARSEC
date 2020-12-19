@@ -40,8 +40,8 @@ The TI-84+CE version only uses 128-bit blocks and 256-bit keys. Why? Because it'
     - Hint: `10^50` operations/sec means `2^166` operations/sec, which cracks more 128-bit keys than I'll probably generate in my lifetime.
     - I settled on 384 bits of security, post-quantum, which means `2^218` seconds to crack the key for the previously mentioned, theoretical *fastest computer in the universe*. That should prevent the security margin from being closed by a quantum supercomputer orbiting a black hole... But, since the key size is a power of 2, I used a 1024-bit key, which becomes 512 bits of security, and thus increasing the security margin even more; as if anyone cares at that point.
 	- For anyone who actually cares, the 1024-bit key means a key bruteforce will take `2^346` seconds for an attacker with such an "ideal computer". However, the challenge of bruteforcing the key becomes unimportant when you consider the block size:
-- 512-bit block size, for the same reason as the key size. This is based on a block-cipher attack where an attacker can break the algorithm for every possible key, with `2^(block size)` bits ciphertext.
-    - I feel comfortable making this smaller than the key, due to a trick I used, where it mixes the key with the P-box, effectively creating `2^256` possible P-boxes. That way, for the purposes of the aforementioned attack, it *should* require `2^768` bits instead of only `2^512`. This security margin increases with each round performed, since the P-box is mixed with 1 byte from the round key each time a round is performed.
+- 512-bit block size, for the same reason as the key size. This is based on a block-cipher attack where an attacker can break the algorithm for every possible key, with `2^(block size)` blocks ciphertext.
+    - I feel comfortable making this smaller than the key, since from  research I;ve seen, it's expected that the universe isn't capable of storing anywhere close to this much data.
 
 ## Why did I make this algorithm so ridiculous?
 #### Because I felt like it, of course!
